@@ -1,1 +1,1 @@
-pass
+from sqlalchemy import Columnm Integer, String
