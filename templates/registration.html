@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sing up</h1>
+{% if message != "" %}
+{{ message }}
+{% endif %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="name">{{ form.name.label }}</label>
+        {{ form.name(id="name") }}
+    </div>
+    <div class="form-group">
+        <label for="email">{{ form.email.label }}</label>
+        {{ form.email(id="email") }}
+    </div>
+    <div class="form-group">
+        <label for="password">{{ form.password.label }}</label>
+        {{ form.password(id="password") }}
+    </div>
+    <div class="form-group">
+        <label for="confirm_password">{{ form.confirm_password.label }}</label>
+        {{ form.confirm_password(id="confirm_password") }}
+    </div>
+    <div class="form-group">
+        <label for="description">{{ form.description.label }}</label>
+        {{ form.description(type="textarea", id="description") }}
+    </div>
+    {{ form.submit() }}
+</form>
+{% endblock %}

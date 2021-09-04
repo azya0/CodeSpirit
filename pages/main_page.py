@@ -1,3 +1,5 @@
+from flask_login import current_user
+from flask import render_template
 import flask
 import json
 
@@ -12,4 +14,4 @@ blueprint = flask.Blueprint(
 
 @blueprint.route('/')
 def main_page():
-    return flask.render_template("main_page.html")
+    return render_template("main_page.html", current_user=current_user)

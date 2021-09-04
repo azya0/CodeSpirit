@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta lang="ru">
+	<title>ProjectTable</title>
+</head>
+<body>
+	<header>
+		<ul>
+			<li><a href="/">main page</a></li>
+			{% if not current_user.is_authenticated %}
+			<li><a href="/login">login</a></li>
+			<li><a href="/register">register</a></li>
+			{% else %}
+			<li><a href="/logout">logout</a></li>
+			{% endif %}
+		</ul>
+	</header>
+	{% block content %}{% endblock %}
+</body>
+</html>

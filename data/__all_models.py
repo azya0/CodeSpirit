@@ -9,10 +9,10 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	name = Column(String)
 	email = Column(String)
-	descritpion = Column(Text)
-	posts = Column(String)
-	likes = Column(String)
-	follows = Column(String)
+	description = Column(Text, default="")
+	posts = Column(String, default="")
+	likes = Column(String, default="")
+	follows = Column(String, default="")
 
 
 class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -21,17 +21,17 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	author = Column(Integer)
 	text = Column(Text)
 	datetime = Column(DateTime)
-	comments = Column(String)
-	refers = Column(Integer)
-	likes = Column(String)
-	dislikes = Column(String)
-	ideas = Column(String)
+	comments = Column(String, default="")
+	refers = Column(Integer, default=-1)
+	likes = Column(String, default="")
+	dislikes = Column(String, default="")
+	ideas = Column(String, default="")
 
 
 class Idea(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "ideas"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	posts = Column(String)
-	likes = Column(String)
-	dislikes = Column(String)
+	posts = Column(String, default="")
+	likes = Column(String, default="")
+	dislikes = Column(String, default="")
 	authors = Column(String)
