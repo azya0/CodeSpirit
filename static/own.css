@@ -17,13 +17,56 @@
     width: 75%;
 }
 
+.main-search-box-container {
+    width: 3.58%;
+    margin-right: auto;
+}
+
 .main-search-box {
-    width: 35%;
+    width: 0;
     padding-left: 5px;
     border: none;
     outline: none;
     border-radius: 7px;
     margin-right: auto;
+    border: none;
+	background: none;
+	color: #fff;
+	font-size: 16px;
+	transition: 1.6s;
+}
+
+.main-search-box::-ms-clear {
+    display: none;
+}
+
+.main-search-btn:hover {
+    color: #f0f0f0;
+}
+
+.main-search-box-container:hover {
+    background-color: #1b141e33;
+    padding-right: 12px;
+    padding-bottom: 2px;
+    padding-left: 6px;
+    border-radius: 40px;
+    width: 20%;
+    border: 2px;
+    border-color: white;
+}
+
+.main-search-box-container:hover .main-search-box {
+	width: calc(100% - 21px);
+}
+
+.main-search-btn {
+	justify-content: center;
+	align-items: center;
+	color: #f0f0f0;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	text-decoration: none;
 }
 
 nav .bar {
@@ -45,12 +88,25 @@ input[type="checkbox"] {
 
 @media screen and (max-width: 886px)
 {
-    .main-search-box {
+    .main-search-box-container {
+        background-color: #1b141e33;
+        padding-right: 12px;
+        padding-bottom: 2px;
+        padding-left: 6px;
+        border-radius: 40px;
         width: 100%;
         margin-left: 1rem!important;
         margin-right: 1rem!important;
         margin-top: 0.1rem!important;
         margin-bottom: 0.5rem!important;
+    }
+
+    .main-search-box {
+        width: calc(100% - 21px);
+    }
+
+    .main-search-box-container:hover {
+        width: 100%;
     }
 
     .main-logo {
