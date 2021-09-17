@@ -1,0 +1,103 @@
+.logo {
+    color: white;
+    font-family: system-ui;
+    font-weight: 700;
+}
+
+.main-navbar {
+    padding: 0;
+}
+
+.main-justify {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-side {
+    width: 75%;
+}
+
+.main-search-box {
+    width: 35%;
+    padding-left: 5px;
+    border: none;
+    outline: none;
+    border-radius: 7px;
+    margin-right: auto;
+}
+
+nav .bar {
+    position: relative;
+    margin: auto;
+    display: none;
+}
+
+nav .bar span {
+    color: #fff;
+    position: absolute;
+    font-size: 35px;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    display: none;
+}
+
+@media screen and (max-width: 886px)
+{
+    .main-search-box {
+        width: 100%;
+        margin-left: 1rem!important;
+        margin-right: 1rem!important;
+        margin-top: 0.1rem!important;
+        margin-bottom: 0.5rem!important;
+    }
+
+    .main-logo {
+        width: 100%;
+        display: inline-flex;
+        justify-content: center;
+    }
+
+    .main-ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 0;
+        visibility: hidden;
+        transition: 0.2s;
+    }
+
+    .links {
+        margin: auto;
+    }
+
+    nav .bar {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 50px;
+        cursor: pointer;
+    }
+
+    nav .bar #times {
+        display: none;
+    }
+
+    #check:checked ~ nav .bar #times {
+        display: block;
+    }
+
+    #check:checked ~ nav .bar #bars {
+        display: none;
+    }
+
+    #check:checked ~ nav .main-ul {
+        height: 160px;
+        visibility: visible;
+    }
+
+    #check:checked ~ nav .links {
+        margin-top: -0.5rem!important;
+    }
+}

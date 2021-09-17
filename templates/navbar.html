@@ -1,21 +1,3 @@
-from flask import Flask
-from data import db_session
-from pages import main_page
-
-app = Flask(__name__, static_folder="static")
-app.config['SECRET_KEY'] = 'piuhPIDFUSHG<-I\'llNeverBeAloneAgain?->KOJDSkfoijds'
-
-
-def main():
-    db_session.global_init("db/database.db")
-    app.run()
-
-
-if __name__ == '__main__':
-    app.register_blueprint(main_page.blueprint)
-    main()
-
-'''
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,35 +11,37 @@ if __name__ == '__main__':
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/9e9545e23d.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <title>Title</title>
 </head>
 <body>
+<input type="checkbox" id="check">
 <svg display="none">
     <symbol id="logo" viewBox="0 0 512 512">
         <g fill="#fff"><path d="m266 223.1h-54.9l-17.2-29.8h89.3l26.1-45.3h-147.6c-9.4 0-18.3 5-22.9 13.3-4.8 8.3-4.8 18.3 0 26.6l94.1 163.1c7.4 12.6 23.7 16.8 36.4 9.4 3.9-2.4 7.2-5.4 9.4-9.4l3-5.4-43.3-75.1z"/><path d="m373.2 161.3c-4.8-8.3-13.5-13.3-22.9-13.3h-6.5l-70.8 122.4 25.9 45.3 74-128.1c5.1-8 5.1-18 .3-26.3z"/></g>
     </symbol>
 </svg>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark main-navbar d-flex justify-content-center">
-        <div class="main-side d-inline-flex align-items-center">
-            <div class="d-inline-flex align-items-center my-1">
-                <svg class="logo" width="60" height="60">
+    <nav class="navbar navbar-dark bg-dark main-navbar d-flex justify-content-space-between">
+            <div class="d-inline-flex align-items-center mr-3 main-logo">
+                <svg class="logo" width="60" height="50">
                     <use xlink:href="#logo"></use>
                 </svg>
-                <h3 class="logo">Dionysus</h3>
+                <h3 class="logo" style="margin-bottom: 3px; margin-left: -4px;">Dionysus</h3>
             </div>
-            <div class="ml-2">
-                <input class="main-search-box" type="search" placeholder="Поиск">
-            </div>
-            <div class="ml-3 collapse navbar-collapse" id="links">
-                <ul class="navbar-nav">
-                    <li class="nav-item active"><a class="nav-link active" href="#">Main</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="#">Someshit</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="#">Someshit</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="#">Someshit</a></li>
+            <input class="main-search-box" type="search" placeholder="Search">
+            <div class="links" id="links">
+                <ul class="navbar-nav list-group-horizontal main-ul">
+                    <li class="nav-item active mr-3 ml-3"><a class="nav-link active" href="#">Main</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
                 </ul>
             </div>
-        </div>
+            <label for="check" class="bar">
+                <span class="fa fa-bars" id="bars"></span>
+                <span class="fa fa-times" id="times"></span>
+            </label>
     </nav>
 
 
@@ -68,4 +52,3 @@ if __name__ == '__main__':
     </main>
 </body>
 </html>
-'''
