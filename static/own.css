@@ -1,7 +1,10 @@
 .logo {
     color: white;
-    font-family: system-ui;
     font-weight: 700;
+}
+
+.main-font {
+    font-family: 'Kanit', sans-serif;
 }
 
 .main-navbar {
@@ -20,6 +23,7 @@
 .main-search-box-container {
     width: 3.58%;
     margin-right: auto;
+    transition: all 0.7s;
 }
 
 .main-search-box {
@@ -33,7 +37,7 @@
 	background: none;
 	color: #fff;
 	font-size: 16px;
-	transition: 1.6s;
+	transition: .5s;
 }
 
 .main-search-box::-ms-clear {
@@ -52,7 +56,10 @@
     border-radius: 40px;
     width: 20%;
     border: 2px;
-    border-color: white;
+}
+
+.main-search-box-container:hover:before {
+    transition: all 0.3s;
 }
 
 .main-search-box-container:hover .main-search-box {

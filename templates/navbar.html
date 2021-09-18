@@ -13,6 +13,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/9e9545e23d.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" rel="stylesheet">
     <title>Title</title>
 </head>
 <body>
@@ -27,18 +30,28 @@
                 <svg class="logo" width="60" height="50">
                     <use xlink:href="#logo"></use>
                 </svg>
-                <h3 class="logo" style="margin-bottom: 3px; margin-left: -4px;">Dionysus</h3>
+                <h3 class="logo main-font" style="margin-bottom: 3px; margin-left: -4px;">Dionysus</h3>
             </div>
             <div class="main-search-box-container">
-                <input class="main-search-box" type="text" placeholder="Search">
+                <input class="main-search-box main-font" type="text" placeholder="Search" id="main-input">
                 <a href="#" class="main-search-btn"><i class="fa fa-search" aria-hidden="true"></i></a>
+                <script>
+                    var input = document.getElementById("main-input");
+
+                    input.addEventListener("keyup", function(event) {
+                      if (event.keyCode === 13) {
+                        event.preventDefault();
+                        document.location.replace("#");
+                      }
+                    });
+                </script>
             </div>
             <div class="links" id="links">
                 <ul class="navbar-nav list-group-horizontal main-ul">
-                    <li class="nav-item active mr-3 ml-3"><a class="nav-link active" href="#">Main</a></li>
-                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
-                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
-                    <li class="nav-item active mx-3"><a class="nav-link" href="#">Someshit</a></li>
+                    <li class="nav-item active mr-3 ml-3"><a class="nav-link active main-font" href="#">Main</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link main-font" href="#">Someshit</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link main-font" href="#">Someshit</a></li>
+                    <li class="nav-item active mx-3"><a class="nav-link main-font" href="#">Someshit</a></li>
                 </ul>
             </div>
             <label for="check" class="bar">
