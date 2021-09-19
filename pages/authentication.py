@@ -1,9 +1,9 @@
 from flask_login import login_user, logout_user, login_required, current_user
-from data.forms import LoginForm, RegistrationForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from data.forms import LoginForm, RegistrationForm
 from data.__all_models import User, Post, Idea
-import flask
 from flask import render_template, redirect
+import flask
 import json
 
 from data import db_session
@@ -21,9 +21,11 @@ def register():
     session = db_session.create_session()
     if form.validate_on_submit():
         if form.password.data != form.confirm_password.data:
-            return render_template("registration.html", message="Passwords do not match", form=form, current_user=current_user)
+            return render_template("registration.html", message="Passwords must match",
+                                   form=form, current_user=current_user)
         if session.query(User).filter(User.email == form.email.data).first() is not None:
-            return render_template("registration.html", message="This email is already taken", current_user=current_user, form=form)
+            return render_template("registration.html", message="This email is already taken",
+                                   current_user=current_user, form=form)
         user = User()
         user.email = form.email.data
         user.password = generate_password_hash(form.password.data)
@@ -38,17 +40,18 @@ def register():
 
 @blueprint.route("/login", methods=["POST", "GET"])
 def login():
-    form = LoginForm()
+    form, message = LoginForm(), ""
     if form.validate_on_submit():
         session = db_session.create_session()
         user = session.query(User).filter(User.email == form.login.data).first()
         if user is None:
-            return render_template("login.html", current_user=current_user, form=form, message="No user found")
-        if check_password_hash(user.password, form.password.data):
+            message = "No user found"
+        elif check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect("/")
-        return render_template("login.html", current_user=current_user, form=form, message="Wrong password")
-    return render_template("login.html", current_user=current_user, form=form, message="")
+        else:
+            message = "Wrong password"
+    return render_template("login.html", current_user=current_user, form=form, message=message)
 
 
 @blueprint.route("/logout")
