@@ -31,7 +31,7 @@ def account(user_id):
         author.posts += f",{session.query(Post).filter(Post.author==current_user.id).all()[-1].id}"
         session.commit()
     return render_template("account.html", user=user, session=session,
-                           posts=[session.query(Post).get(post_id) for post_id in user.posts.split(",")],
+                           posts=[session.query(Post).get(post_id) for post_id in user.posts.strip().split(",") if post_id.strip() != ""],
                            form=form, User=User, len=len, current_user=current_user)
 
 
@@ -43,8 +43,10 @@ def main_page():
         post = Post()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
-        post.text = form.text
+        post.text = form.text.data
         session.add(post)
         session.commit()
-        return render_template("home.html", current_user=current_user, form=form)
+        author = session.query(User).get(current_user.id)
+        author.posts += f",{session.query(Post).filter(Post.author == current_user.id).all()[-1].id}"
+        session.commit()
     return render_template("home.html", current_user=current_user, form=form)
