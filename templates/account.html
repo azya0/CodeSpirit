@@ -4,10 +4,20 @@
 <h2>{{ user.name }}</h2>
 <p>User description:</p>
 <p>{{ user.description }}</p>
+{% if current_user.id == user.id %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="text">{{ form.text.label }}</label>
+        {{ form.text(type="textarea", id="text") }}
+    </div>
+    {{ form.submit() }}
+</form>
+{% endif %}
 {% for post in posts %}
 <hr>
 <b>{{ session.query(User).get(post.author).name }}</b>
-{{ post.text }}
+<br>{{ post.text }}<br>
 <small>{{ post.datetime }} & {{len(post.likes.split())}} likes & {{len(post.dislikes.split())}} dislikes</small>
 {% endfor %}
 {% endblock %}

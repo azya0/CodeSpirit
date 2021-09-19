@@ -21,9 +21,9 @@ def register():
     session = db_session.create_session()
     if form.validate_on_submit():
         if form.password.data != form.confirm_password.data:
-            return render_template("register.html", message="Passwords do not match", form=form, current_user=current_user)
+            return render_template("registration.html", message="Passwords do not match", form=form, current_user=current_user)
         if session.query(User).filter(User.email == form.email.data).first() is not None:
-            return render_template("register.html", message="This email is already taken", current_user=current_user, form=form)
+            return render_template("registration.html", message="This email is already taken", current_user=current_user, form=form)
         user = User()
         user.email = form.email.data
         user.password = generate_password_hash(form.password.data)

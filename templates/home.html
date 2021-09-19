@@ -1,5 +1,14 @@
-{% extends "navbar.html" %}
+{% extends "base.html" %}
 
 {% block content %}
-
+{% if current_user.is_authenticated %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="text">{{ form.text.label }}</label>
+        {{ form.text(type="textarea", id="text") }}
+    </div>
+    {{ form.submit() }}
+</form>
+{% endif %}
 {% endblock %}

@@ -3,6 +3,11 @@ from wtforms import PasswordField, StringField, SubmitField, TextAreaField, Bool
 from wtforms.validators import DataRequired
 
 
+class NewPostForm(FlaskForm):
+	text = StringField("Enter the text", validators=[DataRequired()])
+	submit = SubmitField("Send!")
+
+
 class RegistrationForm(FlaskForm):
 	name = StringField("Your name", validators=[DataRequired()])
 	email = StringField("E-mail", validators=[DataRequired()])
