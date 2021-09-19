@@ -9,6 +9,7 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	name = Column(String)
 	email = Column(String)
+	password = Column(String)
 	description = Column(Text, default="")
 	posts = Column(String, default="")
 	likes = Column(String, default="")

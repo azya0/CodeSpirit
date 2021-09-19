@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.name }}</h2>
+<p>User description:</p>
+<p>{{ user.description }}</p>
+{% for post in posts %}
+<hr>
+<b>{{ session.query(User).get(post.author).name }}</b>
+{{ post.text }}
+<small>{{ post.datetime }} & {{len(post.likes.split())}} likes & {{len(post.dislikes.split())}} dislikes</small>
+{% endfor %}
+{% endblock %}
