@@ -14,4 +14,4 @@ blueprint = flask.Blueprint(
 
 @blueprint.route('/')
 def main_page():
-    return render_template("main_page.html", current_user=current_user)
+    return render_template("home.html", current_user=current_user)

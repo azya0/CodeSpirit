@@ -34,6 +34,14 @@ nav {
     width: 75%;
 }
 
+.d-line {
+    display: inherit;
+}
+
+.main-hidden-word {
+    display: inline;
+}
+
 .main-search-box-container {
     width: 3.58%;
     margin-right: auto;
@@ -68,7 +76,7 @@ nav {
     padding-bottom: 2px;
     padding-left: 6px;
     border-radius: 40px;
-    width: 20%;
+    width: 32%;
     border: 2px;
 }
 
@@ -122,6 +130,10 @@ input[type="checkbox"] {
         padding-left: 0 !important;
     }
 
+    .main-hidden-word {
+        display: none!important;
+    }
+
     .main-search-box-container {
         background-color: #222222;
         padding-right: 12px;
@@ -151,11 +163,9 @@ input[type="checkbox"] {
 
     .main-ul {
         display: flex;
-        flex-direction: column;
         align-items: center;
         height: 0;
         visibility: hidden;
-        transition: 0.2s;
     }
 
     .links {
@@ -183,11 +193,41 @@ input[type="checkbox"] {
     }
 
     #check:checked ~ nav .main-ul {
-        height: 160px;
+        height: auto;
         visibility: visible;
     }
 
-    #check:checked ~ nav .main-search-box-container {
-        margin-bottom: 0!important;
+    .active {
+        margin-left: 2rem!important;
+        margin-right: 2rem!important;
+    }
+}
+
+@media screen and (max-width: 426px)
+{
+    .logo {
+        display: none;
+    }
+
+    nav .bar #times {
+        display: none;
+    }
+
+    nav .bar #bars {
+        display: none;
+    }
+
+    .main-search-box-container {
+        margin-top: 1rem!important;
+    }
+
+    .active {
+        margin-left: 1rem!important;
+        margin-right: 1rem!important;
+    }
+
+    nav .main-ul {
+        height: auto;
+        visibility: visible;
     }
 }
