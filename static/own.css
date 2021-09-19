@@ -58,8 +58,8 @@ nav {
     display: none;
 }
 
-.main-search-btn:hover {
-    color: #f0f0f0;
+.nav-link:hover {
+    color: #c2c2c2;
 }
 
 .main-search-box-container:hover {
@@ -88,6 +88,10 @@ nav {
 	height: 40px;
 	border-radius: 50%;
 	text-decoration: none;
+}
+
+.main-search-btn:hover {
+    color: white;
 }
 
 nav .bar {
@@ -181,5 +185,9 @@ input[type="checkbox"] {
     #check:checked ~ nav .main-ul {
         height: 160px;
         visibility: visible;
+    }
+
+    #check:checked ~ nav .main-search-box-container {
+        margin-bottom: 0!important;
     }
 }
