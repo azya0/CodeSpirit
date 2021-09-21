@@ -1,7 +1,7 @@
 from data.__all_models import User, Post
 from data.forms import NewPostForm
 from flask_login import current_user
-from flask import render_template
+from flask import render_template, redirect
 import flask
 import datetime
 import json
@@ -28,8 +28,13 @@ def __post(session, form):
         session.commit()
 
 
+@blueprint.route('/account', methods=['GET', 'POST'])
+def self_account():
+    return redirect(f'/account/{current_user.id}')
+
+
 @blueprint.route('/account/<int:user_id>', methods=['GET', 'POST'])
-def account(user_id):
+def account_id(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     form = NewPostForm()

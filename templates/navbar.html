@@ -22,50 +22,52 @@
 <input type="checkbox" id="check">
 <svg display="none">
     <symbol id="logo" viewBox="0 0 512 512">
-        <g fill="#fff"><path d="m266 223.1h-54.9l-17.2-29.8h89.3l26.1-45.3h-147.6c-9.4 0-18.3 5-22.9 13.3-4.8 8.3-4.8 18.3 0 26.6l94.1 163.1c7.4 12.6 23.7 16.8 36.4 9.4 3.9-2.4 7.2-5.4 9.4-9.4l3-5.4-43.3-75.1z"/><path d="m373.2 161.3c-4.8-8.3-13.5-13.3-22.9-13.3h-6.5l-70.8 122.4 25.9 45.3 74-128.1c5.1-8 5.1-18 .3-26.3z"/></g>
+        <g fill="#d7dce3"><path d="m266 223.1h-54.9l-17.2-29.8h89.3l26.1-45.3h-147.6c-9.4 0-18.3 5-22.9 13.3-4.8 8.3-4.8 18.3 0 26.6l94.1 163.1c7.4 12.6 23.7 16.8 36.4 9.4 3.9-2.4 7.2-5.4 9.4-9.4l3-5.4-43.3-75.1z"/><path d="m373.2 161.3c-4.8-8.3-13.5-13.3-22.9-13.3h-6.5l-70.8 122.4 25.9 45.3 74-128.1c5.1-8 5.1-18 .3-26.3z"/></g>
     </symbol>
 </svg>
     <nav class="navbar main-color main-navbar d-flex justify-content-space-between">
+        <a class="nav-link main-font d-line p-0" href="/">
             <div class="d-inline-flex align-items-center mr-3 main-logo">
                 <svg class="logo" width="60" height="50">
                     <use xlink:href="#logo"></use>
                 </svg>
                 <h3 class="logo main-font" style="margin-bottom: 3px; margin-left: -4px;">Dionysus</h3>
             </div>
-            <div class="main-search-box-container">
-                <input class="main-search-box main-font" type="text" placeholder="Search" id="main-input">
-                <a href="#" class="main-search-btn"><i class="fa fa-search" aria-hidden="true"></i></a>
-                <script>
-                    var input = document.getElementById("main-input");
+        </a>
+        <div class="main-search-box-container">
+            <input class="main-search-box main-font" type="text" placeholder="Search" id="main-input">
+            <a href="#" class="main-search-btn"><i class="fa fa-search" aria-hidden="true"></i></a>
+            <script>
+                var input = document.getElementById("main-input");
 
-                    input.addEventListener("keyup", function(event) {
-                      if (event.keyCode === 13) {
-                        event.preventDefault();
-                        document.location.replace("#");
-                      }
-                    });
-                </script>
-            </div>
-            <div class="links" id="links">
-                <ul class="navbar-nav list-group-horizontal main-ul" style="font-size: 20px">
-                    <li class="active mr-3 ml-3">
-                        <a class="nav-link main-font d-line" href="#">
-                            <i class="fa fa-newspaper-o" aria-hidden="true"></i>
-                            <p class="main-hidden-word">News</p>
-                        </a>
-                    </li>
-                    <li class="active mx-3"><a class="nav-link main-font" href="#"><i class="fa fa-comments" aria-hidden="true"></i></a></li>
-                    <li class="active mx-3"><a class="nav-link main-font" href="#"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
-                    <li class="active mx-3 d-line" style="font-size: 23px">
-                            <a class="nav-link main-font mr-4" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
-                            <a class="nav-link main-font" href="#"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
-                    </li>
-                </ul>
-            </div>
-            <label for="check" class="bar">
-                <span class="fa fa-bars" id="bars"></span>
-                <span class="fa fa-times" id="times"></span>
-            </label>
+                input.addEventListener("keyup", function(event) {
+                  if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.location.replace("#");
+                  }
+                });
+            </script>
+        </div>
+        <div class="links" id="links">
+            <ul class="navbar-nav list-group-horizontal main-ul" style="font-size: 20px">
+                <li class="active mr-3 ml-3">
+                    <a class="nav-link main-font d-line main-fs" href="/" style="padding-top: 18%;">
+                        <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+                        <p class="main-hidden-word">News</p>
+                    </a>
+                </li>
+                <li class="active mx-3"><a class="nav-link main-font pt-60 main-fs" href="#"><i class="fa fa-comments" aria-hidden="true"></i></a></li>
+                <li class="active mx-3"><a class="nav-link main-font pt-60 main-fs" href="#"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
+                <li class="active mx-3 d-line" style="font-size: 20px; padding-top: 0.4%;">
+                        <a class="nav-link main-font mr-4" href="/account"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                        <a class="nav-link main-font" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+        <label for="check" class="bar">
+            <span class="fa fa-bars" id="bars"></span>
+            <span class="fa fa-times" id="times"></span>
+        </label>
     </nav>
 
 
