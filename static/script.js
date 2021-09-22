@@ -2,11 +2,12 @@ function check() {
     var console_ = document.getElementById('console');
     var txt = document.createElement('span');
     var br_ = document.createElement('br');
+    var input_ = document.getElementById('email');
 
-    txt.innerHTML = 'incorrect email';
+    txt.innerHTML = input_.value+' -> incorrect email';
+    txt.classList.add("main-warning");
     console_.appendChild(txt);
 
-    var input_ = document.getElementById('email');
     input_.outerHTML = "<span>"+input_.value+"</span><br>";
     console_.appendChild(br_);
 
@@ -19,6 +20,7 @@ function check() {
     var doll__ = document.createElement('span');
     doll__.classList.add("mr-1");
     input_.classList.add("main-input-auth");
+    input_.classList.add("pl-0");
     input_.id = 'email';
     doll__.innerHTML = '$';
 

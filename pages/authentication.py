@@ -35,7 +35,7 @@ def register():
         session.commit()
         login_user(user)
         return redirect("/")
-    return render_template("registration.html", message="", current_user=current_user, form=form)
+    return render_template("registration.html", message="", current_user=current_user, form=form, ip=flask.request.remote_addr)
 
 
 @blueprint.route("/login", methods=["POST", "GET"])
