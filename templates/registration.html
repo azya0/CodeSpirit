@@ -1,32 +1,44 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h1>Sing up</h1>
-{% if message != "" %}
-{{ message }}
-{% endif %}
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="name">{{ form.name.label }}</label>
-        {{ form.name(id="name") }}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+
+<script>
+    let typed = new Typed('#typed', { // Тут id того блока, в которм будет анимация
+        stringsElement: '#typed-strings', // Тут id блока из которого берем строки для анимации
+        typeSpeed: 200, // Скорость печати
+        startDelay: 500, // Задержка перед стартом анимации
+        backSpeed: 50, // Скорость удаления
+        loop: true // Указываем, повторять ли анимацию
+    });
+</script>
+
+<div class="main-console-container">
+    <div class="main-console-top-panel">
+
     </div>
-    <div class="form-group">
-        <label for="email">{{ form.email.label }}</label>
-        {{ form.email(id="email") }}
+    <div id="console" class="main-console">
+        <span>
+            AzyaD@DESKTOP-HUMSAG6 MINGW64 ~ <br>
+        </span>
+        <span>
+            $ git
+        </span>
+        <span style="white-space: pre-wrap;">
+usage: git [--version] [--help] [-C {path}] [-c {name}={value}]
+           [--exec-path[=path]] [--html-path] [--man-path] [--info-path]
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+           [--git-dir={path}] [--work-tree={path}] [--namespace={name}]
+           [--super-prefix={path}] [--config-env={name}={envvar}]
+           {command} [{args}]<br></span>
+        <span>
+            ANONYMOUS-USER EMAIL ~ <br>
+        </span>
+        <span class="mr-1">$</span><input id="email" class="main-input-auth">
+        <script id="script">tab()</script>
     </div>
-    <div class="form-group">
-        <label for="password">{{ form.password.label }}</label>
-        {{ form.password(id="password") }}
-    </div>
-    <div class="form-group">
-        <label for="confirm_password">{{ form.confirm_password.label }}</label>
-        {{ form.confirm_password(id="confirm_password") }}
-    </div>
-    <div class="form-group">
-        <label for="description">{{ form.description.label }}</label>
-        {{ form.description(type="textarea", id="description") }}
-    </div>
-    {{ form.submit() }}
-</form>
+</div>
+
+
 {% endblock %}

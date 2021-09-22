@@ -135,9 +135,42 @@ input[type="checkbox"] {
     display: none;
 }
 
+.main-console-container {
+    color: white;
+}
+
+.main-console-top-panel {
+    background-color: black;
+    margin: auto;
+    margin-top: 64px;
+    width: 90%;
+    height: 30px;
+}
+
+.main-console {
+    background-color: #0c0c0c;
+    margin: auto;
+    width: 90%;
+    height: 400px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.main-input-auth {
+    width: 97%;
+    height: 20px;
+    color: white;
+    background-color: #0c0c0c;
+    border: 0;
+}
+
+.main-input-auth:focus {
+    outline: none;
+}
+
 @media screen and (max-width: 925px)
 {
-   nav {
+    nav {
         padding-right: 0!important;
         padding-left: 0 !important;
     }
