@@ -25,6 +25,8 @@ function check() {
     console_.appendChild(doll__);
     console_.appendChild(input_);
 
+    document.getElementById("email").focus();
+
     var script = document.createElement('script');
     script.innerHTML = 'tab()';
     script.id = 'script';
@@ -33,6 +35,10 @@ function check() {
 
 function tab() {
     var input = document.getElementById("email");
+
+    input.addEventListener("DOMContentLoaded", function() {
+        input.focus();
+    });
 
     input.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
