@@ -139,6 +139,10 @@ input[type="checkbox"] {
     color: #aa101c;
 }
 
+.main-success {
+    color: #11a10e;
+}
+
 .main-console-container {
     font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
     color: white;
