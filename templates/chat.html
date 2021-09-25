@@ -1,0 +1,20 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+{% for message in messages %}
+<div>
+	<b><a href="account/{{ message.sender }}">{{ pair[message.sender] }}</a></b>
+	<p>{{ message.text }}</p>
+    <s>{{ message.datetime }}</s>
+</div>
+<hr>
+{% endfor %}
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <label for="text">{{ form.text.label }}</label>
+        {{ form.text(type="textarea", id="text") }}
+    </div>
+    {{ form.submit() }}
+</form>
+{% endblock %}

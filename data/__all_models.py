@@ -1,7 +1,17 @@
-from sqlalchemy import Column, Integer, Text, DateTime, String
+from sqlalchemy import Column, Integer, Text, DateTime, String, Boolean
 from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
+
+
+class Message(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "messages"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	sender = Column(Integer)
+	receiver = Column(Integer)
+	text = Column(String)
+	datetime = Column(DateTime)
+	is_read = Column(Boolean, default=False)
 
 
 class User(UserMixin, SqlAlchemyBase, SerializerMixin):

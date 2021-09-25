@@ -1,0 +1,12 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+{% for message in messages %}
+<div>
+    <b><a href="/account/{{ message[0] }}">{{ message[0] }}</a></b>
+    <p>{{ message[2] }}</p>
+    <s>{{ message[1] }}</s>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}
