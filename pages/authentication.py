@@ -19,7 +19,9 @@ blueprint = flask.Blueprint(
 def register():
     form = RegistrationForm()
     session = db_session.create_session()
+    print(form.name)
     if form.validate_on_submit():
+        print('got it')
         if form.password.data != form.confirm_password.data:
             return render_template("registration.html", message="Passwords must match",
                                    form=form, current_user=current_user)

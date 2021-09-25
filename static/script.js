@@ -55,6 +55,11 @@ function tab(id) {
             }
         }
     });
+
+    document.getElementById('submit').onclick = function() {
+        console.log('flex'); // #TODO
+        document.getElementById('submit').click();
+    };
 }
 
 function request(link) {
@@ -71,11 +76,11 @@ function tab_error(id, message) {
     var br_ = document.createElement('br');
     var input_ = document.getElementById(id);
 
-    txt.innerHTML = input_.value+' -> ' + message;
+    txt.innerHTML = input_.value + ' -> ' + message;
     txt.classList.add("main-warning");
     console_.appendChild(txt);
 
-    input_.outerHTML = "<span>"+input_.value+"</span><br>";
+    input_.outerHTML = "<span>" + input_.value + "</span><br>";
     console_.appendChild(br_);
 
     var script = document.getElementById('script');
@@ -153,8 +158,7 @@ function tab_success(id) {
         script.id = 'script';
         console_.appendChild(script);
     }
-}
-
-function valid () {
-
+    else {
+        console.log(123);
+    }
 }
