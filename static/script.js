@@ -32,7 +32,12 @@ function check(id) {
         }
     }
     else {
-        // #TODO password
+        if ((input_.value != '') && (request('http://127.0.0.1:5000/system/valid_login/' + input_.value) == 'true')) {
+            tab_success(id);
+        }
+        else {
+            tab_error(id, 'incorrect data for ' + id)
+        }
     }
 }
 
@@ -45,7 +50,9 @@ function tab(id) {
 
     input.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
-            check(id);
+            if (!input.readOnly) {
+                check(id);
+            }
         }
     });
 }
@@ -126,7 +133,9 @@ function tab_success(id) {
          new_id = 'password';
     }
     else {
-
+        text__.innerHTML = document.getElementById('email').value + ' successfully registered! ~<br>';
+        text__.classList.add("main-success");
+        console_.appendChild(text__);
     }
     if (id != 'password') {
         input_.id = new_id;
@@ -144,4 +153,8 @@ function tab_success(id) {
         script.id = 'script';
         console_.appendChild(script);
     }
+}
+
+function valid () {
+
 }

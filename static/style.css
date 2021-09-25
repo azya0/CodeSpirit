@@ -173,10 +173,15 @@ input[type="checkbox"] {
     border: 0;
     -webkit-box-shadow: inset 0 0 0 50px #0c0c0c;
     -webkit-text-fill-color: white;
+    border-radius: 0;
 }
 
 .main-input-auth:focus {
     outline: none;
+}
+
+.main-submit {
+    display: none;
 }
 
 @media screen and (max-width: 925px)

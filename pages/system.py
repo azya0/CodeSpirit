@@ -19,7 +19,7 @@ def valid_email_(email):
 
 
 def valid_login_(login):
-    if any([elm in login for elm in ' !@"#№$;%^:&?*()-+={}[]./\'<>~']) and len(login) < 3:
+    if any([elm in login for elm in ' !@"#№$;%^:&?*()-+={}[]./\'<>~']) or len(login) < 3:
         return False
     return True
 
