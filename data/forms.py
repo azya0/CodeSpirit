@@ -3,6 +3,10 @@ from wtforms import PasswordField, StringField, SubmitField, TextAreaField, Bool
 from wtforms.validators import DataRequired, EqualTo
 
 
+class Follow(FlaskForm):
+	subnit = SubmitField("Follow")
+
+
 class NewPostForm(FlaskForm):
 	text = StringField("Enter the text", validators=[DataRequired()])
 	submit = SubmitField("Send!")

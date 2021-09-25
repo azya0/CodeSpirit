@@ -43,9 +43,9 @@ def inbox():
     sorted_messages = dict()
     for message in all_messages:
         if message.receiver == current_user.id:
-            sorted_messages[message.sender] = message.datetime
+            sorted_messages[message.sender] = message
         else:
-            sorted_messages[message.receiver] = message.datetime
-    sorted_messages = [(session.query(User).get(id).name, sorted_messages[id].datetime, sorted_messages[id].text[:10]) for id in sorted_messages.keys()]
+            sorted_messages[message.receiver] = message
+    sorted_messages = [(session.query(User).get(id).name, sorted_messages[id].datetime, sorted_messages[id].text[:10], id) for id in sorted_messages.keys()]
     sorted_messages.sort(key=lambda x: x[1], reverse=True)
     return render_template("messages.html", messages=sorted_messages)

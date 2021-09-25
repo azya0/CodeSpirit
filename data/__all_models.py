@@ -4,6 +4,13 @@ from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
 
+class Event(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "events"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	datetime = Column(DateTime)
+	text = Column(String)
+
+
 class Message(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "messages"
 	id = Column(Integer, primary_key=True, autoincrement=True)
