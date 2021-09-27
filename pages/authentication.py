@@ -15,16 +15,16 @@ blueprint = flask.Blueprint(
 )
 
 
-@blueprint.route("/register", methods=["POST", "GET"])
+@blueprint.route("/registration", methods=["POST", "GET"])
 def register():
     form = RegistrationForm()
     session = db_session.create_session()
     if form.validate_on_submit():
-        if form.password.data != form.confirm_password.data:
-            return render_template("registration.html", message="Passwords must match",
-                                   form=form, current_user=current_user)
         if session.query(User).filter(User.email == form.email.data).first() is not None:
             return render_template("registration.html", message="This email is already taken",
+                                   current_user=current_user, form=form)
+        if session.query(User).filter(User.name == form.name.data).first() is not None:
+            return render_template("registration.html", message="This login is already taken",
                                    current_user=current_user, form=form)
         user = User()
         user.email = form.email.data

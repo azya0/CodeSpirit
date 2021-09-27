@@ -135,6 +135,87 @@ input[type="checkbox"] {
     display: none;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
+    -webkit-transition-delay: 9999s;
+}
+
+.main-registration-error {
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.main-registration-title {
+    font-weight: bold;
+}
+
+.main-registration-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-registration {
+    border-radius: 20px;
+    color: #d7dce3;
+    background-color: #1a1f26;
+    margin-top: 10rem!important;
+    margin-left: 10rem!important;
+    margin-right: 10rem!important;
+    padding-bottom: 1.5rem!important;
+    box-shadow: 0px 6px 50px rgb(0 0 0 / 78%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem!important;
+}
+
+.main-registration-input {
+    width: 65%;
+    font-weight: bold;
+    background-color: #d7dce3;
+    outline: none;
+    border: 0;
+    height: 45px;
+    border-radius: 6px;
+    padding-left: 3%;
+}
+
+.main-registration-description {
+    min-height: 45px;
+}
+
+.main-registration-button {
+    width: 35%;
+    font-weight: bold;
+    font-size: 14px;
+    display:block;
+    height: 45px;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color:#fff;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 45px;
+    cursor: pointer;
+    border: none;
+}
+
 @media screen and (max-width: 925px)
 {
     nav {
@@ -147,7 +228,7 @@ input[type="checkbox"] {
     }
 
     .main-search-box-container {
-        background-color: #222222;
+        background-color: #0d1015;
         padding-right: 12px;
         padding-bottom: 2px;
         padding-left: 6px;
@@ -241,5 +322,53 @@ input[type="checkbox"] {
     nav .main-ul {
         height: auto;
         visibility: visible;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .main-registration-title {
+        font-size: 2rem!important;
+    }
+
+    .main-registration {
+        margin-top: 2rem!important;
+        margin-left: 0!important;
+        margin-right: 0!important;
+    }
+
+    .main-form-group {
+        margin-bottom: 1.5rem!important;
+    }
+
+    .main-registration-input {
+        width: 90%;
+        height: 37px;
+    }
+
+    .main-registration-description {
+        min-height: 37px;
+    }
+}
+
+@media screen and (max-width: 426px)
+{
+    .main-registration-title {
+        font-size: 1.7rem!important;
+    }
+
+    .main-form-group {
+        margin-bottom: 1.1rem!important;
+    }
+
+    .main-registration-input {
+        height: 30px;
+    }
+
+    .main-registration-description {
+        min-height: 30px;
+    }
+
+    .main-registration-description {
+        padding-top: 0.2rem!important;
     }
 }
