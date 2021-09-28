@@ -43,9 +43,9 @@ def login():
     form, message = LoginForm(), ""
     if form.validate_on_submit():
         session = db_session.create_session()
-        user = session.query(User).filter(User.email == form.login.data).first()
+        user = session.query(User).filter(User.name == form.login.data).first()
         if user is None:
-            message = "No user found"
+            message = "No users with this username were found"
         elif check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect("/")

@@ -1,24 +1,24 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h1>Sing in</h1>
-{% if message != "" %}
-{{ message }}
-{% endif %}
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="login">{{ form.login.label }}</label>
-        {{ form.login(id="login") }}
-    </div>
-    <div class="form-group">
-        <label for="password">{{ form.password.label }}</label>
-        {{ form.password(id="password") }}
-    </div>
-    <div class="form-group">
-        {{ form.remember(type="checkbox", id="remember") }}
-        <label for="remember">{{ form.remember.label }}</label>
-    </div>
-    {{ form.submit() }}
-</form>
+<div class="main-registration">
+    <h1 class="my-4 main-registration-title">Login</h1>
+    <form method="post" class="main-registration-form">
+        {{ form.hidden_tag() }}
+        <div class="form-group main-form-group">
+            {{ form.login(id="login", class='main-registration-input', placeholder='Login') }}
+        </div>
+        <div class="form-group main-form-group">
+            {{ form.password(id="password", class='main-registration-input', placeholder='Password') }}
+        </div>
+        <div class="form-group main-form-group-f-d-none">
+            {{ form.remember(type="checkbox", id="remember", class='main-auth-checkbox') }}
+            {{ form.remember.label(class='m-0 ml-2 main-registration-error') }}
+        </div>
+        {% if message != "" %}
+            <span class="main-registration-error" style="margin-top: 0;margin-bottom: 1rem;">{{ message }}</span>
+        {% endif %}
+        {{ form.submit(class='main-registration-button') }}
+    </form>
+</div>
 {% endblock %}

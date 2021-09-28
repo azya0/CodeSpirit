@@ -26,6 +26,7 @@ nav {
 }
 
 .main-navbar {
+    box-shadow: -5px 12px 20px #080a0fd9;
     padding: 0;
 }
 
@@ -130,7 +131,7 @@ nav .bar span {
     color: #d7dce3;
 }
 
-input[type="checkbox"] {
+.main-navbar-check {
     -webkit-appearance: none;
     display: none;
 }
@@ -149,6 +150,7 @@ input:-webkit-autofill:active {
 }
 
 .main-registration-title {
+    box-shadow: 9px 9px 40px #0d1015;
     font-weight: bold;
 }
 
@@ -184,6 +186,15 @@ input:-webkit-autofill:active {
     margin-bottom: 2rem!important;
 }
 
+.main-form-group-f-d-none {
+    display: flex;
+    flex-direction: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem!important;
+}
+
 .main-registration-input {
     width: 65%;
     font-weight: bold;
@@ -193,10 +204,21 @@ input:-webkit-autofill:active {
     height: 45px;
     border-radius: 6px;
     padding-left: 3%;
+    box-shadow: 11px 11px 7px #0d1015;
 }
 
 .main-registration-description {
+    padding-top: 11px!important;
     min-height: 45px;
+}
+
+.main-auth-checkbox {
+    border: 1px solid #adb5bd;
+    border-radius: 0.25em;
+    margin-right: 0.5em;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
 }
 
 .main-registration-button {
@@ -347,6 +369,7 @@ input:-webkit-autofill:active {
 
     .main-registration-description {
         min-height: 37px;
+        padding-top: 7px!important;
     }
 }
 
@@ -357,7 +380,7 @@ input:-webkit-autofill:active {
     }
 
     .main-form-group {
-        margin-bottom: 1.1rem!important;
+        margin-bottom: 1.5rem!important;
     }
 
     .main-registration-input {

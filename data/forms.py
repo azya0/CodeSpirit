@@ -19,11 +19,11 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField("Confirm password", validators=[
         DataRequired(), EqualTo("password", message="Passwords must match")])
     description = TextAreaField("Short description (you can fill it later)")
-    submit = SubmitField("Sing up!")
+    submit = SubmitField("Let's go!")
 
 
 class LoginForm(FlaskForm):
     login = StringField("Login (e-mail)", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField("Remember me", default=False)
-    submit = SubmitField("Sing in")
+    submit = SubmitField("Let's go!")

@@ -24,8 +24,8 @@ class Message(UserMixin, SqlAlchemyBase, SerializerMixin):
 class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String)
-	email = Column(String)
+	name = Column(String, unique=True)
+	email = Column(String, unique=True)
 	password = Column(String)
 	description = Column(Text, default="")
 	posts = Column(String, default="")
