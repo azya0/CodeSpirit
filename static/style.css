@@ -255,6 +255,7 @@ input:-webkit-autofill:active {
     border: none;
     height: 80%;
     margin: auto;
+    width: 90px;
 }
 
 @media screen and (max-width: 925px)
