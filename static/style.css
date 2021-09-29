@@ -147,6 +147,7 @@ input:-webkit-autofill:active {
 .main-registration-error {
     margin-top: 1rem;
     font-weight: bold;
+    text-align: center;
 }
 
 .main-registration-title {
@@ -163,12 +164,13 @@ input:-webkit-autofill:active {
 }
 
 .main-registration {
+    width: 60%;
     border-radius: 20px;
     color: #d7dce3;
     background-color: #1a1f26;
     margin-top: 10rem!important;
-    margin-left: 10rem!important;
-    margin-right: 10rem!important;
+    margin-left: auto;
+    margin-right: auto;
     padding-bottom: 1.5rem!important;
     box-shadow: 0px 6px 50px rgb(0 0 0 / 78%);
     display: flex;
@@ -192,11 +194,11 @@ input:-webkit-autofill:active {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-bottom: 2rem!important;
+    margin-bottom: 1rem!important;
 }
 
 .main-registration-input {
-    width: 65%;
+    width: 75%;
     font-weight: bold;
     background-color: #d7dce3;
     outline: none;
@@ -353,9 +355,11 @@ input:-webkit-autofill:active {
     }
 
     .main-registration {
-        margin-top: 2rem!important;
+        width: auto!important;
+        margin-top: 21%!important;
         margin-left: 0!important;
         margin-right: 0!important;
+        margin-bottom: auto!important;
     }
 
     .main-form-group {
@@ -375,6 +379,11 @@ input:-webkit-autofill:active {
 
 @media screen and (max-width: 426px)
 {
+    .main-registration {
+        width: auto!important;
+        margin-top: 33%!important;
+    }
+
     .main-registration-title {
         font-size: 1.7rem!important;
     }
