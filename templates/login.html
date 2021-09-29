@@ -8,7 +8,7 @@
         <div class="form-group main-form-group">
             {{ form.login(id="login", class='main-registration-input', placeholder='Login') }}
         </div>
-        <div class="form-group main-form-group">
+        <div class="form-group main-form-group" style="margin-bottom: 1rem!important;">
             {{ form.password(id="password", class='main-registration-input', placeholder='Password') }}
         </div>
         <div class="form-group main-form-group-f-d-none">
@@ -16,11 +16,9 @@
             {{ form.remember.label(class='m-0 ml-2 main-registration-error') }}
         </div>
         {% if message != "" %}
-            <span class="main-registration-error" style="margin-top: 0;">{{ message }}</span>
-            {% if 'found' in message %}
-                <a href="/registration" class="mt-0 main-registration-error" style="margin-bottom: 1rem;color:#6498d0;">Do not have an account yet?</a>
-            {% endif %}
+            <span class="main-registration-error" style="margin-top: 0;color: #d24545;">{{ message }}</span>
         {% endif %}
+        <a href="/registration" class="mt-0 main-registration-error" style="margin-bottom: 1rem;color:#6498d0;">Do not have an account yet?</a>
         {{ form.submit(class='main-registration-button') }}
     </form>
 </div>
