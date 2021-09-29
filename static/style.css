@@ -148,6 +148,7 @@ input:-webkit-autofill:active {
     margin-top: 1rem;
     font-weight: bold;
     text-align: center;
+    color: #d24545;
 }
 
 .main-registration-title {
@@ -194,7 +195,7 @@ input:-webkit-autofill:active {
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-bottom: 1rem!important;
+    margin-bottom: 0.5rem!important;
 }
 
 .main-registration-input {
@@ -238,6 +239,22 @@ input:-webkit-autofill:active {
     line-height: 45px;
     cursor: pointer;
     border: none;
+}
+
+.main-registration-button-navbar {
+    font-weight: bold;
+    font-size: 14px;
+    display:block;
+    height: 45px;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color:#fff;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    height: 80%;
+    margin: auto;
 }
 
 @media screen and (max-width: 925px)
@@ -317,6 +334,16 @@ input:-webkit-autofill:active {
     .active {
         margin-left: 2rem!important;
         margin-right: 2rem!important;
+    }
+
+    .main-registration-button-navbar {
+        width: 100px;
+        height: 30px;
+        margin-bottom: 8px;
+    }
+
+    .main-icon-fix {
+        margin-bottom: 10px;
     }
 }
 

@@ -16,7 +16,7 @@
             {{ form.remember.label(class='m-0 ml-2 main-registration-error') }}
         </div>
         {% if message != "" %}
-            <span class="main-registration-error" style="margin-top: 0;color: #d24545;">{{ message }}</span>
+            <span class="main-registration-error" style="margin-top: 0;">{{ message }}</span>
         {% endif %}
         <a href="/registration" class="mt-0 main-registration-error" style="margin-bottom: 1rem;color:#6498d0;">Do not have an account yet?</a>
         {{ form.submit(class='main-registration-button') }}
