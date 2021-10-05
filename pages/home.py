@@ -20,7 +20,7 @@ def __post(session, form):
         post = Post()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
-        post.text = form.text.data
+        post.text = form.text.data.replace('<br>', '\n')
         session.add(post)
         session.commit()
         author = session.query(User).get(current_user.id)

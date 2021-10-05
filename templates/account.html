@@ -20,7 +20,11 @@
 {% for post in posts %}
 <hr>
 <b>{{ session.query(User).get(post.author).name }}</b>
-<br>{{ post.text }}<br>
+<br>
+{% for string in post.text.split('\n') %}
+{{ string }}<br>
+{% endfor %}
+<br>
 <small>{{ post.datetime }} & {{len(post.likes.split())}} likes & {{len(post.dislikes.split())}} dislikes</small>
 {% endfor %}
 {% endblock %}

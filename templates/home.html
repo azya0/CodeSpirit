@@ -3,15 +3,24 @@
 {% block content %}
 <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 {% if current_user.is_authenticated %}
-    <div style="display: block;width: 100%;">
-        <div id='main-post-container' class="main-add-post main-white-font-color main-news-block main-align-div" style="align-items: start;display:flex">
-            <i class="fa fa-user-circle main-post-item i-post" aria-hidden="true" style="margin-left: 2%!important;margin-top: 0.515%;"></i>
-            <input id='main-post-ask-btn' class='main-post-item main-white-font-color' type="button" value="What's new?" onclick="addPost()">
-            <i class="fa fa-picture-o main-post-item i-post" aria-hidden="true" style="margin-top: 0.52%;"></i>
-        </div>
-        <div class="main-add-post-bottom main-white-font-color main-news-block main-align-div" style="display:flex;justify-content: flex-end;">
-            <input id='main-post-btn' type="button" value="Post">
-        </div>
+    <div id='main-big-post-container' style="display: block;width: 100%;">
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <div id='main-post-container' class="main-add-post main-white-font-color main-news-block main-align-div" style="align-items: start;display:flex">
+                <i class="fa fa-user-circle main-post-item i-post" aria-hidden="true" style="margin-left: 2%!important;margin-top: 0.515%;"></i>
+                <input id='main-post-ask-btn' class='main-post-item main-white-font-color' type="button" value="What's new?">
+                <i class="fa fa-picture-o main-post-item i-post" aria-hidden="true" style="margin-top: 0.52%;"></i>
+            </div>
+            <div hidden id='main-post-bottom-panel' class="main-add-post-bottom main-white-font-color main-news-block main-align-div">
+                <div id="qa-div">
+                    <div class="main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Q&A</label><input id='qa-checkbox' type="checkbox"></div>
+                    <div class="ml-2 main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">ANON</label><input id='an-checkbox' type="checkbox"></div>
+                </div>
+                {{ form.text(type="textarea", id="text", class='main-hidden-crutch', value='gay') }}
+                {{ form.submit(id='main-post-btn', type="submit", onclick='replaceText()') }}
+            </div>
+        </form>
     </div>
+    <script>postClicked()</script>
 {% endif %}
 {% endblock %}

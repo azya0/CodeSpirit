@@ -292,7 +292,7 @@ input:-webkit-autofill:active {
     padding-right: 0.4%;
     width: 75%;
     background-color: #1a1f26;
-    border-radius: 6px 6px 0 0;
+    border-radius: 6px;
 }
 
 .main-add-post-bottom {
@@ -330,6 +330,20 @@ input:-webkit-autofill:active {
     padding-left: 3%;
 }
 
+.main-post-label {
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+[hidden] {
+    display: none!important;
+}
+
+#main-post-bottom-panel {
+    display: flex;
+    justify-content: space-between;
+}
+
 #main-post-btn {
     font-size: 14px;
     width: 21%;
@@ -339,7 +353,7 @@ input:-webkit-autofill:active {
     background: #0d1015;
     box-shadow: 7px 8px 8px #0d1015;
     border-radius: 5px;
-    color: #fff;
+    color: #d7dce3;
     text-transform: uppercase;
     text-align: center;
     line-height: 28px;
@@ -349,6 +363,14 @@ input:-webkit-autofill:active {
 }
 
 #main-post-ask-btn:click {
+    display: none;
+}
+
+#qa-div {
+    margin-left: 2%;
+}
+
+.main-hidden-crutch {
     display: none;
 }
 
