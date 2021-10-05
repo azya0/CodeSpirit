@@ -29,6 +29,21 @@ nav {
     background-color: #010409f2;
 }
 
+.main-white-font-color {
+    color: #d7dce3;
+}
+
+.main-news-block {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.main-align-div {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .main-navbar {
     box-shadow: -5px 12px 20px #080a0fd9;
     padding: 0;
@@ -264,6 +279,77 @@ input:-webkit-autofill:active {
 
 .main-registration-button-navbar:hover {
     color: #afb5bb;
+}
+
+.main-post-item {
+    margin-right: 2%!important;
+}
+
+.main-add-post {
+    padding-top: 0.4%;
+    padding-bottom: 0.4%;
+    padding-left: 0.4%;
+    padding-right: 0.4%;
+    width: 75%;
+    background-color: #1a1f26;
+    border-radius: 6px 6px 0 0;
+}
+
+.main-add-post-bottom {
+    padding-top: 0.4%;
+    padding-bottom: 0.4%;
+    padding-left: 0.4%;
+    padding-right: 0.4%;
+    width: 75%;
+    background-color: #1a1f26;
+    border-radius: 0 0 6px 6px;
+}
+
+.i-post {
+    font-size: 19px!important;
+    margin-top: 0.7%;
+}
+
+#main-post-input {
+    border: none;
+    width: 100%;
+    min-height: 20px;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: none;
+    min-height: 26px;
+    padding-right: 2%;
+}
+
+#main-post-ask-btn {
+    border: none; outline: none;
+    width: 100%;
+    background: none;
+    text-align: inherit;
+    padding-left: 3%;
+}
+
+#main-post-btn {
+    font-size: 14px;
+    width: 21%;
+    height: 20%;
+    font-weight: bold;
+    display: block;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 28px;
+    border: none;
+    margin-right: 1%;
+    margin-bottom: 0.7%;
+}
+
+#main-post-ask-btn:click {
+    display: none;
 }
 
 @media screen and (max-width: 925px)
