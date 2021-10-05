@@ -15,12 +15,14 @@ blueprint = flask.Blueprint(
 )
 
 
-def __post(session, form):
+def __post(session, form, data=[]):
     if form.validate_on_submit():
         post = Post()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
         post.text = form.text.data.replace('<br>', '\n')
+        post.q_and_a = 'q&a' in data
+        post.anonymous = 'anon' in data
         session.add(post)
         session.commit()
         author = session.query(User).get(current_user.id)
@@ -44,5 +46,5 @@ def account(user_id):
 def main_page():
     session = db_session.create_session()
     form = NewPostForm()
-    __post(session, form)
+    __post(session, form, flask.request.form.getlist('checkbox'))
     return render_template("home.html", current_user=current_user, form=form)

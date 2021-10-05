@@ -13,8 +13,8 @@
             </div>
             <div hidden id='main-post-bottom-panel' class="main-add-post-bottom main-white-font-color main-news-block main-align-div">
                 <div id="qa-div">
-                    <div class="main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Q&A</label><input id='qa-checkbox' type="checkbox"></div>
-                    <div class="ml-2 main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">ANON</label><input id='an-checkbox' type="checkbox"></div>
+                    <div class="main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Q&A</label><input id='qa-checkbox' value="q&a" type="checkbox" name="checkbox"></div>
+                    <div class="ml-2 main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">ANON</label><input id='an-checkbox' value="anon" type="checkbox" name="checkbox"></div>
                 </div>
                 {{ form.text(type="textarea", id="text", class='main-hidden-crutch', value='gay') }}
                 {{ form.submit(id='main-post-btn', type="submit", onclick='replaceText()') }}

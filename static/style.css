@@ -468,6 +468,14 @@ input:-webkit-autofill:active {
     .main-icon-fix {
         margin-bottom: 10px;
     }
+
+    .main-add-post-bottom {
+        width: 100%;
+    }
+
+    .main-add-post {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 426px)

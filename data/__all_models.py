@@ -38,6 +38,8 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	author = Column(Integer)
 	text = Column(Text)
+	q_and_a = Column(Boolean)
+	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
 	comments = Column(String, default="")
 	refers = Column(Integer, default=-1)
