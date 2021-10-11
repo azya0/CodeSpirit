@@ -281,6 +281,32 @@ input:-webkit-autofill:active {
     color: #afb5bb;
 }
 
+#main-post {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #1a1f26;
+    border-radius: 5px;
+}
+
+#main-post-header {
+    margin-left: 4%;
+    align-items: center;
+}
+
+#post-user {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 98%;
+}
+
+#main-post-user-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .main-post-item {
     margin-right: 2%!important;
 }

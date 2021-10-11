@@ -35,16 +35,32 @@ def account(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     form = NewPostForm()
+    data = {
+        'user': user,
+        'session': session,
+        'posts': [session.query(Post).get(post_id) for post_id in user.posts.strip().split(",") if
+                  post_id.strip() != ""],
+        'form': form,
+        'User': User,
+        'len': len,
+        'current_user': current_user
+    }
     __post(session, form)
-    return render_template("account.html", user=user, session=session,
-                           posts=[session.query(Post).get(post_id) for post_id in user.posts.strip().split(",")
-                                  if post_id.strip() != ""],
-                           form=form, User=User, len=len, current_user=current_user)
+    return render_template("account.html", **data)
 
 
 @blueprint.route('/', methods=['GET', 'POST'])
 def main_page():
     session = db_session.create_session()
     form = NewPostForm()
+    data = {
+        'session': session,
+        'posts': session.query(Post).all(),
+        'form': form,
+        'User': User,
+        'len': len,
+        'current_user': current_user,
+        'get_user': lambda x: session.query(User).get(x)
+    }
     __post(session, form, flask.request.form.getlist('checkbox'))
-    return render_template("home.html", current_user=current_user, form=form)
+    return render_template("home.html", **data)
