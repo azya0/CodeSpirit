@@ -28,6 +28,8 @@ def __post(session, form, data=[]):
         author = session.query(User).get(current_user.id)
         author.posts += f",{session.query(Post).filter(Post.author == current_user.id).all()[-1].id}"
         session.commit()
+        return True
+    return False
 
 
 @blueprint.route('/account/<int:user_id>', methods=['GET', 'POST'])
@@ -62,5 +64,7 @@ def main_page():
         'current_user': current_user,
         'get_user': lambda x: session.query(User).get(x)
     }
-    __post(session, form, flask.request.form.getlist('checkbox'))
+    is_new_post = __post(session, form, flask.request.form.getlist('checkbox'))
+    if is_new_post and flask.request.method == 'POST':
+        return flask.redirect('/')
     return render_template("home.html", **data)
