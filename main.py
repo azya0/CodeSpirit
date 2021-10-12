@@ -5,7 +5,7 @@ from data.__all_models import User
 from pages import home, authentication, chats
 
 app = Flask(__name__, static_folder="static")
-app.config['SECRET_KEY'] = 'piuhPIDFUSHG<-I\'llNeverBeAloneAgain?->KOJDSkfoijds'
+app.config['SECRET_KEY'] = 'durachek_poprobuy_poluchshe<-I\'llNeverBeAloneAgain?->KOJDDw??DSkiffs'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
