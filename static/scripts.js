@@ -18,23 +18,6 @@ function postClicked () {
             var cont = document.getElementById('main-post-container');
             cont.style.borderRadius = '6px 6px 0 0';
         }
-
-        else if (!flex.hidden && !target.closest('#main-post-bottom-panel') && !target.closest('#main-post-container')) { // если этот элемент или его родительские элементы не окно навигации и не кнопка
-            var flex = document.getElementById('main-post-bottom-panel');
-            flex.hidden = !flex.hidden;
-
-            var cont = document.getElementById('main-post-container');
-            cont.style.borderRadius = '6px';
-
-            var new_input = document.createElement('input');
-            new_input.id = 'main-post-ask-btn';
-            new_input.classList.add("main-post-item", "main-white-font-color");
-            new_input.type = 'button';
-            new_input.value = "What's new?";
-            console.log(new_input);
-            div = document.getElementById('main-post-input');
-            div.replaceWith(new_input);
-        }
     });
 }
 
@@ -44,4 +27,41 @@ function replaceText() {
     flex.value = div.innerHTML;
     console.log(flex.value);
 }
-// TO POST console.log(div.innerHTML);
+
+
+function addImages() {
+    $(function() {
+            function readURL(input) {
+                $('#main-post-images').empty();
+                if (input.files.length > 8) {
+                    alert('Слишком много изображений');
+                    $("#image_input").val('');
+                    document.getElementById('main-post-cancel-btn-div').style.display = "none";
+                }
+                else {
+                    $(input.files).each(function(i, el) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            img = $('<img>').attr('src', e.target.result).attr('class', 'main-post-image');
+                            img.appendTo('#main-post-images');
+                        };
+                        reader.readAsDataURL(input.files[i]);
+                    });
+                }
+                if (input.files.length > 0) {
+                    document.getElementById('main-post-cancel-btn-div').style.display = "flex";
+                    document.getElementById('main-post-cancel-btn-div').style.justifyContent = "flex-end";
+                }
+            }
+
+            $("#image_input").change(function() {
+                readURL(this);
+            });
+        });
+}
+
+function clearImagesBtn() {
+    document.getElementById('main-post-cancel-btn-div').style.display = "none";
+    $('#main-post-images').empty();
+    $("#image_input").val('');
+}

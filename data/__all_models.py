@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, DateTime, String, Boolean
+from sqlalchemy import Column, Integer, Text, DateTime, String, Boolean, ForeignKey
 from sqlalchemy_serializer import SerializerMixin
 from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
@@ -36,7 +36,7 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "posts"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	author = Column(Integer)
+	author = Column(Integer, ForeignKey('users.id'))
 	text = Column(Text)
 	q_and_a = Column(Boolean)
 	anonymous = Column(Boolean)
@@ -55,3 +55,11 @@ class Idea(UserMixin, SqlAlchemyBase, SerializerMixin):
 	likes = Column(String, default="")
 	dislikes = Column(String, default="")
 	authors = Column(String)
+
+
+class FilePost(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "files"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	way = Column(String)
+	author = Column(Integer, ForeignKey('users.id'))
+	post_id = Column(Integer, ForeignKey('posts.id'))

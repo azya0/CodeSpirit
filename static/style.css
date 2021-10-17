@@ -416,6 +416,58 @@ input:-webkit-autofill:active {
     display: none;
 }
 
+#main-post-images {
+    width: 75%;
+    background-color: #1a1f26;
+    margin: 0 auto;
+}
+
+#main-post-cancel-btn-div {
+    display: none;
+    width: 75%;
+    background-color: #1a1f26;
+    border-radius: 0 0 6px 6px;
+    margin: 0 auto;
+}
+
+.main-post-image {
+    width: 20%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+#main-post-cancel-btn {
+    font-size: 14px;
+    width: 21%;
+    height: 20%;
+    font-weight: bold;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color: #d7dce3;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 28px;
+    margin-bottom: 1%;
+    margin-right: 1.5%;
+    border: none;
+}
+
+#main-img-div {
+    display: inline-block;
+}
+
+#main-post-files {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main-image-in-post {
+    width: 75%;
+    margin-bottom: 1%;
+}
+
 @media screen and (max-width: 925px)
 {
     nav {

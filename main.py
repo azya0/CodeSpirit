@@ -3,9 +3,16 @@ from flask import Flask
 from data import db_session
 from data.__all_models import User
 from pages import home, authentication, chats
+import configparser
 
 app = Flask(__name__, static_folder="static")
-app.config['SECRET_KEY'] = 'durachek_poprobuy_poluchshe<-I\'llNeverBeAloneAgain?->KOJDDw??DSkiffs'
+config = configparser.ConfigParser()
+config.read('static/config.ini')
+app.config['SECRET_KEY'] = config['App']['SECRET_KEY']
+app.config['UPLOAD_FOLDER'] = config['App']['UPLOAD_FOLDER']
+app.config['MAX_CONTENT_LENGTH'] = int(config['App']['MAX_CONTENT_LENGTH'])
+app.config['last_uploaded_file'] = config['App']['last_file_way']
+app.add_url_rule("/uploads/<name>", endpoint="download_file", build_only=True)
 login_manager = LoginManager()
 login_manager.init_app(app)
 

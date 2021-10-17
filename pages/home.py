@@ -1,10 +1,12 @@
-from data.__all_models import User, Post
+from werkzeug.utils import secure_filename
+from data.__all_models import User, Post, FilePost
 from data.forms import NewPostForm
 from flask_login import current_user
 from flask import render_template
 import flask
 import datetime
 import json
+import os
 
 from data import db_session
 
@@ -15,6 +17,38 @@ blueprint = flask.Blueprint(
 )
 
 
+def update_last_folder(last_file_way):
+    import configparser
+    config = configparser.ConfigParser()
+    config.read('static/config.ini')
+    config['App']['last_file_way'] = last_file_way
+    with open('static/config.ini', 'w') as configfile:
+        config.write(configfile)
+
+
+def add_file():
+    def last_section(data, num):
+        if len(set(data[:-1])) == 1 and data[0] == 'z':
+            for i in range(len(data) - 1):
+                data[i] = 'a'
+            data.insert(-1, 'a')
+            return data
+        letter = data[-num]
+        if letter == 'z':
+            del data[-num]
+            return last_section(data, num)
+        else:
+            data[-num] = chr(ord(letter) + 1)
+        return data
+
+    last_data = flask.current_app.config['last_uploaded_file'].split('/')
+    last_data[-1] = str((int(last_data[-1]) + 1) % 10)
+    if not int(last_data[-1]):
+        last_data = last_section(last_data, 2)
+    under_return = '/'.join(last_data)
+    return under_return[:-1], under_return[-1]
+
+
 def __post(session, form, data=[]):
     if form.validate_on_submit():
         post = Post()
@@ -23,8 +57,31 @@ def __post(session, form, data=[]):
         post.text = form.text.data.replace('<br>', '\n')
         post.q_and_a = 'q&a' in data
         post.anonymous = 'anon' in data
+        f_req = flask.request.files.getlist("image_input[]")
+        files = []
+        for file in f_req:
+            if not file.filename:
+                continue
+            file_way, filename = add_file()
+            flask.current_app.config['last_uploaded_file'] = file_way + filename
+            update_last_folder(file_way + filename)
+            for i in range(len(file_way[:-1])):
+                try:
+                    os.mkdir(flask.current_app.config['UPLOAD_FOLDER'] + '/' + '/'.join(file_way[:-1][:i + 1]))
+                except FileExistsError:
+                    pass
+
+            file.save(os.path.join(f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way[:-1]}",
+                                   filename + '.' + file.filename.split('.')[-1]))
+            files += [f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way}" + filename + '.' + file.filename.split('.')[-1]]
+
         session.add(post)
-        session.commit()
+        for way in files:
+            file = FilePost()
+            file.author = current_user.id
+            file.post_id = session.query(Post).filter(Post.author == current_user.id).all()[-1].id
+            file.way = way
+            session.add(file)
         author = session.query(User).get(current_user.id)
         author.posts += f",{session.query(Post).filter(Post.author == current_user.id).all()[-1].id}"
         session.commit()
@@ -58,8 +115,10 @@ def main_page():
     data = {
         'session': session,
         'posts': session.query(Post).all(),
+        'files': session.query(FilePost),
         'form': form,
         'User': User,
+        'FilePost': FilePost,
         'len': len,
         'current_user': current_user,
         'get_user': lambda x: session.query(User).get(x)

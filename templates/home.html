@@ -1,15 +1,17 @@
 {% extends "navbar.html" %}
 
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 {% if current_user.is_authenticated %}
     <div id='main-big-post-container' style="display: block;width: 100%;">
-        <form method="post">
+        <form method="post" enctype=multipart/form-data action="/">
             {{ form.hidden_tag() }}
             <div id='main-post-container' class="main-add-post main-white-font-color main-news-block main-align-div" style="align-items: start;display:flex">
                 <i class="fa fa-user-circle main-post-item i-post" aria-hidden="true" style="margin-left: 2%!important;margin-top: 0.515%;"></i>
                 <input id='main-post-ask-btn' class='main-post-item main-white-font-color' type="button" value="What's new?">
-                <i class="fa fa-picture-o main-post-item i-post" aria-hidden="true" style="margin-top: 0.52%;"></i>
+                <label for="image_input" style="margin-top: 0.2%;margin-right: 1%;margin-bottom: 0;"><i class="fa fa-picture-o main-post-item i-post" aria-hidden="true"></i></label>
+			    <input name="image_input[]" id="image_input" type="file" accept=".png" style="display: none" multiple>
             </div>
             <div hidden id='main-post-bottom-panel' class="main-add-post-bottom main-white-font-color main-news-block main-align-div">
                 <div id="qa-div">
@@ -19,9 +21,14 @@
                 {{ form.text(type="textarea", id="text", class='main-hidden-crutch', value='gay') }}
                 {{ form.submit(id='main-post-btn', type="submit", onclick='replaceText()') }}
             </div>
+            <div id="main-post-images"></div>
         </form>
+        <div id="main-post-cancel-btn-div">
+            <button id="main-post-cancel-btn" onclick=clearImagesBtn()>cancel</button>
+        </div>
     </div>
     <script>postClicked()</script>
+    <script>addImages()</script>
 
     <div id="main-posts">
         {% for post in posts %}
@@ -39,6 +46,13 @@
             {% for string in post.text.split('\n') %}
                 <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b><br>
             {% endfor %}
+            {% if files.filter(FilePost.post_id == post.id).first() %}
+            <div id="main-post-files">
+                {% for image in files.filter(FilePost.post_id == post.id).all() %}
+                    <img id='main-image-in-post' src="{{ image.way }}">
+                {% endfor %}
+            </div>
+            {% endif %}
             <div id="main-post-other">
                 <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
                 <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
