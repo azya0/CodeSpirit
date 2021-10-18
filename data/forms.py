@@ -8,7 +8,7 @@ class Follow(FlaskForm):
 
 
 class NewPostForm(FlaskForm):
-    text = StringField("Enter the text", validators=[DataRequired()])
+    text = StringField("Enter the text")
     submit = SubmitField("Post")
 
 

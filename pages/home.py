@@ -58,6 +58,7 @@ def __post(session, form, data=[]):
         post.q_and_a = 'q&a' in data
         post.anonymous = 'anon' in data
         f_req = flask.request.files.getlist("image_input[]")
+
         files = []
         for file in f_req:
             if not file.filename:
@@ -74,6 +75,9 @@ def __post(session, form, data=[]):
             file.save(os.path.join(f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way[:-1]}",
                                    filename + '.' + file.filename.split('.')[-1]))
             files += [f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way}" + filename + '.' + file.filename.split('.')[-1]]
+
+        if not post.text and not files:
+            return False
 
         session.add(post)
         for way in files:
@@ -120,10 +124,10 @@ def main_page():
         'User': User,
         'FilePost': FilePost,
         'len': len,
+        'is_file': lambda x: os.path.exists(x),
         'current_user': current_user,
         'get_user': lambda x: session.query(User).get(x)
     }
-    is_new_post = __post(session, form, flask.request.form.getlist('checkbox'))
-    if is_new_post and flask.request.method == 'POST':
+    if flask.request.method == 'POST' and __post(session, form, flask.request.form.getlist('checkbox')):
         return flask.redirect('/')
     return render_template("home.html", **data)

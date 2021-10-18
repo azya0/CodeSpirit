@@ -37,7 +37,7 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "posts"
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	author = Column(Integer, ForeignKey('users.id'))
-	text = Column(Text)
+	text = Column(Text, default='')
 	q_and_a = Column(Boolean)
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
