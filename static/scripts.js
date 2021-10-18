@@ -89,22 +89,28 @@ function clearImagesBtn() {
                         document.querySelector(easyBlock.getAttribute('data-easy-toggle')).classList.remove(easyBlock.getAttribute('data-easy-class'));
                     }
                     else if (easyBlock.hasAttribute('data-easy-parallel') && easyBlock == EY_BTN) {
-                        if (last != -1) {
+                        if ((last != -1)) {
+                            console.log(12, last);
                             var block_list = document.querySelectorAll(ey_target);
                             block_list[last].classList.remove('show');
                         }
-                        var block_list = document.querySelectorAll(ey_target);
-                        var array = Array.from(document.querySelectorAll('[data-easy-toggle]'));
-                        var index = array.indexOf(easyBlock);
-                        var flex = array[index]
-                        block_list[index].classList.toggle(ey_class);
-                        last = index;
+                        if (last != Array.from(document.querySelectorAll('[data-easy-toggle]')).indexOf(easyBlock)) {
+                            var block_list = document.querySelectorAll(ey_target);
+                            var array = Array.from(document.querySelectorAll('[data-easy-toggle]'));
+                            var index = array.indexOf(easyBlock);
+                            var flex = array[index]
+                            block_list[index].classList.toggle(ey_class);
+                            last = index;
+                        }
+                        else {
+                            last = -1;
+                        }
                     }
                 });
             }
             catch (ey_error)
             {
-                console.warn('EasyToggler.js : Блок ' + ey_target + ' не существует');
+                console.warn(ey_error);
             }
         }
 
