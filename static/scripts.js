@@ -73,7 +73,7 @@ function clearImagesBtn() {
 
 (function() {
     var last = -1;
-    document.addEventListener('click', EasyTogglerHandler);
+    document.addEventListener('mouseover', EasyTogglerHandler);
     function EasyTogglerHandler(event){
         const EY_BTN = event.target.closest('[data-easy-toggle]');
         if( EY_BTN )
@@ -94,17 +94,13 @@ function clearImagesBtn() {
                             var block_list = document.querySelectorAll(ey_target);
                             block_list[last].classList.remove('show');
                         }
-                        if (last != Array.from(document.querySelectorAll('[data-easy-toggle]')).indexOf(easyBlock)) {
-                            var block_list = document.querySelectorAll(ey_target);
-                            var array = Array.from(document.querySelectorAll('[data-easy-toggle]'));
-                            var index = array.indexOf(easyBlock);
-                            var flex = array[index]
-                            block_list[index].classList.toggle(ey_class);
-                            last = index;
-                        }
-                        else {
-                            last = -1;
-                        }
+
+                        var block_list = document.querySelectorAll(ey_target);
+                        var array = Array.from(document.querySelectorAll('[data-easy-toggle]'));
+                        var index = array.indexOf(easyBlock);
+                        var flex = array[index]
+                        block_list[index].classList.toggle(ey_class);
+                        last = index;
                     }
                 });
             }

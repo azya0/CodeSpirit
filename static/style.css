@@ -13,7 +13,7 @@ nav {
 }
 
 .logo {
-    color: #d7dce3;
+    color: ;
     fill: # d7dce3;
     font-weight: 700;
 }
@@ -487,12 +487,16 @@ input:-webkit-autofill:active {
     margin-bottom: 1%;
 }
 
+.dropdown-link {
+    color: #d7dce3!important;
+}
+
 .main-post-dropdown-menu {
-    background: #fff;
-    padding: 10px 20px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
-    border-radius: 7px;
-    width: 10%;
+    color: #d7dce3;
+    background: #1a1f26;
+    padding: 8px 15px;
+    box-shadow: 0 5px 30px rgb(12 13 16);
+    border-radius: 5px;
     visibility: hidden;
     opacity: 0;
     z-index: -1;
