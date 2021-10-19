@@ -63,3 +63,11 @@ class FilePost(UserMixin, SqlAlchemyBase, SerializerMixin):
 	way = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
 	post_id = Column(Integer, ForeignKey('posts.id'))
+
+
+class Comment(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "comments"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	author = Column(Integer, ForeignKey('users.id'))
+	post_id = Column(Integer, ForeignKey('posts.id'))
+	datetime = Column(DateTime)

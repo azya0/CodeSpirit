@@ -32,31 +32,31 @@
 
     <div id="main-posts">
         {% for post in posts %}
-        <div id="main-post">
-            <hr>
-            <div id="main-post-header">
-                <div id="post-user">
-                    <a href="/account/{{ post.author }}" id="main-post-user-link">
-                        <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;"></i>
-                        <b class="main-font main-white-font-color" style="margin-left: 20%;">{{ get_user(post.author).name }}</b><br>
-                    </a>
-                    <div>
-                        <button id='main-post-more-btn' data-easy-toggle="#main-post-dropdown" data-easy-class="show" data-easy-rcoe data-easy-parallel>
-                            <svg style='color: #d7dce3;' width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="more_horizontal_24__Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="more_horizontal_24__more_horizontal_24"><path id="more_horizontal_24__Bounds" d="M24 0H0v24h24z"></path><path d="M18 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2c0-1.1.9-2 2-2zm-6 4a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2zm-6 0a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2z" id="more_horizontal_24__Mask" fill="currentColor"></path></g></g></svg>
-                        </button>
-                        <div id="main-post-dropdown" class="main-post-dropdown-menu">
-                            <a href="#" class="dropdown-link">Удалить запись</a>
-                            <a href="#" class="dropdown-link">Это не интересно</a>
-                            <a href="#" class="dropdown-link">Пожаловаться</a>
+            <div id="main-post">
+                <hr>
+                <div id="main-post-header">
+                    <div id="post-user">
+                        <a href="/account/{{ post.author }}" id="main-post-user-link">
+                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;"></i>
+                            <b class="main-font main-white-font-color" style="margin-left: 20%;">{{ get_user(post.author).name }}</b><br>
+                        </a>
+                        <div>
+                            <button id='main-post-more-btn' data-easy-toggle="#main-post-dropdown" data-easy-class="show" data-easy-rcoe data-easy-parallel>
+                                <svg style='color: #d7dce3;' width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="more_horizontal_24__Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="more_horizontal_24__more_horizontal_24"><path id="more_horizontal_24__Bounds" d="M24 0H0v24h24z"></path><path d="M18 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2c0-1.1.9-2 2-2zm-6 4a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2zm-6 0a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2z" id="more_horizontal_24__Mask" fill="currentColor"></path></g></g></svg>
+                            </button>
+                            <div id="main-post-dropdown" class="main-post-dropdown-menu">
+                                <a href="#" class="dropdown-link">Удалить запись</a>
+                                <a href="#" class="dropdown-link">Это не интересно</a>
+                                <a href="#" class="dropdown-link">Пожаловаться</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             {% for string in post.text.split('\n') %}
-                <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b><br>
+                <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b>
             {% endfor %}
             {% if files.filter(FilePost.post_id == post.id).first() %}
-            <div id="main-post-files">
+                <div id="main-post-files">
                 {% for image in files.filter(FilePost.post_id == post.id).all() %}
                     {% if is_file(image.way) %}
                         <img id='main-image-in-post' src="{{ image.way }}">
@@ -64,14 +64,15 @@
                         <img id='main-image-in-post-error' src="static/post-img/a/0.jpg">
                     {% endif %}
                 {% endfor %}
-            </div>
+                </div>
             {% endif %}
-            <div id="main-post-other">
-                <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
-                <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
+                <br>
+                <div id="main-post-other">
+                    <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
+                    <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
+                </div>
+                <hr>
             </div>
-            <hr>
-        </div>
         {% endfor %}
     </div>
 

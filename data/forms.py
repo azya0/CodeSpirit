@@ -27,3 +27,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField("Remember me", default=False)
     submit = SubmitField("Let's go!")
+
+
+class Comment(FlaskForm):
+    text = StringField("write a comment...")
