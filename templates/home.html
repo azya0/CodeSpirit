@@ -5,7 +5,7 @@
 <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 {% if current_user.is_authenticated %}
     <div id='main-big-post-container' style="display: block;width: 100%;">
-        <form method="post" enctype=multipart/form-data action="/" novalidate>
+        <form method="post" enctype=multipart/form-data action="/add_post" novalidate>
             {{ form.hidden_tag() }}
             <div id='main-post-container' class="main-add-post main-white-font-color main-news-block main-align-div" style="align-items: start;display:flex">
                 <i class="fa fa-user-circle main-post-item i-post" aria-hidden="true" style="margin-left: 2%!important;margin-top: 0.515%;"></i>
@@ -72,6 +72,21 @@
                     <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
                 </div>
                 <hr>
+                <div id="main-post-comments">
+
+                </div>
+                <div id="main-post-write-comments">
+                    <form method="post" enctype=multipart/form-data action="/add_comment" novalidate>
+                        {{ comment_form.hidden_tag() }}
+                        {{ comment_form.post_id(type='hidden', value=post.id, readonly=True) }}
+                        {{ comment_form.text(id='comments-hidden-input', type='hidden', post=post.id) }}
+                        <div class="main-flex">
+                            <i class="fa fa-user-circle main-comment-ava main-white-font-color" aria-hidden="true"></i>
+                            <div contenteditable="true" id="main-post-comment-input" placeholder="write comment..."></div>
+                            {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText()', value="send") }}
+                        </div>
+                    </form>
+                </div>
             </div>
         {% endfor %}
     </div>

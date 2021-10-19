@@ -7,6 +7,14 @@ a:hover {text-decoration: none;}
 button:active, button:focus {outline: none;}
 button::-moz-focus-inner {border: 0;}
 
+[contenteditable][placeholder]:empty:before {
+  content: attr(placeholder);
+  position: absolute;
+  color: gray;
+  background-color: transparent;
+  cursor: text;
+}
+
 nav {
     padding-left: 6rem!important;
     padding-right: 6rem!important;
@@ -36,6 +44,13 @@ nav {
 
 .main-white-font-color {
     color: #d7dce3;
+}
+
+.main-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
 }
 
 .main-news-block {
@@ -320,8 +335,8 @@ input:-webkit-autofill:active {
 }
 
 .main-add-post {
-    padding-top: 0.4%;
-    padding-bottom: 0.4%;
+    padding-top: 0.6%;
+    padding-bottom: 0.6%;
     padding-left: 0.4%;
     padding-right: 0.4%;
     width: 75%;
@@ -519,6 +534,52 @@ input:-webkit-autofill:active {
     padding: 5px;
     color: black;
     text-decoration: none;
+}
+
+#main-post-write-comments {
+    padding-bottom: 1.5%;
+}
+
+#main-post-comment-input {
+    color: #d7dce3;
+    width: 100%;
+    border-radius: 5px;
+    padding: 4px 5px;
+    padding-left: 1.5%;
+    margin-left: 2%;
+    margin-right: 3%;
+    border: none;
+    min-height: 20px;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: none;
+    min-height: 32px;
+    padding-right: 2%;
+    background-color: #0d1015;
+    cursor: auto;
+    box-shadow: 7px 8px 8px #0d1015;
+}
+
+#main-send-comment-btn {
+    font-size: 15px;
+    width: 21%;
+    font-weight: bold;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color: #d7dce3;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 28px;
+    border: none;
+    margin-right: 2%;
+}
+
+.main-comment-ava {
+    font-size: 22px!important;
+    margin-top: 0.65%;
+    margin-left: 2.6%;
 }
 
 @media screen and (max-width: 925px)

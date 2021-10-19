@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField
+from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, EqualTo, Email
 
 
@@ -8,6 +8,7 @@ class Follow(FlaskForm):
 
 
 class NewPostForm(FlaskForm):
+    __form__ = 'post'
     text = StringField("Enter the text")
     submit = SubmitField("Post")
 
@@ -29,5 +30,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Let's go!")
 
 
-class Comment(FlaskForm):
-    text = StringField("write a comment...")
+class CommentForm(FlaskForm):
+    __form__ = 'comment'
+    text = StringField("write a comment...", validators=[DataRequired()])
+    post_id = IntegerField(validators=[DataRequired()])

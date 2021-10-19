@@ -11,6 +11,7 @@ function postClicked () {
             var input = document.getElementById("main-post-ask-btn");
             var div = document.createElement('div');
             div.setAttribute("contentEditable", true);
+            div.setAttribute("placeholder", "What's new?");
             div.id = "main-post-input";
             div.class = "main-post-item";
             input.replaceWith(div);
@@ -27,6 +28,12 @@ function postClicked () {
 function replaceText() {
     var flex = document.getElementById('text');
     var div = document.getElementById('main-post-input');
+    flex.value = div.innerHTML;
+}
+
+function replaceCommentText() {
+    var flex = document.getElementById('comments-hidden-input');
+    var div = document.getElementById('main-post-comment-input');
     flex.value = div.innerHTML;
 }
 
