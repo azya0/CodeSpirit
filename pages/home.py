@@ -17,6 +17,19 @@ blueprint = flask.Blueprint(
 )
 
 
+def format_string(string: str) -> str:
+    replace_dict = {
+        '&nbsp;': ' ',
+        '<div>': '',
+        '</div>': '',
+        '<br>': '\n'
+    }
+    string = string.strip()
+    for elm in replace_dict:
+        string = string.replace(elm, replace_dict[elm]).strip()
+    return string
+
+
 def update_last_folder(last_file_way):
     import configparser
     config = configparser.ConfigParser()
@@ -77,10 +90,12 @@ def main_page():
         'session': session,
         'posts': session.query(Post).all(),
         'files': session.query(FilePost),
+        'comments': session.query(Comment),
         'form': form,
         'comment_form': comment_form,
         'User': User,
         'FilePost': FilePost,
+        'Comment': Comment,
         'current_user': current_user,
         'len': len,
         'is_file': lambda x: os.path.exists(x),
@@ -96,7 +111,9 @@ def add_post():
         post, data, session = Post(), flask.request.form.getlist('checkbox'), db_session.create_session()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
-        post.text = form.text.data.replace('<br>', '\n')
+        post.text = format_string(form.text.data)
+        if not post.text:
+            return flask.redirect('/')
         post.q_and_a = 'q&a' in data
         post.anonymous = 'anon' in data
         f_req = flask.request.files.getlist("image_input[]")
@@ -139,7 +156,9 @@ def add_comment():
     form = CommentForm()
     if form.validate_on_submit():
         comment, session = Comment(), db_session.create_session()
-        comment.text = form.text.data.replace('<br>', '\n')
+        comment.text = format_string(form.text.data)
+        if not comment.text:
+            return flask.redirect('/')
         comment.author = current_user.id
         comment.post_id = form.post_id.data
         comment.datetime = datetime.datetime.now()
