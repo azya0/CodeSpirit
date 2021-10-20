@@ -52,28 +52,41 @@
                         </div>
                     </div>
                 </div>
-            {% for string in post.text.split('\n') %}
-                <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b>
-            {% endfor %}
-            {% if files.filter(FilePost.post_id == post.id).first() %}
-                <div id="main-post-files">
-                {% for image in files.filter(FilePost.post_id == post.id).all() %}
-                    {% if is_file(image.way) %}
-                        <img id='main-image-in-post' src="{{ image.way }}">
-                    {% else %}
-                        <img id='main-image-in-post-error' src="static/post-img/a/0.jpg">
-                    {% endif %}
+                {% for string in post.text.split('\n') %}
+                    <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b>
                 {% endfor %}
-                </div>
-            {% endif %}
+                {% if files.filter(FilePost.post_id == post.id).first() %}
+                    <div id="main-post-files">
+                    {% for image in files.filter(FilePost.post_id == post.id).all() %}
+                        {% if is_file(image.way) %}
+                            <img id='main-image-in-post' src="{{ image.way }}">
+                        {% else %}
+                            <img id='main-image-in-post-error' src="static/post-img/a/0.jpg">
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% endif %}
                 <br>
                 <div id="main-post-other">
                     <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
                     <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
                 </div>
-                <hr>
-                <div id="main-post-comments">
-
+                <hr class="main-comment-hr">
+                <div class="main-post-comments">
+                    {% for comment in comments.filter(Comment.post_id == post.id).all() %}
+                        <div class="main-post-comment">
+                            <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                            <div class="main-comment-data">
+                                <b class="main-comment-username">{{ get_user(comment.author).name }}</b>
+                                {% for string in comment.text.split('\n') %}
+                                    <b class="main-comment-text">{{ string }}</b>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if comments.filter(Comment.post_id == post.id).all()[-1] != comment %}
+                            <hr class="main-hr-for-comments">
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 <div id="main-post-write-comments">
                     <form method="post" enctype=multipart/form-data action="/add_comment" novalidate>
