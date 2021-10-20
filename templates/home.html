@@ -37,8 +37,8 @@
                 <div id="main-post-header">
                     <div id="post-user">
                         <a href="/account/{{ post.author }}" id="main-post-user-link">
-                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;"></i>
-                            <b class="main-font main-white-font-color" style="margin-left: 20%;">{{ get_user(post.author).name }}</b><br>
+                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;font-size: 30px!important;"></i>
+                            <b class="main-font main-white-font-color" style="margin-left: 12%;font-size: 23px;">{{ get_user(post.author).name }}</b><br>
                         </a>
                         <div>
                             <button id='main-post-more-btn' data-easy-toggle="#main-post-dropdown" data-easy-class="show" data-easy-rcoe data-easy-parallel>
@@ -74,13 +74,27 @@
                 <hr class="main-comment-hr">
                 <div class="main-post-comments">
                     {% for comment in comments.filter(Comment.post_id == post.id).all() %}
-                        <div class="main-post-comment">
-                            <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
-                            <div class="main-comment-data">
-                                <b class="main-comment-username">{{ get_user(comment.author).name }}</b>
-                                {% for string in comment.text.split('\n') %}
-                                    <b class="main-comment-text">{{ string }}</b>
-                                {% endfor %}
+                        <div class="main-comment-union">
+                            <div class="main-post-comment">
+                                <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                                <div class="main-comment-data">
+                                    <b class="main-comment-username">{{ get_user(comment.author).name }}</b>
+                                    {% if not string_long(comment.text) %}
+                                        {% for string in comment.text.split('\n') %}
+                                            <b class="main-comment-text">{{ string }}</b>
+                                        {% endfor %}
+                                    {% elif string_long(comment.text) == 1 %}
+                                        <div class='main-hidden-content-div'>
+                                            <span>{{ comment.text[:230] }}</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[230:] }}</span>
+                                        </div>
+                                    {% elif string_long(comment.text) == 2 %}
+                                        <-- #TODO -->
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="main-comment-content">
+                                <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime }}</p>
+                                <i class="fas fa-heart main-like-icon"></i>
                             </div>
                         </div>
                         {% if comments.filter(Comment.post_id == post.id).all()[-1] != comment %}
@@ -89,14 +103,13 @@
                     {% endfor %}
                 </div>
                 <div id="main-post-write-comments">
-                    <form method="post" enctype=multipart/form-data action="/add_comment" novalidate>
+                    <form method="post" enctype=multipart/form-data action="/add_comment/{{ post.id }}" novalidate>
                         {{ comment_form.hidden_tag() }}
-                        {{ comment_form.post_id(type='hidden', value=post.id, readonly=True) }}
-                        {{ comment_form.text(id='comments-hidden-input', type='hidden', post=post.id) }}
+                        {{ comment_form.text(id='comments-hidden-input-' + str(post.id), type='hidden', post=post.id) }}
                         <div class="main-flex">
                             <i class="fa fa-user-circle main-comment-ava main-white-font-color" aria-hidden="true"></i>
-                            <div contenteditable="true" id="main-post-comment-input" placeholder="write comment..."></div>
-                            {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText()', value="send") }}
+                            <div contenteditable="true" id='comment-post-{{ post.id }}' class="main-post-comment-input" placeholder="write comment..."></div>
+                            {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText("' + str(post.id) + '")', value="send") }}
                         </div>
                     </form>
                 </div>

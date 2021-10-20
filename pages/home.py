@@ -77,7 +77,6 @@ def account(user_id):
         'len': len,
         'current_user': current_user
     }
-    __post(session, form)
     return render_template("account.html", **data)
 
 
@@ -98,6 +97,8 @@ def main_page():
         'Comment': Comment,
         'current_user': current_user,
         'len': len,
+        'str': str,
+        'string_long': lambda x: 1 if len(x) > 330 else 2 if x.count('\n') > 3 else 0,
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
@@ -151,8 +152,8 @@ def add_post():
     return flask.redirect('/')
 
 
-@blueprint.route('/add_comment', methods=['POST'])
-def add_comment():
+@blueprint.route('/add_comment/<int:post_id>', methods=['POST'])
+def add_comment(post_id: int):
     form = CommentForm()
     if form.validate_on_submit():
         comment, session = Comment(), db_session.create_session()
@@ -160,7 +161,7 @@ def add_comment():
         if not comment.text:
             return flask.redirect('/')
         comment.author = current_user.id
-        comment.post_id = form.post_id.data
+        comment.post_id = post_id
         comment.datetime = datetime.datetime.now()
         session.add(comment)
         session.commit()

@@ -33,4 +33,3 @@ class LoginForm(FlaskForm):
 class CommentForm(FlaskForm):
     __form__ = 'comment'
     text = StringField("write a comment...", validators=[DataRequired()])
-    post_id = IntegerField(validators=[DataRequired()])
