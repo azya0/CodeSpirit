@@ -41,10 +41,24 @@ function moreButton(comment_id) {
     var button = document.getElementById('text-a-' + comment_id);
     var br = document.getElementById('text-br-' + comment_id);
     var hidden_text = document.getElementById('text-hidden-' + comment_id);
+    var points = document.getElementById('points-' + comment_id);
 
     button.style.display = 'none';
     br.style.display = 'none';
+    points.style.display = 'none';
     hidden_text.style.display = 'contents';
+}
+
+function moreButtonN(comment_id) {
+    var button = document.getElementById('text-n-' + comment_id);
+    var points = document.getElementById('points-n-' + comment_id);
+    var hidden_text = document.getElementsByClassName('text-n-hidden-' + comment_id);
+
+    for (let item of hidden_text) {
+        item.style.display = 'block';
+    }
+    button.style.display = 'none';
+    points.style.display = 'none';
 }
 
 

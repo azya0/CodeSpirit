@@ -98,7 +98,8 @@ def main_page():
         'current_user': current_user,
         'len': len,
         'str': str,
-        'string_long': lambda x: 1 if len(x) > 330 else 2 if x.count('\n') > 3 else 0,
+        'enu': enumerate,
+        'string_long': lambda x: 1 if len(x) > 400 else 2 if x.count('\n') > 14 else 0,
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }

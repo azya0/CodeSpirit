@@ -85,10 +85,16 @@
                                         {% endfor %}
                                     {% elif string_long(comment.text) == 1 %}
                                         <div class='main-hidden-content-div'>
-                                            <span>{{ comment.text[:230] }}</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[230:] }}</span>
+                                            <span>{{ comment.text[:201] }}</span><span id="points-{{ comment.id }}">...</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[201:] }}</span>
                                         </div>
                                     {% elif string_long(comment.text) == 2 %}
-                                        <-- #TODO -->
+                                        {% for string in enu(comment.text.split('\n')[:8]) %}
+                                            <b class="main-comment-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-n-{{ comment.id }}">...</span>{% endif %}</b>
+                                        {% endfor %}
+                                        <a id="text-n-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonN('{{ comment.id }}')" class="main-show-all-link-n">Show all...</a>
+                                        {% for string in comment.text.split('\n')[8:] %}
+                                            <b class="text-n-hidden-{{ comment.id }} main-comment-text" style="display: none">{{ string }}</b>
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
                             </div>
