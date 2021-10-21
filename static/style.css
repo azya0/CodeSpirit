@@ -15,6 +15,10 @@ button::-moz-focus-inner {border: 0;}
   cursor: text;
 }
 
+span {
+    font-weight: bolder;
+}
+
 nav {
     padding-left: 6rem!important;
     padding-right: 6rem!important;
@@ -663,6 +667,16 @@ input:-webkit-autofill:active {
     color: #d7dce3;
     word-wrap: break-word;
     margin-bottom: 1%;
+}
+
+.main-post-long-text {
+    margin-right: 5%;
+    margin-top: 1%;
+    margin-left: 3.15%;
+    word-wrap: break-word;
+    flex-direction: column;
+    color: #d7dce3;
+    display: block;
 }
 
 @media screen and (max-width: 925px)

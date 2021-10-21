@@ -99,7 +99,8 @@ def main_page():
         'len': len,
         'str': str,
         'enu': enumerate,
-        'string_long': lambda x: 1 if len(x) > 400 else 2 if x.count('\n') > 14 else 0,
+        'string_long': lambda x: 1 if len(x) >= 400 else 2 if x.count('\n') > 14 else 0,
+        'string_long_p': lambda x: 1 if len(x) >= 4000 else 2 if x.count('\n') > 14 else 0,
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
@@ -113,6 +114,7 @@ def add_post():
         post, data, session = Post(), flask.request.form.getlist('checkbox'), db_session.create_session()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
+        print(form.text)
         post.text = format_string(form.text.data)
         if not post.text:
             return flask.redirect('/')

@@ -31,11 +31,13 @@ function replaceText() {
     flex.value = div.innerHTML;
 }
 
+
 function replaceCommentText(post_id) {
     var flex = document.getElementById('comments-hidden-input-' + post_id);
     var div = document.getElementById('comment-post-' + post_id);
     flex.value = div.innerHTML;
 }
+
 
 function moreButton(comment_id) {
     var button = document.getElementById('text-a-' + comment_id);
@@ -49,10 +51,37 @@ function moreButton(comment_id) {
     hidden_text.style.display = 'contents';
 }
 
+
 function moreButtonN(comment_id) {
     var button = document.getElementById('text-n-' + comment_id);
     var points = document.getElementById('points-n-' + comment_id);
     var hidden_text = document.getElementsByClassName('text-n-hidden-' + comment_id);
+
+    for (let item of hidden_text) {
+        item.style.display = 'block';
+    }
+    button.style.display = 'none';
+    points.style.display = 'none';
+}
+
+
+function moreButtonP(comment_id) {
+    var button = document.getElementById('p-text-a-' + comment_id);
+    var br = document.getElementById('p-text-br-' + comment_id);
+    var hidden_text = document.getElementById('p-text-hidden-' + comment_id);
+    var points = document.getElementById('p-points-' + comment_id);
+
+    button.style.display = 'none';
+    br.style.display = 'none';
+    points.style.display = 'none';
+    hidden_text.style.display = 'contents';
+}
+
+
+function moreButtonPP(comment_id) {
+    var button = document.getElementById('text-p-' + comment_id);
+    var points = document.getElementById('points-p-' + comment_id);
+    var hidden_text = document.getElementsByClassName('text-p-hidden-' + comment_id);
 
     for (let item of hidden_text) {
         item.style.display = 'block';
@@ -101,6 +130,7 @@ function clearImagesBtn() {
     $("#image_input").val('');
     document.getElementById('main-post-bottom-panel').style = null;
 }
+
 
 (function() {
     var last = -1;
