@@ -15,10 +15,6 @@ button::-moz-focus-inner {border: 0;}
   cursor: text;
 }
 
-span {
-    font-weight: bolder;
-}
-
 nav {
     padding-left: 6rem!important;
     padding-right: 6rem!important;
@@ -677,6 +673,10 @@ input:-webkit-autofill:active {
     flex-direction: column;
     color: #d7dce3;
     display: block;
+}
+
+.p-span {
+    font-weight: bolder;
 }
 
 @media screen and (max-width: 925px)

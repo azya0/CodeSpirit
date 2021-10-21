@@ -57,10 +57,10 @@
                         <b id='main-post-text' class="main-font main-white-font-color">{{ string }}</b>
                     {% endfor %}
                 {% elif string_long_p(post.text) == 1 %}
-                    <div class='main-hidden-content-div main-post-long-text'><span>{{ post.text[:2001] }}</span><span id="p-points-{{ post.id }}">...</span><br id="p-text-br-{{ post.id }}"><a id="p-text-a-{{ post.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonP('{{ post.id }}')" class="main-show-all-link">Show all...</a><span id="p-text-hidden-{{ post.id }}" style="display: none">{{ post.text[2001:] }}</span></div>
+                    <div class='main-hidden-content-div main-post-long-text'><span class="p-span">{{ post.text[:1001] }}</span><span id="p-points-{{ post.id }}" class="p-span">...</span><br id="p-text-br-{{ post.id }}"><a id="p-text-a-{{ post.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonP('{{ post.id }}')" class="main-show-all-link">Show all...</a><span id="p-text-hidden-{{ post.id }}" class="p-span" style="display: none">{{ post.text[1001:] }}</span></div>
                 {% elif string_long_p(post.text) == 2 %}
                     {% for string in enu(post.text.split('\n')[:8]) %}
-                        <b class="main-post-long-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-p-{{ post.id }}">...</span>{% endif %}</b>
+                        <b class="main-post-long-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-p-{{ post.id }}" class="p-span">...</span>{% endif %}</b>
                     {% endfor %}
                     <a id="text-p-{{ post.id }}" style="margin-left: 3.15%;display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonPP('{{ post.id }}')" class="main-show-all-link-p">Show all...</a>
                     {% for string in post.text.split('\n')[8:] %}
