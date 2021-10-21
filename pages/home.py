@@ -114,7 +114,6 @@ def add_post():
         post, data, session = Post(), flask.request.form.getlist('checkbox'), db_session.create_session()
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
-        print(form.text)
         post.text = format_string(form.text.data)
         if not post.text:
             return flask.redirect('/')
