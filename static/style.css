@@ -313,6 +313,7 @@ input:-webkit-autofill:active {
 }
 
 #main-post-header {
+    position: relative;
     margin-left: 4%;
     align-items: center;
 }
@@ -505,11 +506,18 @@ input:-webkit-autofill:active {
     margin-bottom: 1%;
 }
 
-.dropdown-link {
+.main-dropdown-link {
     color: #d7dce3!important;
+    font-size: 15px;
+}
+
+.main-delete-link {
+    background-color: #d24545b5;
+    border-radius: 5px;
 }
 
 .main-post-dropdown-menu {
+    right: 2%;
     color: #d7dce3;
     background: #1a1f26;
     padding: 8px 15px;
