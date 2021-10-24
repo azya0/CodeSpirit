@@ -1,5 +1,5 @@
 from werkzeug.utils import secure_filename
-from data.__all_models import User, Post, FilePost, Comment
+from data.__all_models import User, Post, File, Comment
 from data.forms import NewPostForm, CommentForm
 from flask_login import current_user
 from flask import render_template
@@ -22,8 +22,9 @@ def format_string(string: str) -> str:
         '&nbsp;': ' ',
         '<div>': '',
         '</div>': '',
-        '<br>': '\n'
+        '\\n': '\n'
     }
+
     string = string.strip()
     for elm in replace_dict:
         string = string.replace(elm, replace_dict[elm]).strip()
@@ -88,12 +89,12 @@ def main_page():
     data = {
         'session': session,
         'posts': session.query(Post).all(),
-        'files': session.query(FilePost),
+        'files': session.query(File),
         'comments': session.query(Comment),
         'form': form,
         'comment_form': comment_form,
         'User': User,
-        'FilePost': FilePost,
+        'File': File,
         'Comment': Comment,
         'current_user': current_user,
         'len': len,
@@ -109,19 +110,8 @@ def main_page():
 
 @blueprint.route('/add_post', methods=['POST'])
 def add_post():
-    form = NewPostForm()
-    if form.validate_on_submit():
-        post, data, session = Post(), flask.request.form.getlist('checkbox'), db_session.create_session()
-        post.datetime = datetime.datetime.now()
-        post.author = current_user.id
-        post.text = format_string(form.text.data)
-        if not post.text:
-            return flask.redirect('/')
-        post.q_and_a = 'q&a' in data
-        post.anonymous = 'anon' in data
-        f_req = flask.request.files.getlist("image_input[]")
-
-        files = []
+    def get_files(f_req):
+        file_list = []
         for file in f_req:
             if not file.filename:
                 continue
@@ -136,18 +126,38 @@ def add_post():
 
             file.save(os.path.join(f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way[:-1]}",
                                    filename + '.' + file.filename.split('.')[-1]))
-            files += [f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way}" + filename + '.' + file.filename.split('.')[-1]]
+            file_list += [
+                f"{flask.current_app.config['UPLOAD_FOLDER']}/{file_way}" + filename + '.' + file.filename.split('.')[
+                    -1]]
+        return file_list
 
-        if not post.text and not files:
-            return False
+    def add_img(file_list):
+        if not post.text and not file_list:
+            return
 
-        session.add(post)
-        for way in files:
-            file = FilePost()
+        for way in file_list:
+            file = File()
+            file.type = 'img'
             file.author = current_user.id
             file.post_id = session.query(Post).filter(Post.author == current_user.id).all()[-1].id
             file.way = way
             session.add(file)
+
+    form = NewPostForm()
+    if form.validate_on_submit():
+        post, data, session = Post(), flask.request.form.getlist('checkbox'), db_session.create_session()
+        post.datetime = datetime.datetime.now()
+        post.author = current_user.id
+        post.text = format_string(form.text.data)
+        if not post.text:
+            return flask.redirect('/')
+        post.q_and_a = 'q&a' in data
+        post.anonymous = 'anon' in data
+        session.add(post)
+
+        files = get_files(flask.request.files.getlist("image_input[]"))
+        add_img(files)
+
         author = session.query(User).get(current_user.id)
         author.posts += f",{session.query(Post).filter(Post.author == current_user.id).all()[-1].id}"
         session.commit()

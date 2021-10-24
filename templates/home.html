@@ -69,9 +69,9 @@
                 {% elif string_long_p(post.text) == 1 %}
                     <div class='main-hidden-content-div main-post-long-text'><span class="p-span">{{ post.text[:1001] }}</span><span id="p-points-{{ post.id }}" class="p-span">...</span><br id="p-text-br-{{ post.id }}"><a id="p-text-a-{{ post.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonP('{{ post.id }}')" class="main-show-all-link">Show all...</a><span id="p-text-hidden-{{ post.id }}" class="p-span" style="display: none">{{ post.text[1001:] }}</span></div>
                 {% endif %}
-                {% if files.filter(FilePost.post_id == post.id).first() %}
+                {% if files.filter(File.post_id == post.id).first() %}
                     <div id="main-post-files">
-                    {% for image in files.filter(FilePost.post_id == post.id).all() %}
+                    {% for image in files.filter(File.post_id == post.id).all() %}
                         {% if is_file(image.way) %}
                             <img id='main-image-in-post' src="{{ image.way }}">
                         {% else %}

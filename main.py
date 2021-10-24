@@ -13,6 +13,7 @@ app.config['UPLOAD_FOLDER'] = config['App']['UPLOAD_FOLDER']
 app.config['MAX_CONTENT_LENGTH'] = int(config['App']['MAX_CONTENT_LENGTH'])
 app.config['last_uploaded_file'] = config['App']['last_file_way']
 app.add_url_rule("/uploads/<name>", endpoint="download_file", build_only=True)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 

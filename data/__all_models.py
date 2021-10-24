@@ -57,10 +57,11 @@ class Idea(UserMixin, SqlAlchemyBase, SerializerMixin):
 	authors = Column(String)
 
 
-class FilePost(UserMixin, SqlAlchemyBase, SerializerMixin):
+class File(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "files"
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	way = Column(String)
+	type = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
 	post_id = Column(Integer, ForeignKey('posts.id'))
 

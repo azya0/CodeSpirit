@@ -28,7 +28,7 @@ function postClicked () {
 function replaceText() {
     var flex = document.getElementById('text');
     var div = document.getElementById('main-post-input');
-    flex.value = div.innerHTML;
+    flex.value = div.innerText.replace(/\r?\n|\r/g, "\\n");
 }
 
 
