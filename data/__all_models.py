@@ -28,9 +28,7 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	email = Column(String, unique=True)
 	password = Column(String)
 	description = Column(Text, default="")
-	posts = Column(String, default="")
 	likes = Column(String, default="")
-	follows = Column(String, default="")
 
 
 class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -42,19 +40,7 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
 	comments = Column(String, default="")
-	refers = Column(Integer, default=-1)
-	likes = Column(String, default="")
-	dislikes = Column(String, default="")
-	ideas = Column(String, default="")
-
-
-class Idea(UserMixin, SqlAlchemyBase, SerializerMixin):
-	__tablename__ = "ideas"
-	id = Column(Integer, primary_key=True, autoincrement=True)
-	posts = Column(String, default="")
-	likes = Column(String, default="")
-	dislikes = Column(String, default="")
-	authors = Column(String)
+	likes = Column(Integer, default=0)
 
 
 class File(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -71,5 +57,15 @@ class Comment(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	text = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
+	likes = Column(Integer, default=0)
 	post_id = Column(Integer, ForeignKey('posts.id'))
+	datetime = Column(DateTime)
+
+
+class Like(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "likes"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	author = Column(Integer, ForeignKey('users.id'))
+	type = Column(String)
+	obj_id = Column(Integer)
 	datetime = Column(DateTime)

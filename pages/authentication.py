@@ -1,7 +1,7 @@
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from data.forms import LoginForm, RegistrationForm
-from data.__all_models import User, Post, Idea
+from data.__all_models import User, Post
 from flask import render_template, redirect
 import flask
 import json

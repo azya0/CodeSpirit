@@ -306,7 +306,7 @@ input:-webkit-autofill:active {
     margin: 0 auto;
 }
 
-#main-post {
+.main-post {
     background-color: #1a1f26;
     border-radius: 5px;
     margin-bottom: 2.5%;
@@ -511,9 +511,42 @@ input:-webkit-autofill:active {
     font-size: 15px;
 }
 
+.main-deleted-post {
+    margin-top: 2%;
+    margin-bottom: 2%;
+    text-align: center;
+    padding: 1%;
+    background-color: #1a1f26;
+    border-bottom: 2px solid #d7dce3;
+}
+
+.main-deleted-span {
+    color: #d7dce3;
+    font-weight: bold;
+}
+
 .main-delete-link {
     background-color: #d24545b5;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.main-likes {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.main-likes-num {
+    color: #d7dce3;
+    font-weight: bold;
+    margin-right: 20%;
+}
+
+.main-already-liked {
+    color: #d24545!important;
 }
 
 .main-post-dropdown-menu {

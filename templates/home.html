@@ -32,12 +32,12 @@
 
     <div id="main-posts">
         {% for post in posts %}
-            <div id="main-post">
+            <div id='{{ post.id }}' class="main-post">
                 <hr>
                 <div id="main-post-header">
                     <div id="post-user">
                         <a href="/account/{{ post.author }}" id="main-post-user-link">
-                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;font-size: 30px!important;"></i>
+                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;font-size: 25px!important;"></i>
                             <b class="main-font main-white-font-color" style="margin-left: 12%;font-size: 23px;">{{ get_user(post.author).name }}</b><br>
                         </a>
                         <div>
@@ -46,7 +46,7 @@
                             </button>
                             <div id="main-post-dropdown" class="main-post-dropdown-menu">
                                 {% if post.author == current_user.id %}
-                                    <a href="#" class="main-dropdown-link main-delete-link">Delete</a>
+                                    <a onclick="deletePost({{ post.id }})" class="main-dropdown-link main-delete-link" role="link">Delete</a>
                                 {% endif %}
                                 <a href="#" class="main-dropdown-link">It is not interesting</a>
                                 <a href="#" class="main-dropdown-link">Complain</a>
@@ -83,7 +83,7 @@
                 <br>
                 <div id="main-post-other">
                     <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
-                    <small class="main-font main-white-font-color">{{ post.datetime }} & {{ len(post.likes.split()) }} likes & {{ len(post.dislikes.split()) }} dislikes</small>
+                    <small class="main-font main-white-font-color">{{ post.datetime }} & {{ post.likes }} likes</small>
                 </div>
                 <hr class="main-comment-hr">
                 <div class="main-post-comments">
@@ -114,7 +114,10 @@
                             </div>
                             <div class="main-comment-content">
                                 <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime }}</p>
-                                <i class="fas fa-heart main-like-icon"></i>
+                                <a class="main-likes" onclick="likeComment({{ comment.id }})">
+                                    <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ comment.likes if comment.likes else '' }}</span>
+                                    <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) %}main-already-liked{% endif %}"></i>
+                                </a>
                             </div>
                         </div>
                         {% if comments.filter(Comment.post_id == post.id).all()[-1] != comment %}

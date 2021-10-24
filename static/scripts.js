@@ -196,3 +196,57 @@ function clearImagesBtn() {
     }
 
   })()
+
+function deletePost(post_id) {
+    $.ajax({
+        url: '/delete_post/' + post_id,
+        type: 'DELETE',
+        success: function() {
+            post = document.getElementById(post_id);
+            var div = document.createElement('div');
+            div.classList.add("main-deleted-post");
+
+            span = document.createElement('span');
+            span.innerHTML = 'Once, a long time ago, there was a post here...'
+            span.classList.add('main-deleted-span');
+
+            div.appendChild(span)
+
+            post.replaceWith(div);
+        }
+    });
+}
+
+function likeComment(id) {
+    $.ajax({
+        url: '/like/comment/' + id,
+        type: 'GET',
+        success: function(data) {
+            heart = document.getElementById('heart-' + id);
+            span = document.getElementById('likes-' + id);
+            if (data.result == 'add') {
+                if (!span.innerHTML) {
+                    span.innerHTML = '1';
+                }
+                else {
+                    span.innerHTML = parseInt(span.innerHTML) + 1;
+                }
+                span.classList.add('main-already-liked');
+                heart.classList.add('main-already-liked');
+            }
+            else if (data.result == 'cancel') {
+                if (parseInt(span.innerHTML) - 1 == 0) {
+                    span.innerHTML = '';
+                }
+                else {
+                    span.innerHTML = parseInt(span.innerHTML) - 1;
+                }
+                span.classList.remove('main-already-liked');
+                heart.classList.remove('main-already-liked');
+            }
+            else {
+                console.log(data.result);
+            }
+        }
+    });
+}

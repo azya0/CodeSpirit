@@ -1,7 +1,7 @@
 from werkzeug.utils import secure_filename
-from data.__all_models import User, Post, File, Comment
+from data.__all_models import *
 from data.forms import NewPostForm, CommentForm
-from flask_login import current_user
+from flask_login import login_required, current_user
 from flask import render_template
 import flask
 import datetime
@@ -91,10 +91,12 @@ def main_page():
         'posts': session.query(Post).all(),
         'files': session.query(File),
         'comments': session.query(Comment),
+        'likes': session.query(Like),
         'form': form,
         'comment_form': comment_form,
         'User': User,
         'File': File,
+        'Like': Like,
         'Comment': Comment,
         'current_user': current_user,
         'len': len,
@@ -102,12 +104,16 @@ def main_page():
         'enu': enumerate,
         'string_long': lambda x: 1 if len(x) >= 400 else 2 if x.count('\n') > 14 else 0,
         'string_long_p': lambda x: 1 if len(x) >= 1700 else 2 if x.count('\n') > 14 else 0,
+        'is_liked': lambda x: session.query(Like).filter(Like.author == current_user.id
+                                                         and Like.type == 'comment'
+                                                         and Like.obj_id == x.id),
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
     return render_template("home.html", **data)
 
 
+@login_required
 @blueprint.route('/add_post', methods=['POST'])
 def add_post():
     def get_files(f_req):
@@ -154,16 +160,24 @@ def add_post():
         post.q_and_a = 'q&a' in data
         post.anonymous = 'anon' in data
         session.add(post)
-
         files = get_files(flask.request.files.getlist("image_input[]"))
         add_img(files)
-
-        author = session.query(User).get(current_user.id)
-        author.posts += f",{session.query(Post).filter(Post.author == current_user.id).all()[-1].id}"
         session.commit()
     return flask.redirect('/')
 
 
+@login_required
+@blueprint.route('/delete_post/<int:id>', methods=['DELETE'])
+def delete_post(id):
+    session = db_session.create_session()
+    post = session.query(Post).get(id)
+    if post and current_user.id == post.author:
+        session.delete(post)
+        session.commit()
+    return flask.jsonify({'success': True})
+
+
+@login_required
 @blueprint.route('/add_comment/<int:post_id>', methods=['POST'])
 def add_comment(post_id: int):
     form = CommentForm()
@@ -178,3 +192,45 @@ def add_comment(post_id: int):
         session.add(comment)
         session.commit()
     return flask.redirect('/')
+
+
+@login_required
+@blueprint.route('/like/<string:type_>/<int:id>', methods=['GET', 'PUT'])
+def is_comment_liked(type_: str, id: int):
+    WT_ERROR = flask.jsonify({'result': 'error: wrong type'})
+    OBJ_ERROR = flask.jsonify({'result': 'error: no such object'})
+
+    def correct_like(add):
+        if type_ == 'post':
+            obj = session.query(Post).filter(Post.id == id).first()
+        else:
+            obj = session.query(Comment).filter(Comment.id == id).first()
+        obj.likes += 1 if add else -1
+
+    def valid_type(type_of):
+        return type_of in ('post', 'comment')
+
+    if not valid_type(type_):
+        return WT_ERROR
+
+    session = db_session.create_session()
+    like = session.query(Like).filter(Like.author == current_user.id
+                                      and Like.type == type_
+                                      and Like.obj_id == id).first()
+    if like:
+        if valid_type(like.type):
+            correct_like(False)
+        else:
+            return WT_ERROR
+        session.delete(like)
+        result = 'cancel'
+    else:
+        new_like = Like()
+        new_like.author = current_user.id
+        new_like.obj_id = id
+        new_like.type = type_
+        session.add(new_like)
+        correct_like(True)
+        result = 'add'
+    session.commit()
+    return flask.jsonify({'result': result})
