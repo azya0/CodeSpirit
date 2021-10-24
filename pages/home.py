@@ -106,7 +106,7 @@ def main_page():
         'string_long_p': lambda x: 1 if len(x) >= 1700 else 2 if x.count('\n') > 14 else 0,
         'is_liked': lambda x: session.query(Like).filter(Like.author == current_user.id
                                                          and Like.type == 'comment'
-                                                         and Like.obj_id == x.id),
+                                                         and Like.obj_id == x.id).first(),
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
