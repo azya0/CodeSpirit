@@ -1,3 +1,6 @@
+last = -1;
+
+
 function postClicked () {
     window.addEventListener('click',function(elm){
 
@@ -133,7 +136,6 @@ function clearImagesBtn() {
 
 
 (function() {
-    var last = -1;
     document.addEventListener('mouseover', EasyTogglerHandler);
     function EasyTogglerHandler(event){
         const EY_BTN = event.target.closest('[data-easy-toggle]');
@@ -213,6 +215,8 @@ function deletePost(post_id) {
             div.appendChild(span)
 
             post.replaceWith(div);
+
+            last = -1;
         }
     });
 }

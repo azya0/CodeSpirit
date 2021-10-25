@@ -81,6 +81,13 @@ def account(user_id):
     return render_template("account.html", **data)
 
 
+def is_liked(id):
+    session = db_session.create_session()
+    data = session.query(Like).filter(Like.author == current_user.id).filter(
+        Like.type == 'comment').filter(Like.obj_id == id).first()
+    return data
+
+
 @blueprint.route('/', methods=['GET', 'POST'])
 def main_page():
     session = db_session.create_session()
@@ -104,9 +111,7 @@ def main_page():
         'enu': enumerate,
         'string_long': lambda x: 1 if len(x) >= 400 else 2 if x.count('\n') > 14 else 0,
         'string_long_p': lambda x: 1 if len(x) >= 1700 else 2 if x.count('\n') > 14 else 0,
-        'is_liked': lambda x: session.query(Like).filter(Like.author == current_user.id
-                                                         and Like.type == 'comment'
-                                                         and Like.obj_id == x.id).first(),
+        'is_liked': is_liked,
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
@@ -214,9 +219,8 @@ def is_comment_liked(type_: str, id: int):
         return WT_ERROR
 
     session = db_session.create_session()
-    like = session.query(Like).filter(Like.author == current_user.id
-                                      and Like.type == type_
-                                      and Like.obj_id == id).first()
+    like = session.query(Like).filter(Like.author == current_user.id).filter(
+        Like.type == 'comment').filter(Like.obj_id == id).first()
     if like:
         if valid_type(like.type):
             correct_like(False)

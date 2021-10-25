@@ -38,7 +38,7 @@
                     <div id="post-user">
                         <a href="/account/{{ post.author }}" id="main-post-user-link">
                             <i class="fa fa-user-circle main-post-item i-post main-white-font-color" aria-hidden="true" style="margin-top: 0;font-size: 25px!important;"></i>
-                            <b class="main-font main-white-font-color" style="margin-left: 12%;font-size: 23px;">{{ get_user(post.author).name }}</b><br>
+                            <b class="main-font main-white-font-color" style="margin-left: 5%;font-size: 23px;">{{ get_user(post.author).name }}</b><br>
                         </a>
                         <div>
                             <button id='main-post-more-btn' data-easy-toggle="#main-post-dropdown" data-easy-class="show" data-easy-rcoe data-easy-parallel>
@@ -92,7 +92,7 @@
                             <div class="main-post-comment">
                                 <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
                                 <div class="main-comment-data">
-                                    <b class="main-comment-username">{{ get_user(comment.author).name }}</b>
+                                    <b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b>
                                     {% if not string_long(comment.text) %}
                                         {% for string in comment.text.split('\n') %}
                                             <b class="main-comment-text">{{ string }}</b>
@@ -116,7 +116,7 @@
                                 <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime }}</p>
                                 <a class="main-likes" onclick="likeComment({{ comment.id }})">
                                     <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ comment.likes if comment.likes else '' }}</span>
-                                    <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) %}main-already-liked{% endif %}"></i>
+                                    <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) != None %}main-already-liked{% endif %}"></i>
                                 </a>
                             </div>
                         </div>
