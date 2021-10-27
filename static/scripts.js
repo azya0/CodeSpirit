@@ -1,6 +1,22 @@
 last = -1;
 
 
+//function addContent(){
+//
+//	var $dump = $(".dump"),
+//  		curScroll = $(window).scrollTop(),
+//      curHeight = $('body').height(), newHeight;
+//
+//  $dump.prepend("<div class='dump_item'>" + Math.random() + "</div>");
+//
+// 	newHeight = $('body').height();
+//
+// 	scrollTo(0, curScroll + (newHeight - curHeight));
+//
+//}
+
+
+
 function postClicked () {
     window.addEventListener('click',function(elm){
 
@@ -208,6 +224,8 @@ $(document).ready(function () {
 });
 
 function addComment(post_id) {
+    var curScroll = $(window).scrollTop(),
+    curHeight = $('body').height(), newHeight;
     var form = $("#comment-form-" + post_id);
     $.ajax({
         url: '/add_comment/' + post_id,
@@ -243,6 +261,10 @@ function addComment(post_id) {
                 }
                 new_comment.appendTo('#main-post-comments-' + post_id);
                 document.getElementById('comment-post-' + post_id).innerHTML = '';
+
+                newHeight = $('body').height();
+
+                scrollTo(0, curScroll + (newHeight - curHeight));
             }
         }
     });

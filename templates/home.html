@@ -83,7 +83,7 @@
                 <br>
                 <div id="main-post-other">
                     <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
-                    <small class="main-font main-white-font-color">{{ post.datetime }} & {{ post.likes }} likes</small>
+                    <small class="main-font main-white-font-color">{{ post.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }} & {{ post.likes }} likes</small>
                 </div>
                 <hr class="main-comment-hr">
                 <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="main-comment-content">
-                                <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime }}</p>
+                                <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</p>
                                 <a class="main-likes" onclick="likeComment({{ comment.id }})">
                                     <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ comment.likes if comment.likes else '' }}</span>
                                     <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) != None %}main-already-liked{% endif %}"></i>
