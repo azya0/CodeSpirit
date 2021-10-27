@@ -276,7 +276,7 @@ function deletePost(post_id) {
         url: '/delete_post/' + post_id,
         type: 'DELETE',
         success: function() {
-            post = document.getElementById(post_id);
+            post = document.getElementById('post-' + post_id);
             var div = document.createElement('div');
             div.classList.add("main-deleted-post");
 
