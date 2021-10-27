@@ -1,0 +1,8 @@
+Flask==2.0.2
+Flask-Login==0.5.0
+Flask-RESTful==0.3.9
+Flask-WTF==0.15.1
+SQLAlchemy==1.4.26
+SQLAlchemy-serializer==1.4.1
+WTForms==2.3.3
+validate-email==1.3
