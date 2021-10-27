@@ -199,6 +199,56 @@ function clearImagesBtn() {
 
   })()
 
+
+$(document).ready(function () {
+    $(".comment-form" ).submit(function( event ) {
+        addComment(jQuery(this).attr('_post'));
+        event.preventDefault();
+    });
+});
+
+function addComment(post_id) {
+    var form = $("#comment-form-" + post_id);
+    $.ajax({
+        url: '/add_comment/' + post_id,
+        type: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            if (response.result == 'success') {
+                post =  $("#post-" + post_id);
+                comments = $('.main-post-comments:first');
+                new_hr = $('<hr class="main-hr-for-comments">');
+                string = `
+                <div class="main-comment-union">
+                    <div class="main-post-comment">
+                        <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                        <div class="main-comment-data">
+                            <b class="main-comment-username main-strong">${response.author}</b>
+                            <b class="main-comment-text">${response.text}</b>
+                        </div>
+                    </div>
+                    <div class="main-comment-content">
+                        <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">${response.datetime}</p>
+                        <a class="main-likes" onclick="likeComment(${response.id})">
+                            <span id="likes-${response.id}" class="main-likes-num"></span>
+                            <i id='heart-${response.id}' class="fa fa-heart main-like-icon"></i>
+                        </a>
+                    </div>
+                 </div>
+                `
+                var new_comment = $(string);
+                var hr = $('<hr class="main-hr-for-comments">');
+                if (!response.is_first) {
+                    hr.appendTo('#main-post-comments-' + post_id);
+                }
+                new_comment.appendTo('#main-post-comments-' + post_id);
+                document.getElementById('comment-post-' + post_id).innerHTML = '';
+            }
+        }
+    });
+}
+
+
 function deletePost(post_id) {
     $.ajax({
         url: '/delete_post/' + post_id,
@@ -225,10 +275,10 @@ function likeComment(id) {
     $.ajax({
         url: '/like/comment/' + id,
         type: 'GET',
-        success: function(data) {
+        success: function(response) {
             heart = document.getElementById('heart-' + id);
             span = document.getElementById('likes-' + id);
-            if (data.result == 'add') {
+            if (response.result == 'add') {
                 if (!span.innerHTML) {
                     span.innerHTML = '1';
                 }
@@ -238,7 +288,7 @@ function likeComment(id) {
                 span.classList.add('main-already-liked');
                 heart.classList.add('main-already-liked');
             }
-            else if (data.result == 'cancel') {
+            else if (response.result == 'cancel') {
                 if (parseInt(span.innerHTML) - 1 == 0) {
                     span.innerHTML = '';
                 }
@@ -249,7 +299,7 @@ function likeComment(id) {
                 heart.classList.remove('main-already-liked');
             }
             else {
-                console.log(data.result);
+                console.log(response.result);
             }
         }
     });

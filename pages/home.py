@@ -185,18 +185,28 @@ def delete_post(id):
 @login_required
 @blueprint.route('/add_comment/<int:post_id>', methods=['POST'])
 def add_comment(post_id: int):
-    form = CommentForm()
-    if form.validate_on_submit():
-        comment, session = Comment(), db_session.create_session()
-        comment.text = format_string(form.text.data)
-        if not comment.text:
-            return flask.redirect('/')
-        comment.author = current_user.id
-        comment.post_id = post_id
-        comment.datetime = datetime.datetime.now()
-        session.add(comment)
-        session.commit()
-    return flask.redirect('/')
+    try:
+        form = CommentForm()
+        if form.validate_on_submit():
+            comment, session = Comment(), db_session.create_session()
+            comment.text = format_string(form.text.data)
+            if not comment.text:
+                return flask.redirect('/')
+            comment.author = current_user.id
+            comment.post_id = post_id
+            comment.datetime = datetime.datetime.now()
+            session.add(comment)
+            session.commit()
+            return flask.jsonify({'result': 'success',
+                                  'id': comment.id,
+                                  'author': session.query(User).get(comment.author).name,
+                                  'text': comment.text,
+                                  'datetime': comment.datetime,
+                                  'is_first': True if len(session.query(Comment).filter(
+                                      Comment.post_id == post_id).all()) == 1 else False})
+    except BaseException as exception:
+        return flask.jsonify({'result': 'error', 'error': f'{exception}'})
+    return flask.jsonify({'result': 'unvalidated'})
 
 
 @login_required
