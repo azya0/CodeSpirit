@@ -87,7 +87,7 @@
                 </div>
                 <hr class="main-comment-hr">
                 <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
-                    {% for comment in comments.filter(Comment.post_id == post.id).all() %}
+                    {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
                         <div class="main-comment-union">
                             <div class="main-post-comment">
                                 <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>

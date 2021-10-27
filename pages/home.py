@@ -95,7 +95,7 @@ def main_page():
     comment_form = CommentForm()
     data = {
         'session': session,
-        'posts': session.query(Post).all(),
+        'posts': sorted(session.query(Post).all(), key=lambda x: x.datetime, reverse=True),
         'files': session.query(File),
         'comments': session.query(Comment),
         'likes': session.query(Like),
@@ -106,6 +106,8 @@ def main_page():
         'Like': Like,
         'Comment': Comment,
         'current_user': current_user,
+        'sorted': sorted,
+        'cl_filter': lambda x: x.likes,
         'len': len,
         'str': str,
         'enu': enumerate,
