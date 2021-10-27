@@ -23,6 +23,15 @@ b, strong{
     font-weight: bolder;
 }
 
+.df-jc-sb {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
 nav {
     padding-left: 6rem!important;
     padding-right: 6rem!important;
@@ -539,8 +548,15 @@ input:-webkit-autofill:active {
     cursor: pointer;
 }
 
+.fa-times {
+    cursor: pointer;
+    transition: all .2s cubic-bezier(0.39, 0.12, 1, 1) 0s;
+}
+
 .main-likes {
+    transition: all .2s cubic-bezier(0.39, 0.12, 1, 1) 0s;
     height: 18px;
+    margin-right: .3%;
     cursor: pointer;
     display: flex;
     flex-direction: row;

@@ -1,22 +1,6 @@
 last = -1;
 
 
-//function addContent(){
-//
-//	var $dump = $(".dump"),
-//  		curScroll = $(window).scrollTop(),
-//      curHeight = $('body').height(), newHeight;
-//
-//  $dump.prepend("<div class='dump_item'>" + Math.random() + "</div>");
-//
-// 	newHeight = $('body').height();
-//
-// 	scrollTo(0, curScroll + (newHeight - curHeight));
-//
-//}
-
-
-
 function postClicked () {
     window.addEventListener('click',function(elm){
 
@@ -221,6 +205,20 @@ $(document).ready(function () {
         addComment(jQuery(this).attr('_post'));
         event.preventDefault();
     });
+
+    $(".main-comment-union").hover(
+        function() {
+            if ($( this ).attr('comment_liked') == 'False') {
+                $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+                }
+            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+        }, function() {
+            if ($( this ).attr('comment_liked') == 'False') {
+                $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+            }
+            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+        }
+        );
 });
 
 function addComment(post_id) {
@@ -237,17 +235,20 @@ function addComment(post_id) {
                 comments = $('.main-post-comments:first');
                 new_hr = $('<hr class="main-hr-for-comments">');
                 string = `
-                <div class="main-comment-union">
+                <div comment_id="${response.id}" comment_liked='False' class="main-comment-union">
                     <div class="main-post-comment">
                         <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
                         <div class="main-comment-data">
-                            <b class="main-comment-username main-strong">${response.author}</b>
+                            <div class='df-jc-sb'>
+                                <b class="main-comment-username main-strong">${response.author}</b>
+                                <i id="delete-${response.id}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment(${response.id})"></i>
+                            </div>
                             <b class="main-comment-text">${response.text}</b>
                         </div>
                     </div>
                     <div class="main-comment-content">
                         <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">${response.datetime}</p>
-                        <a class="main-likes" onclick="likeComment(${response.id})">
+                        <a id='main-likes-${response.id}' class="main-likes" onclick="likeComment(${response.id})" style="visibility: hidden;opacity: 0;">
                             <span id="likes-${response.id}" class="main-likes-num"></span>
                             <i id='heart-${response.id}' class="fa fa-heart main-like-icon"></i>
                         </a>
@@ -265,6 +266,19 @@ function addComment(post_id) {
                 newHeight = $('body').height();
 
                 scrollTo(0, curScroll + (newHeight - curHeight));
+                $('[comment_id=' + response.id + ']').hover(
+                    function() {
+                        if ($( this ).attr('comment_liked') == 'False') {
+                            $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+                            }
+                            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+                    }, function() {
+                        if ($( this ).attr('comment_liked') == 'False') {
+                            $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+                            }
+                            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+                    }
+                );
             }
         }
     });
@@ -309,6 +323,7 @@ function likeComment(id) {
                 }
                 span.classList.add('main-already-liked');
                 heart.classList.add('main-already-liked');
+                $('[comment_id=' + id + ']').attr('comment_liked', 'True');
             }
             else if (response.result == 'cancel') {
                 if (parseInt(span.innerHTML) - 1 == 0) {
@@ -319,6 +334,7 @@ function likeComment(id) {
                 }
                 span.classList.remove('main-already-liked');
                 heart.classList.remove('main-already-liked');
+                $('[comment_id=' + id + ']').attr('comment_liked', 'False');
             }
             else {
                 console.log(response.result);
