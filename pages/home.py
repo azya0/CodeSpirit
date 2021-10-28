@@ -162,7 +162,7 @@ def add_post():
         post.datetime = datetime.datetime.now()
         post.author = current_user.id
         post.text = format_string(form.text.data)
-        if not post.text:
+        if not post.text and not flask.request.files.getlist("image_input[]"):
             return flask.redirect('/')
         post.q_and_a = 'q&a' in data
         post.anonymous = 'anon' in data
@@ -180,7 +180,13 @@ def delete_post(id):
     post = session.query(Post).get(id)
     if post and current_user.id == post.author:
         session.delete(post)
-        session.commit()
+    for file in session.query(File).filter(File.post_id == id).all():
+        if os.path.isfile(file.way):
+            os.remove(file.way)
+        session.delete(file)
+    for comment in session.query(Comment).filter(Comment.post_id == id).all():
+        session.delete(comment)
+    session.commit()
     return flask.jsonify({'success': True})
 
 
