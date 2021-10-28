@@ -235,7 +235,7 @@ function addComment(post_id) {
                 comments = $('.main-post-comments:first');
                 new_hr = $('<hr class="main-hr-for-comments">');
                 string = `
-                <div comment_id="${response.id}" comment_liked='False' class="main-comment-union">
+                <div id='comment-${response.id}' comment_id="${response.id}" comment_liked='False' class="main-comment-union">
                     <div class="main-post-comment">
                         <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
                         <div class="main-comment-data">
@@ -303,6 +303,26 @@ function deletePost(post_id) {
             post.replaceWith(div);
 
             last = -1;
+        }
+    });
+}
+
+function deleteComment(id) {
+    $.ajax({
+        url: '/delete_comment/' + id,
+        type: 'DELETE',
+        success: function() {
+            post = document.getElementById('comment-' + id);
+            var div = document.createElement('div');
+            div.classList.add("main-deleted-post");
+
+            span = document.createElement('span');
+            span.innerHTML = 'Once, a long time ago, there was a comment here...'
+            span.classList.add('main-deleted-span');
+
+            div.appendChild(span)
+
+            post.replaceWith(div);
         }
     });
 }

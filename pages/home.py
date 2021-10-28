@@ -215,7 +215,6 @@ def add_comment(post_id: int):
 @blueprint.route('/like/<string:type_>/<int:id>', methods=['GET', 'PUT'])
 def is_comment_liked(type_: str, id: int):
     WT_ERROR = flask.jsonify({'result': 'error: wrong type'})
-    OBJ_ERROR = flask.jsonify({'result': 'error: no such object'})
 
     def correct_like(add):
         if type_ == 'post':
@@ -250,3 +249,16 @@ def is_comment_liked(type_: str, id: int):
         result = 'add'
     session.commit()
     return flask.jsonify({'result': result})
+
+
+@login_required
+@blueprint.route('/delete_comment/<int:id>', methods=['DELETE'])
+def delete_comment(id):
+    session = db_session.create_session()
+    comment = session.query(Comment).get(id)
+    if comment and current_user.id == comment.author:
+        session.delete(comment)
+    for like in session.query(Like).filter(Like.type == 'comment').filter(Like.obj_id == id).all():
+        session.delete(like)
+    session.commit()
+    return flask.jsonify({'success': True})

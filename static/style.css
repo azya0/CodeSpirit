@@ -549,12 +549,13 @@ input:-webkit-autofill:active {
 }
 
 .fa-times {
+    color: #d7dce3b0;
     cursor: pointer;
     transition: all .2s cubic-bezier(0.39, 0.12, 1, 1) 0s;
 }
 
 .main-likes {
-    transition: all .2s cubic-bezier(0.39, 0.12, 1, 1) 0s;
+    transition: all .2#d7dce3b0s cubic-bezier(0.39, 0.12, 1, 1) 0s;
     height: 18px;
     margin-right: .3%;
     cursor: pointer;
@@ -565,7 +566,7 @@ input:-webkit-autofill:active {
 }
 
 .main-likes-num {
-    color: #d7dce3;
+    color: #d7dce3b0;
     font-weight: bold;
     margin-right: 20%;
 }
@@ -719,7 +720,7 @@ input:-webkit-autofill:active {
 }
 
 .main-like-icon {
-    color: #d7dce3;
+    color: #d7dce3b0;
     font-size: 10.5px!important;
 }
 
