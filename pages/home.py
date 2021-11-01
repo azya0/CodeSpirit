@@ -1,11 +1,10 @@
 from werkzeug.utils import secure_filename
 from data.__all_models import *
-from data.forms import NewPostForm, CommentForm
+from data.forms import *
 from flask_login import login_required, current_user
 from flask import render_template
 import flask
 import datetime
-import json
 import os
 
 from data import db_session
@@ -120,8 +119,8 @@ def main_page():
     return render_template("home.html", **data)
 
 
-@login_required
 @blueprint.route('/add_post', methods=['POST'])
+@login_required
 def add_post():
     def get_files(f_req):
         file_list = []
@@ -164,7 +163,7 @@ def add_post():
         post.text = format_string(form.text.data)
         if not post.text and not flask.request.files.getlist("image_input[]"):
             return flask.redirect('/')
-        post.q_and_a = 'q&a' in data
+        post.turn_off_comments = 'toc' in data
         post.anonymous = 'anon' in data
         session.add(post)
         files = get_files(flask.request.files.getlist("image_input[]"))
@@ -173,8 +172,8 @@ def add_post():
     return flask.redirect('/')
 
 
-@login_required
 @blueprint.route('/delete_post/<int:id>', methods=['DELETE'])
+@login_required
 def delete_post(id):
     session = db_session.create_session()
     post = session.query(Post).get(id)
@@ -190,8 +189,8 @@ def delete_post(id):
     return flask.jsonify({'success': True})
 
 
-@login_required
 @blueprint.route('/add_comment/<int:post_id>', methods=['POST'])
+@login_required
 def add_comment(post_id: int):
     try:
         form = CommentForm()
@@ -217,8 +216,8 @@ def add_comment(post_id: int):
     return flask.jsonify({'result': 'unvalidated'})
 
 
-@login_required
 @blueprint.route('/like/<string:type_>/<int:id>', methods=['GET', 'PUT'])
+@login_required
 def is_comment_liked(type_: str, id: int):
     WT_ERROR = flask.jsonify({'result': 'error: wrong type'})
 
@@ -257,8 +256,8 @@ def is_comment_liked(type_: str, id: int):
     return flask.jsonify({'result': result})
 
 
-@login_required
 @blueprint.route('/delete_comment/<int:id>', methods=['DELETE'])
+@login_required
 def delete_comment(id):
     session = db_session.create_session()
     comment = session.query(Comment).get(id)

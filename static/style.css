@@ -2,8 +2,10 @@ body {
     background-color: #010409f2;
 }
 
-a {text-decoration:none;}
-a:hover {text-decoration: none;}
+a {text-decoration:none;color:#d7dce3}
+a:hover {text-decoration: none;color:#afb5bb}
+input {outline:none;}
+textarea {outline:none;}
 button:active, button:focus {outline: none;}
 button::-moz-focus-inner {border: 0;}
 
@@ -29,6 +31,15 @@ b, strong{
     flex-direction: row;
     align-content: center;
     justify-content: space-between;
+    align-items: center;
+}
+
+.df-jc-c {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
     align-items: center;
 }
 
@@ -180,7 +191,7 @@ nav .bar {
 nav .bar span {
     color: #fff;
     position: absolute;
-    font-size: 35px;
+    font-size: 27px;
 }
 
 .nav-link {
@@ -707,7 +718,6 @@ input:-webkit-autofill:active {
     margin-right: 6.285%;
     word-wrap: break-word;
     color: #d7dce3;
-    margin-bottom: .5%;
 }
 
 .main-comment-content {
@@ -743,6 +753,67 @@ input:-webkit-autofill:active {
 
 .p-span {
     font-weight: bolder;
+}
+
+#main-qaa-ask {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #d7dce3;
+    border-radius: 7px;
+}
+
+#main-qaa-ask-link {
+    font-size: 25px;
+    text-transform: uppercase;
+    background: linear-gradient(#C33764, rgba(135, 60, 255, 0.0) 70%),
+                linear-gradient(-45deg, rgba(120, 155, 255, 0.9) 25%, #1D2671 65%);
+    color: #d7dce3;
+    font-weight: 650;
+    padding: 1% 4%;
+    border-radius: 19px;
+    transition: .5s;
+}
+
+#main-qaa-ask-link:hover {
+    color: #d7dce3a6;
+}
+
+.df-jc-c .fa-code {
+    font-size: 30px;
+    margin-right: .5%;
+}
+
+#main-qaa-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #1a1f26;
+    padding: 1% 3%;
+    padding-bottom: 3%;
+    border-radius: 14px;
+    box-shadow: 10px 9px 7px #080a0fd9;
+}
+
+.main-qaa-form-item {
+    width: 100%;
+    margin-bottom: 1%;
+    padding: .5%;
+}
+
+#main-ask-button {
+    width: 35%;
+    font-weight: bold;
+    background: #0d1015;
+    box-shadow: 7px 8px 8px #0d1015;
+    border-radius: 5px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    padding: .5%;
+    cursor: pointer;
+    border: none;
 }
 
 @media screen and (max-width: 925px)

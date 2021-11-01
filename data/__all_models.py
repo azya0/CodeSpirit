@@ -36,10 +36,32 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	author = Column(Integer, ForeignKey('users.id'))
 	text = Column(Text, default='')
-	q_and_a = Column(Boolean)
+	turn_off_comments = Column(Boolean, default=False)
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
 	comments = Column(String, default="")
+	likes = Column(Integer, default=0)
+
+
+class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "qaa"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	author = Column(Integer, ForeignKey('users.id'))
+	text = Column(Text, default='')
+	anonymous = Column(Boolean)
+	datetime = Column(DateTime)
+	likes = Column(Integer, default=0)
+	tags = Column(String, default="")
+	answered = Column(Boolean, default=False)
+
+
+class Answer(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "answ"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	qaa_id = Column(Integer, ForeignKey('qaa.id'))
+	author = Column(Integer, ForeignKey('users.id'))
+	text = Column(Text, default='')
+	datetime = Column(DateTime)
 	likes = Column(Integer, default=0)
 
 

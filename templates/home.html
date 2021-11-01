@@ -15,8 +15,8 @@
             </div>
             <div hidden id='main-post-bottom-panel' class="main-add-post-bottom main-white-font-color main-news-block main-align-div">
                 <div id="qa-div">
-                    <div class="main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Q&A</label><input id='qa-checkbox' value="q&a" type="checkbox" name="checkbox"></div>
-                    <div class="ml-2 main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">ANON</label><input id='an-checkbox' value="anon" type="checkbox" name="checkbox"></div>
+                    <div class="main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Turn off com's</label><input id='qa-checkbox' value="toc" type="checkbox" name="checkbox"></div>
+                    <div class="ml-2 main-align-div"><label for="#qa-checkbox" class="mr-2 main-post-label">Post anon</label><input id='an-checkbox' value="anon" type="checkbox" name="checkbox"></div>
                 </div>
                 {{ form.text(type="textarea", id="text", class='main-hidden-crutch', value='gay') }}
                 {{ form.submit(id='main-post-btn', type="submit", onclick='replaceText()') }}
@@ -85,62 +85,64 @@
                     <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
                     <small class="main-font main-white-font-color">{{ post.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }} & {{ post.likes }} likes</small>
                 </div>
-                <hr class="main-comment-hr">
-                <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
-                    {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
-                        <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ comment.likes != 0 }}' class="main-comment-union">
-                            <div class="main-post-comment">
-                                <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
-                                <div class="main-comment-data">
-                                    <div class='df-jc-sb'>
-                                        <b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b>
-                                        {% if comment.author == current_user.id %}
-                                            <i id="delete-{{ comment.id }}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment({{ comment.id }})"></i>
+                <hr class="main-comment-hr" style="{% if post.turn_off_comments %}opacity: 0;{% endif %}">
+                {% if not post.turn_off_comments %}
+                    <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
+                        {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
+                            <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ comment.likes != 0 }}' class="main-comment-union">
+                                <div class="main-post-comment">
+                                    <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                                    <div class="main-comment-data">
+                                        <div class='df-jc-sb'>
+                                            <b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b>
+                                            {% if comment.author == current_user.id %}
+                                                <i id="delete-{{ comment.id }}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment({{ comment.id }})"></i>
+                                            {% endif %}
+                                        </div>
+                                        {% if not string_long(comment.text) %}
+                                            {% for string in comment.text.split('\n') %}
+                                                <b class="main-comment-text">{{ string }}</b>
+                                            {% endfor %}
+                                        {% elif string_long(comment.text) == 2 %}
+                                            {% for string in enu(comment.text.split('\n')[:8]) %}
+                                                <b class="main-comment-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-n-{{ comment.id }}">...</span>{% endif %}</b>
+                                            {% endfor %}
+                                            <a id="text-n-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonN('{{ comment.id }}')" class="main-show-all-link-n">Show all...</a>
+                                            {% for string in comment.text.split('\n')[8:] %}
+                                                <b class="text-n-hidden-{{ comment.id }} main-comment-text" style="display: none">{{ string }}</b>
+                                            {% endfor %}
+                                        {% elif string_long(comment.text) == 1 %}
+                                            <div class='main-hidden-content-div'>
+                                                <span>{{ comment.text[:201] }}</span><span id="points-{{ comment.id }}">...</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[201:] }}</span>
+                                            </div>
                                         {% endif %}
                                     </div>
-                                    {% if not string_long(comment.text) %}
-                                        {% for string in comment.text.split('\n') %}
-                                            <b class="main-comment-text">{{ string }}</b>
-                                        {% endfor %}
-                                    {% elif string_long(comment.text) == 2 %}
-                                        {% for string in enu(comment.text.split('\n')[:8]) %}
-                                            <b class="main-comment-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-n-{{ comment.id }}">...</span>{% endif %}</b>
-                                        {% endfor %}
-                                        <a id="text-n-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonN('{{ comment.id }}')" class="main-show-all-link-n">Show all...</a>
-                                        {% for string in comment.text.split('\n')[8:] %}
-                                            <b class="text-n-hidden-{{ comment.id }} main-comment-text" style="display: none">{{ string }}</b>
-                                        {% endfor %}
-                                    {% elif string_long(comment.text) == 1 %}
-                                        <div class='main-hidden-content-div'>
-                                            <span>{{ comment.text[:201] }}</span><span id="points-{{ comment.id }}">...</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[201:] }}</span>
-                                        </div>
-                                    {% endif %}
+                                </div>
+                                <div class="main-comment-content">
+                                    <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</p>
+                                    <a id='main-likes-{{ comment.id }}' class="main-likes" onclick="likeComment({{ comment.id }})" style="{% if comment.likes != 0 %}visibility: visible;opacity: 1;{% else %}visibility: hidden;opacity: 0;{% endif %}">
+                                        <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ comment.likes if comment.likes else '' }}</span>
+                                        <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) != None %}main-already-liked{% endif %}"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="main-comment-content">
-                                <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</p>
-                                <a id='main-likes-{{ comment.id }}' class="main-likes" onclick="likeComment({{ comment.id }})" style="{% if comment.likes != 0 %}visibility: visible;opacity: 1;{% else %}visibility: hidden;opacity: 0;{% endif %}">
-                                    <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ comment.likes if comment.likes else '' }}</span>
-                                    <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) != None %}main-already-liked{% endif %}"></i>
-                                </a>
+                            {% if sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True)[-1] != comment %}
+                                <hr class="main-hr-for-comments">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div id="main-post-write-comments">
+                        <form id='comment-form-{{ post.id }}' class='comment-form' _post='{{ post.id }}' method="post" enctype=multipart/form-data action="/add_comment/{{ post.id }}" novalidate>
+                            {{ comment_form.hidden_tag() }}
+                            {{ comment_form.text(id='comments-hidden-input-' + str(post.id), type='hidden', post=post.id) }}
+                            <div class="main-flex">
+                                <i class="fa fa-user-circle main-comment-ava main-white-font-color" aria-hidden="true"></i>
+                                <div contenteditable="true" id='comment-post-{{ post.id }}' class="main-post-comment-input" placeholder="write comment..."></div>
+                                {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText("' + str(post.id) + '")', value="send") }}
                             </div>
-                        </div>
-                        {% if sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True)[-1] != comment %}
-                            <hr class="main-hr-for-comments">
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div id="main-post-write-comments">
-                    <form id='comment-form-{{ post.id }}' class='comment-form' _post='{{ post.id }}' method="post" enctype=multipart/form-data action="/add_comment/{{ post.id }}" novalidate>
-                        {{ comment_form.hidden_tag() }}
-                        {{ comment_form.text(id='comments-hidden-input-' + str(post.id), type='hidden', post=post.id) }}
-                        <div class="main-flex">
-                            <i class="fa fa-user-circle main-comment-ava main-white-font-color" aria-hidden="true"></i>
-                            <div contenteditable="true" id='comment-post-{{ post.id }}' class="main-post-comment-input" placeholder="write comment..."></div>
-                            {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText("' + str(post.id) + '")', value="send") }}
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

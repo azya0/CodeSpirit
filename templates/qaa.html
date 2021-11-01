@@ -1,0 +1,15 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+<div class="df-jc-c" style="margin-bottom: 2%;">
+    <i class="fas fa-code main-white-font-color"></i>
+    <h1 id="main-qaa-title" class="main-font main-white-font-color">Questions from developers to developers</h1>
+</div>
+<div class="df-jc-c">
+    <a id="main-qaa-ask-link" href="/q&a/form"><span>Ask a Question</span></a>
+</div>
+
+{% endblock %}

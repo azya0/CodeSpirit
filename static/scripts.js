@@ -38,7 +38,7 @@ function replaceText() {
 function replaceCommentText(post_id) {
     var flex = document.getElementById('comments-hidden-input-' + post_id);
     var div = document.getElementById('comment-post-' + post_id);
-    flex.value = div.innerHTML;
+    flex.value = div.innerText.replace(/\r?\n|\r/g, "\\n");
 }
 
 
@@ -243,7 +243,7 @@ function addComment(post_id) {
                                 <b class="main-comment-username main-strong">${response.author}</b>
                                 <i id="delete-${response.id}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment(${response.id})"></i>
                             </div>
-                            <b class="main-comment-text">${response.text}</b>
+                            <b class="main-comment-text">${response.text.replace(/\r?\n|\r/g, "<br>")}</b>
                         </div>
                     </div>
                     <div class="main-comment-content">
@@ -265,7 +265,6 @@ function addComment(post_id) {
 
                 newHeight = $('body').height();
 
-                scrollTo(0, curScroll + (newHeight - curHeight));
                 $('[comment_id=' + response.id + ']').hover(
                     function() {
                         if ($( this ).attr('comment_liked') == 'False') {
@@ -279,6 +278,7 @@ function addComment(post_id) {
                             $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
                     }
                 );
+                scrollTo(0, curScroll + (newHeight - curHeight));
             }
         }
     });

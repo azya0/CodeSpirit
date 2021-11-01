@@ -3,10 +3,6 @@ from wtforms import PasswordField, StringField, SubmitField, TextAreaField, Bool
 from wtforms.validators import DataRequired, EqualTo, Email
 
 
-class Follow(FlaskForm):
-    subnit = SubmitField("Follow")
-
-
 class NewPostForm(FlaskForm):
     __form__ = 'post'
     text = StringField("Enter the text")
@@ -33,3 +29,16 @@ class LoginForm(FlaskForm):
 class CommentForm(FlaskForm):
     __form__ = 'comment'
     text = StringField("write a comment...", validators=[DataRequired()])
+
+
+class QAAForm(FlaskForm):
+    __form__ = 'qaa'
+    title = StringField('What is the problem? Be short', validators=[DataRequired()])
+    text = TextAreaField(validators=[DataRequired()])
+    tags = StringField()
+    submit = SubmitField("Post")
+
+
+class AnswerForm(FlaskForm):
+    __form__ = 'answ'
+    text = StringField("write an answer...", validators=[DataRequired()])
