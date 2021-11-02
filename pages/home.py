@@ -62,7 +62,12 @@ def add_file():
     return under_return[:-1], under_return[-1]
 
 
-@blueprint.route('/account/<int:user_id>', methods=['GET', 'POST'])
+@blueprint.route('/profile', methods=['GET', 'POST'])
+def self_account():
+    return account(current_user.id)
+
+
+@blueprint.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def account(user_id):
     session = db_session.create_session()
     user = session.query(User).get(user_id)
@@ -70,14 +75,13 @@ def account(user_id):
     data = {
         'user': user,
         'session': session,
-        'posts': [session.query(Post).get(post_id) for post_id in user.posts.strip().split(",") if
-                  post_id.strip() != ""],
+        'posts': session.query(Post).filter(Post.author == user_id).all(),
         'form': form,
         'User': User,
         'len': len,
         'current_user': current_user
     }
-    return render_template("account.html", **data)
+    return render_template("profile.html", **data)
 
 
 def is_liked(id):

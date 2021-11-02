@@ -61,7 +61,7 @@
                 {% endif %}
                 <li class="active mx-3 d-line" style="font-size: 20px; padding-top: 0.4%;">
                     {% if current_user.is_authenticated %}
-                        <a class="nav-link main-font mr-4" href="/account/{{ current_user.id }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                        <a class="nav-link main-font mr-4" href="/profile/{{ current_user.id }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
                         <a class="nav-link main-font" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
                     {% else %}
                         <input class="main-registration-button-navbar" type="button" value="SIGN IN" onclick="window.location.href = '/login';">

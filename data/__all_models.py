@@ -46,13 +46,16 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "qaa"
 	id = Column(Integer, primary_key=True, autoincrement=True)
+	title = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
 	text = Column(Text, default='')
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
 	likes = Column(Integer, default=0)
 	tags = Column(String, default="")
+	answers = Column(Integer, default=0)
 	answered = Column(Boolean, default=False)
+	views = Column(Integer, default=0)
 
 
 class Answer(UserMixin, SqlAlchemyBase, SerializerMixin):

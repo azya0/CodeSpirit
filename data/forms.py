@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField, IntegerField
-from wtforms.validators import DataRequired, EqualTo, Email
+from wtforms.validators import DataRequired, EqualTo, Email, Length
 
 
 class NewPostForm(FlaskForm):
@@ -33,7 +33,7 @@ class CommentForm(FlaskForm):
 
 class QAAForm(FlaskForm):
     __form__ = 'qaa'
-    title = StringField('What is the problem? Be short', validators=[DataRequired()])
+    title = StringField('What is the problem? Be short', validators=[DataRequired(), Length(min=5, max=100)])
     text = TextAreaField(validators=[DataRequired()])
     tags = StringField()
     submit = SubmitField("Post")

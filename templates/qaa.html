@@ -8,8 +8,43 @@
     <i class="fas fa-code main-white-font-color"></i>
     <h1 id="main-qaa-title" class="main-font main-white-font-color">Questions from developers to developers</h1>
 </div>
-<div class="df-jc-c">
+<div class="df-jc-c" style="margin-bottom: 2%">
     <a id="main-qaa-ask-link" href="/q&a/form"><span>Ask a Question</span></a>
+</div>
+<div id="main-questions">
+    {% for question in questions %}
+        <div style="margin-bottom: 4%; width: 100%">
+            <div class="main-ask-container">
+                <div class="main-white-font-color main-qaa-panel">
+                    <span class="main-num">{{ question.likes }}</span>
+                    <span>votes</span>
+                    <span class="main-num">{{ question.answers }}</span>
+                    <span style="margin-bottom: 7.5%">answers</span>
+                    <small>{{ question.views }} views</small>
+                </div>
+                <div style="width: 100%;">
+                    <div class="main-question">
+                        <a class="main-question-title" href="#">{{ question.title }}</a><br>
+                        <b class="main-w-w">{{ qaa_text(question.text) }}</b>
+                    </div>
+                    <div class="main-qaa-back-data">
+                        {% if question.tags %}
+                            <div class="main-tags">
+                                {% for tag in question.tags.split() %}
+                                    <b class="main-tag">{{ tag }}</b>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <a class="qaa-user" style="font-size: 20px;" href="/profile/{{ question.author }}">
+                            <i class="fa fa-user-circle main-white-font-color" aria-hidden="true"></i>
+                            <span class="main-white-font-color">{{ author(question.author).name }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="main-qaa-hr">
+        </div>
+    {% endfor %}
 </div>
 
 {% endblock %}
