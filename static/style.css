@@ -17,8 +17,41 @@ button::-moz-focus-inner {border: 0;}
   cursor: text;
 }
 
-b, strong{
+b {
     font-weight: 400;
+}
+
+div .code {
+    padding: 12px;
+    background-color: #292d3e!important;
+    display: inline-block;
+    padding: 2%;
+    border-radius: 13px;
+    color: #e83e8c!important;
+    white-space: pre-wrap;
+}
+
+blockquote {
+    position: relative;
+    margin: 0 1em var(--s-prose-spacing) 1em;
+    padding: 0.4em 1em 0.4em 1em;
+    color: #d7dce3;
+}
+
+blockquote:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    border-radius: 8px;
+    background: #d7dce3;
+}
+
+.main-p {
+    margin: 0;
 }
 
 .main-strong {
@@ -43,9 +76,19 @@ b, strong{
     align-items: center;
 }
 
+.df-c {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
 .main-w-w {
     word-wrap: break-word;
     word-break: break-word;
+}
+
+.f-s-20 {
+    font-size: 20px;
 }
 
 nav {
@@ -896,6 +939,36 @@ input:-webkit-autofill:active {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#main-qaa-content {
+    margin-left: 1rem;
+    white-space: pre-wrap;
+    grid-column: 2;
+}
+
+.main-vote {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-arrow {
+    font-size: 40px!important;
+    cursor: pointer;
+}
+
+.main-qaa-page-content {
+    margin-top: 2%;
+    display: grid;
+    justify-content: start;
+    justify-items: start;
+}
+
+.main-qaa-selected {
+    color: #e8396b;
+    transition: .2s;
 }
 
 @media screen and (max-width: 925px)

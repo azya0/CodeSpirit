@@ -362,3 +362,88 @@ function likeComment(id) {
         }
     });
 }
+
+function from_text_to_tags() {
+    var text = document.getElementById('main-qaa-content').innerText;
+    const regex = /(?:^|[^\\])```(.*?)```/gs;
+    const searchRegExp = /\\```/g;
+    const replaceWith_ = '```';
+    let new_arr = [];
+    var last_num = 0;
+    var arr = Array.from(text.matchAll(regex), (x) => x[1]);
+    arr.forEach(function(item, i, arr) {
+        span = document.createElement('span');
+        index = text.indexOf("```" + item + "```");
+        span.innerText = text.substring(last_num, index).replace(searchRegExp, replaceWith_);
+        last_num = index + item.length + 6;
+        new_arr.push(span);
+        code = document.createElement('p');
+        code.classList.add('code');
+        code.classList.add('main-w-w');
+        code.innerText = item.trim();
+        new_arr.push(code);
+    });
+    span = document.createElement('span');
+    span.innerText = text.substring(last_num).replace(searchRegExp, replaceWith_);
+    new_arr.push(span);
+    document.getElementById('main-qaa-content').innerHTML = '';
+    new_arr.forEach(function(item, i, arr) {
+        document.getElementById('main-qaa-content').appendChild(item);
+    });
+
+}
+
+function qaa_vote(id, bool_) {
+    if (bool_) {
+        var rating = 1
+    }
+    else {
+        var rating = 0
+    }
+    $.ajax({
+        url: '/like/qaa_post/' + id + '/' + rating,
+        type: 'GET',
+        success: function(response) {
+            if (response.result == 'success') {
+                span = document.getElementById('rating-qaa-span-' + id);
+                span.innerHTML = response.rating;
+                if (response.cancel == 'True') {
+                    if (response.double == 'True') {
+                        if (rating) {
+                            arrow_up = document.getElementById('up-arrow-' + id);
+                            arrow_dn = document.getElementById('down-arrow-' + id);
+                            arrow_up.classList.add('main-qaa-selected');
+                            arrow_dn.classList.remove('main-qaa-selected');
+                        }
+                        else {
+                            arrow_up = document.getElementById('up-arrow-' + id);
+                            arrow_dn = document.getElementById('down-arrow-' + id);
+                            arrow_dn.classList.add('main-qaa-selected');
+                            arrow_up.classList.remove('main-qaa-selected');
+                        }
+                    }
+                    else {
+                        if (rating) {
+                            arrow = document.getElementById('up-arrow-' + id);
+                            arrow.classList.remove('main-qaa-selected');
+                        }
+                        else {
+                            arrow = document.getElementById('down-arrow-' + id);
+                            arrow.classList.remove('main-qaa-selected');
+                        }
+                    }
+                }
+                else {
+                    if (rating) {
+                        arrow = document.getElementById('up-arrow-' + id);
+                        arrow.classList.add('main-qaa-selected');
+                    }
+                    else {
+                        arrow = document.getElementById('down-arrow-' + id);
+                        arrow.classList.add('main-qaa-selected');
+                    }
+                }
+            }
+        }
+    });
+}

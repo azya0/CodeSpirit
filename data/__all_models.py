@@ -28,7 +28,6 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	email = Column(String, unique=True)
 	password = Column(String)
 	description = Column(Text, default="")
-	likes = Column(String, default="")
 
 
 class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -51,7 +50,8 @@ class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
 	text = Column(Text, default='')
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
-	likes = Column(Integer, default=0)
+	rating = Column(Integer, default=0)
+	rated = Column(Integer, default=0)
 	tags = Column(String, default="")
 	answers = Column(Integer, default=0)
 	answered = Column(Boolean, default=False)
@@ -91,6 +91,7 @@ class Like(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "likes"
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	author = Column(Integer, ForeignKey('users.id'))
+	dislike = Column(Boolean, default=False)
 	type = Column(String)
 	obj_id = Column(Integer)
 	datetime = Column(DateTime)

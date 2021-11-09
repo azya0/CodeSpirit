@@ -34,7 +34,7 @@ class CommentForm(FlaskForm):
 class QAAForm(FlaskForm):
     __form__ = 'qaa'
     title = StringField('What is the problem? Be short', validators=[DataRequired(), Length(min=5, max=100)])
-    text = TextAreaField(validators=[DataRequired()])
+    text = TextAreaField(validators=[DataRequired(), Length(min=50)])
     tags = StringField()
     submit = SubmitField("Post")
 

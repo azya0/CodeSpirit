@@ -1,0 +1,24 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+
+<div class="df-c main-white-font-color">
+    <h2 class="main-w-w f-s-20">{{ question.title }}</h2>
+    <small>Asked {{ question.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</small>
+    <small>Viewed {{ question.views }}</small>
+    <div class="main-qaa-page-content">
+        <div class="main-vote">
+            <i id='up-arrow-{{ question.id }}' class="fa fa-arrow-up main-arrow {% if is_liked %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote({{ question.id }}, true)"></i>
+            <span id='rating-qaa-span-{{ question.id }}' style="font-size: 40px;">{{ question.rating }}</span>
+            <i id='down-arrow-{{ question.id }}' class="fa fa-arrow-down main-arrow {% if is_disliked %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote({{ question.id }}, false)"></i>
+        </div>
+        <pre id="main-qaa-content" class="main-white-font-color"><span>{{ question.text }}</span></pre>
+        <script>from_text_to_tags()</script>
+    </div>
+</div>
+
+{% endblock %}
