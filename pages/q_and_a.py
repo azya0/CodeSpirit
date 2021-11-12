@@ -15,8 +15,9 @@ blueprint = flask.Blueprint(
 
 
 def mini_qaa_text(string: str) -> str:
-    string = string.split('\n')[0][:401].strip() + ('...' if len(
-        string.split('\n')[0][:251].strip()) != len(string) else '')
+    string = string.replace('\n', ' ').strip()[:401].strip()
+    for key in ('\\```', '```'):
+        string = string.replace(key, '')
     return string
 
 

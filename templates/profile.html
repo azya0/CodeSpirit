@@ -25,6 +25,6 @@
 {{ string }}<br>
 {% endfor %}
 <br>
-<small>{{ post.datetime }} & {{len(post.likes.split())}} likes & {{len(post.dislikes.split())}} dislikes</small>
+<small>{{ post.datetime }} & {{ post.likes }} likes</small>
 {% endfor %}
 {% endblock %}
