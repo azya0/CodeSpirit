@@ -45,9 +45,9 @@ def main_page():
         'File': File,
         'Like': Like,
         'current_user': current_user,
-        'gradient': lambda: f'linear-gradient({randint(30, 90)}deg, rgba({randint(50, 180)},20,{randint(0, 60)},1)'
-                            f'0%, rgba({randint(50, 180)},{randint(80, 200)},{randint(50, 180)},1) 28%,'
-                            f'rgba({randint(111, 180)},{randint(50, 200)},{randint(150, 180)},1) 72%, rgba({randint(0, 100)},{randint(50, 180)},{randint(100, 200)},{randint(0, 100)}) 100%);',
+        'gradient': lambda: f'linear-gradient({randint(40, 150)}deg, rgba({randint(50, 180)},20,{randint(0, 60)},1)'
+                            f'0%, rgba({randint(110, 180)},{randint(80, 200)},{randint(110, 180)},1) 28%,'
+                            f'rgba({randint(111, 180)},{randint(110, 200)},{randint(150, 180)},1) 72%, rgba({randint(0, 100)},{randint(50, 180)},{randint(100, 200)},{randint(0, 100)}) 100%);',
         'enumerate': enumerate,
         'qaa_text': mini_qaa_text,
         'len': len,
