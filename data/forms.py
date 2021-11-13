@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField, TextAreaField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, EqualTo, Email, Length
+from data.validators import *
 
 
 class NewPostForm(FlaskForm):
@@ -10,9 +11,9 @@ class NewPostForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    name = StringField("Your name", validators=[DataRequired()])
+    name = StringField("Your name", validators=[DataRequired(), WhiteSpaceBanned(), Login()])
     email = StringField("E-mail", validators=[DataRequired(), Email('Incorrect email')])
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), WhiteSpaceBanned()])
     confirm_password = PasswordField("Confirm password", validators=[
         DataRequired(), EqualTo("password", message="Passwords must match")])
     description = TextAreaField("Short description (you can fill it later)")
@@ -20,8 +21,8 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    login = StringField("Login (e-mail)", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    login = StringField("Login (e-mail)", validators=[DataRequired(), WhiteSpaceBanned()])
+    password = PasswordField("Password", validators=[DataRequired(), WhiteSpaceBanned()])
     remember = BooleanField("Remember me", default=False)
     submit = SubmitField("Let's go!")
 
@@ -33,9 +34,10 @@ class CommentForm(FlaskForm):
 
 class QAAForm(FlaskForm):
     __form__ = 'qaa'
-    title = StringField('What is the problem? Be short', validators=[DataRequired(), Length(min=5, max=100)])
-    text = TextAreaField(validators=[DataRequired(), Length(min=50)])
-    tags = StringField()
+    title = StringField('What is the problem? Be short', validators=[DataRequired(), SelfLength('title', min_length=5,
+                                                                                                max_length=100)])
+    text = TextAreaField(validators=[DataRequired(), SelfLength('text', min_length=50)])
+    tags = StringField(validators=[Tag()])
     submit = SubmitField("Post")
 
 

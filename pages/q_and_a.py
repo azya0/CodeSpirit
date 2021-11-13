@@ -2,6 +2,7 @@ from flask_login import login_required, current_user
 from data.__all_models import *
 from data.forms import *
 from flask import render_template, redirect
+from random import randint, choice
 import datetime
 import flask
 
@@ -44,6 +45,9 @@ def main_page():
         'File': File,
         'Like': Like,
         'current_user': current_user,
+        'gradient': lambda: f'linear-gradient({randint(30, 90)}deg, rgba({randint(50, 180)},20,{randint(0, 60)},1)'
+                            f'0%, rgba({randint(50, 180)},{randint(80, 200)},{randint(50, 180)},1) 28%,'
+                            f'rgba({randint(111, 180)},{randint(50, 200)},{randint(150, 180)},1) 72%, rgba({randint(0, 100)},{randint(50, 180)},{randint(100, 200)},{randint(0, 100)}) 100%);',
         'enumerate': enumerate,
         'qaa_text': mini_qaa_text,
         'len': len,
@@ -62,7 +66,7 @@ def qaa_form():
         qaa.title = form.title.data.strip().capitalize()
         qaa.text = form.text.data.strip()
         qaa.datetime = datetime.datetime.now()
-        qaa.tags = form.tags.data.replace(' ', '').replace(',', ' ').lower()
+        qaa.tags = ' '.join(map(str.strip, form.tags.data.split()))
         session.add(qaa)
         session.commit()
         return redirect('/q&a')

@@ -7,6 +7,9 @@
         {{ form.hidden_tag() }}
         <div class="form-group main-form-group">
             {{ form.name(id="name", class='main-registration-input', placeholder='Login') }}
+            {% for error in form.name.errors %}
+                <span class="main-registration-error">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group main-form-group">
             {{ form.email(id="email", class='main-registration-input', placeholder="Email") }}
@@ -16,6 +19,9 @@
         </div>
         <div class="form-group main-form-group">
             {{ form.password(id="password", class='main-registration-input', placeholder="Password") }}
+            {% for error in form.password.errors %}
+                <span class="main-registration-error">{{ error }}</span>
+            {% endfor %}
         </div>
         <div class="form-group main-form-group">
             {{ form.confirm_password(id="confirm_password", class='main-registration-input', placeholder="Confirm password") }}

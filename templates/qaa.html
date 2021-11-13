@@ -8,25 +8,42 @@
     <i class="fas fa-code main-white-font-color main-20px"></i>
     <h1 id="main-qaa-title" class="main-font main-white-font-color">Questions from developers to developers</h1>
 </div>
-<div class="df-jc-c" style="margin-bottom: 2%">
+<div class="df-jc-c" style="margin-bottom: 2rem;">
     <a id="main-qaa-ask-link" href="/q&a/form"><span>Ask a Question</span></a>
 </div>
 <div id="main-questions">
     {% for question in questions %}
-         <div class="main-qaa-block main-white-font-color">
+        <a href='profile/{{ author(question.author).id }}' class="top-panel" style="background: {{ gradient() }}">
+             <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-qaa-ava" aria-hidden="true"></i>
+             <b>{{ author(question.author).name }}</b>
+        </a>
+        <div class="main-qaa-block main-white-font-color">
             <div class="main-qaa-left-block">
-                <span class="main-num">{{ question.rating }}</span>
-                <small>rating</small>
-                <span class="main-num">{{ question.answers }}</span>
-                <small>answers</small>
+                <div class="main-m-b">
+                    <span class="main-num">{{ question.rating }}</span>
+                    <small>rating</small>
+                </div>
+                <div class="main-m-b">
+                    <span class="main-num">{{ question.answers }}</span>
+                    <small>answers</small>
+                </div>
                 <small>{{ question.views }} views</small>
             </div>
-             <div class="main-qaa-right-block">
-                 <a href="q&a/{{ question.id }}" class="main-fs-15px">{{ question.title }}</a>
-                 <p class="main-w-w main-hidden-text main-fs-15px">{{ qaa_text(question.text) }}</p>
-             </div>
-         </div>
-    {% endfor %}
+            <div class="main-qaa-right-block">
+                <div class="main-qaa-right-block">
+                    <a href="q&a/{{ question.id }}" class="main-fs-15px">{{ question.title }}</a>
+                    <p class="main-w-w main-hidden-text main-fs-15px">{{ qaa_text(question.text) }}</p>
+                    {% if question.tags %}
+                        <div class="main-qaa-tags">
+                            {% for tag in question.tags.split() %}
+                                <p class="main-qaa-tag">{{ tag }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+   {% endfor %}
 </div>
 
 {% endblock %}
