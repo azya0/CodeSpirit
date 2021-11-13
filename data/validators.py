@@ -9,13 +9,17 @@ class WhiteSpaceBanned(object):
 
 
 class Login(object):
-    def __init__(self, num=30):
+    def __init__(self, num: int = 30, banned_chars: str = '@'):
         self.num = num
+        self.banned_chars = banned_chars
 
     def __call__(self, form, field):
         data = field.data
         if len(data) > self.num:
             raise ValidationError(f'Too many characters for login ({self.num} max)')
+        for char in self.banned_chars:
+            if char in data:
+                raise ValidationError(f'\'{char}\' can\'t be used in login field')
 
 
 class SelfLength(object):

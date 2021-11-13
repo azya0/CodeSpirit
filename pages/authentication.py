@@ -45,6 +45,8 @@ def login():
         session = db_session.create_session()
         user = session.query(User).filter(User.name == form.login.data).first()
         if user is None:
+            user = session.query(User).filter(User.email == form.login.data).first()
+        if user is None:
             message = "No users with this username were found"
         elif check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
