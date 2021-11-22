@@ -16,8 +16,77 @@
             <span id='rating-qaa-span-{{ question.id }}' style="font-size: 40px;">{{ question.rating }}</span>
             <i id='down-arrow-{{ question.id }}' class="fa fa-arrow-down main-arrow {% if is_disliked %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote({{ question.id }}, false)"></i>
         </div>
-        <pre id="main-qaa-content" class="main-white-font-color"><span>{{ question.text }}</span></pre>
-        <script>from_text_to_tags()</script>
+        <div id="main-qaa-question">
+            <pre id="main-qaa-content" class="main-white-font-color">
+                <span>{{ question.text }}</span>
+            </pre>
+            <script>from_text_to_tags()</script>
+            <div class="main-bottom-data" style="{% if not question.tags %}justify-content: flex-end;{% endif %}">
+                {% if question.tags %}
+                    <div id="main-qaa-p-tags">
+                        <span class="tags"></span>
+                        {% for tag in enumerate(question.tags.split()) %}
+                            <span class="main-qaa-tag" {% if tag[0] + 1 == len(question.tags.split()) %}style="margin: 0 auto" {% endif %}>{{ tag[1] }}</span>
+                        {% endfor%}
+                    </div>
+                {% endif %}
+                <a href="/profile/{{ question.author }}" class="main-qaa-user-data">
+                    <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" aria-hidden="true"></i>
+                    <span>{{ get_user(question.author).name }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="main-answers">
+        {% for answer in answers %}
+            <div id="qaa-answer-{{ answer.id }}" class="{% if answer.right_answer %}right-answer{% endif %}">
+                <div class="main-qaa-user-data-comment">
+                    <a href="/profile/{{ answer.author }}">
+                        <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" style="margin: 0 auto" aria-hidden="true"></i>
+                        <span>{{ get_user(answer.author).name }}</span>
+                    </a>
+                </div>
+                <div class="grid-answer">
+                    <div class="main-comment-vote">
+                        <i id='up-arrow-c-{{ answer.id }}' class="fa fa-arrow-up main-arrow-c {% if is_qaa_comment_liked(answer.id) %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote_a_c({{ answer.id }}, true)"></i>
+                        <span id="rating-qaa-span-c-{{ answer.id }}">{{ answer.rating }}</span>
+                        <i id="down-arrow-c-{{ answer.id }}" class="fa fa-arrow-down main-arrow-c {% if is_qaa_comment_disliked(answer.id) %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote_a_c({{ answer.id }}, false)"></i>
+                        {% if question.author == current_user.id %}<i id='fa-check-{{ answer.id }}' class="fa fa-check {% if answer.right_answer %}fa-check-right{% endif %}" aria-hidden="true" onclick="mark_as_right({{ question.id }},{{ answer.id }})" {% if answered(question.id) and not answer.right_answer %}style="display: none;"{% endif %}></i>{% endif %}
+                    </div>
+                    <div class="grid-answer-data">
+                        <span class="answers-pre">{{ answer.text }}</span>
+                    </div>
+                </div>
+                <div id='qaa-comments-{{ answer.id }}' class="qaa-answers-comments">
+                    {% for comment in enumerate(comments.filter(QaaComment.answer_id == answer.id).all()) %}
+                        <div answer="{{ answer.id }}" class="qaa-comment {% if comment[0] > 1 %}qaa-comment-hidden{% endif %}">
+                            <span>{{ comment[1].text.strip().replace('\n\n', '\n') }}</span>
+                            <a href="/profile/{{ comment[1].author }}" class="qaa-comment-data">
+                                <small>{{ comment[1].datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }} commented by &mdash;&ensp;</small>
+                                <span>{{ get_user(comment[1].author).name }}</span>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    <span id="s-a-b-{{ answer.id }}" class="comment-show-all-btn {% if len(comments.filter(QaaComment.answer_id == answer.id).all()) <= 2 %}hidden{% endif %}" onclick="show_hidden_qaa_comments({{ answer.id }})">show all...</span>
+                </div>
+                <form id='qaa-comment-{{ answer.id }}' __answer='{{ answer.id }}' class="qaa-comment-form" method="post" enctype=multipart/form-data action="/add_qaa_comment/{{ answer.id }}">
+                    {{ comment_form.hidden_tag() }}
+                    {{ comment_form.text(id='qaa-answer-comments-hidden-input-' + str(answer.id), style='display: none') }}
+                    <div id='qaa-answer-comment-input-{{ answer.id }}' contenteditable="true" class="main-qaa-comment-input" placeholder="write comment..."></div>
+                    {{ comment_form.submit(class='qaa-comment-btn', onclick='replaceQaaCommentText(' + str(answer.id) + ')') }}
+                    <small id="main-qaa-c-error-{{ answer.id }}" class="main-qaa-c-error"></small>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    <div id="main-comments-data">
+        <form id='qaa-answer-form' _question="{{ question.id }}" method="post" enctype=multipart/form-data action="/add_answer/{{ question.id }}">
+            <span>Answer a question</span>
+            <small class="main-qaa-error"></small>
+            {{ answer_form.hidden_tag() }}
+            {{ answer_form.text(id='answer-form') }}
+            {{ answer_form.submit() }}
+        </form>
     </div>
 </div>
 

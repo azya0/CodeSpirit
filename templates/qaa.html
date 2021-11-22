@@ -23,15 +23,15 @@
                     <span class="main-num">{{ question.rating }}</span>
                     <small>rating</small>
                 </div>
-                <div class="main-m-b">
-                    <span class="main-num">{{ question.answers }}</span>
+                <div class="{% if answered(question.id) %}right-answer-bg {% endif %}main-m-b">
+                    <span class="main-num">{{ answ_count(question.id) }}</span>
                     <small>answers</small>
                 </div>
                 <small>{{ question.views }} views</small>
             </div>
             <div class="main-qaa-right-block">
                 <div class="main-qaa-right-block">
-                    <a href="q&a/{{ question.id }}" class="main-fs-15px">{{ question.title }}</a>
+                    <a href="q&a/{{ question.id }}" class="main-fs-15px{% if answered(question.id) %} right-answered{% endif %}">{{ question.title }}</a>
                     <p class="main-w-w main-hidden-text main-fs-15px">{{ qaa_text(question.text) }}</p>
                     {% if question.tags %}
                         <div class="main-qaa-tags">

@@ -19,15 +19,13 @@ blueprint = flask.Blueprint(
 def format_string(string: str) -> str:
     replace_dict = {
         '&nbsp;': ' ',
-        '<div>': '',
-        '</div>': '',
         '\\n': '\n'
     }
 
     string = string.strip()
     for elm in replace_dict:
         string = string.replace(elm, replace_dict[elm]).strip()
-    return string
+    return string.strip()
 
 
 def update_last_folder(last_file_way):

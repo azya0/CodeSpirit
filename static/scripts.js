@@ -139,7 +139,7 @@ function clearImagesBtn() {
     document.addEventListener('mouseover', EasyTogglerHandler);
     function EasyTogglerHandler(event){
         const EY_BTN = event.target.closest('[data-easy-toggle]');
-        if( EY_BTN )
+        if(EY_BTN)
         {
             event.preventDefault();
             let ey_target = EY_BTN.getAttribute('data-easy-toggle');
@@ -172,7 +172,7 @@ function clearImagesBtn() {
             }
         }
 
-        if ( !EY_BTN )
+        if (!EY_BTN)
         {
             let ey_rcoe_block_targets = document.querySelectorAll('[data-easy-rcoe]');
 
@@ -180,7 +180,7 @@ function clearImagesBtn() {
                 let ey_rcoe_block = ey_rcoe_block_target.getAttribute('data-easy-toggle'),
                     ey_rcoe_block_class = ey_rcoe_block_target.getAttribute('data-easy-class');
 
-                    if( !event.target.closest(ey_rcoe_block) )
+                    if(!event.target.closest(ey_rcoe_block))
                     {
                         try
                         {
@@ -201,24 +201,35 @@ function clearImagesBtn() {
 
 
 $(document).ready(function () {
-    $(".comment-form" ).submit(function( event ) {
+    $(".comment-form").submit(function(event) {
         addComment(jQuery(this).attr('_post'));
+        event.preventDefault();
+    });
+
+    $("#qaa-answer-form").submit(function(event) {
+        addAnswer($("#qaa-answer-form").attr('_question'));
+        event.preventDefault();
+    });
+
+    $(".qaa-comment-form").submit(function(event) {
+        answer_id = $(event.currentTarget).attr('__answer');
+        addQAAComment(answer_id);
         event.preventDefault();
     });
 
     $(".main-comment-union").hover(
         function() {
-            if ($( this ).attr('comment_liked') == 'False') {
-                $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+            if ($(this).attr('comment_liked') == 'False') {
+                $ ('#main-likes-' + $(this).attr('comment_id')).css({'visibility': 'visible', 'opacity': '1'})
                 }
-            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+            $ ('#delete-' + $(this).attr('comment_id')).css({'visibility': 'visible', 'opacity': '1'})
         }, function() {
-            if ($( this ).attr('comment_liked') == 'False') {
-                $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+            if ($(this).attr('comment_liked') == 'False') {
+                $ ('#main-likes-' + $(this).attr('comment_id')).css({'visibility': 'hidden', 'opacity': '0'})
             }
-            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+            $ ('#delete-' + $(this).attr('comment_id')).css({'visibility': 'hidden', 'opacity': '0'})
         }
-        );
+       );
 });
 
 function addComment(post_id) {
@@ -243,7 +254,7 @@ function addComment(post_id) {
                                 <b class="main-comment-username main-strong">${response.author}</b>
                                 <i id="delete-${response.id}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment(${response.id})"></i>
                             </div>
-                            <b class="main-comment-text">${response.text.replace(/\r?\n|\r/g, "<br>")}</b>
+                            <b class="main-comment-text"></b>
                         </div>
                     </div>
                     <div class="main-comment-content">
@@ -256,6 +267,7 @@ function addComment(post_id) {
                  </div>
                 `
                 var new_comment = $(string);
+                $('.main-comment-text', new_comment).text(response.text.replace(/\r?\n|\r/g, "<br>"));
                 var hr = $('<hr class="main-hr-for-comments">');
                 if (!response.is_first) {
                     hr.appendTo('#main-post-comments-' + post_id);
@@ -267,19 +279,220 @@ function addComment(post_id) {
 
                 $('[comment_id=' + response.id + ']').hover(
                     function() {
-                        if ($( this ).attr('comment_liked') == 'False') {
-                            $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
-                            }
-                            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'visible', 'opacity': '1'})
+                        if ($(this).attr('comment_liked') == 'False') {
+                            $ ('#main-likes-' + $(this).attr('comment_id')).css({'visibility': 'visible', 'opacity': '1'})
+                        }
+                            $ ('#delete-' + $(this).attr('comment_id')).css({'visibility': 'visible', 'opacity': '1'})
                     }, function() {
-                        if ($( this ).attr('comment_liked') == 'False') {
-                            $ ( '#main-likes-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
-                            }
-                            $ ( '#delete-' + $( this ).attr('comment_id') ).css({'visibility': 'hidden', 'opacity': '0'})
+                        if ($(this).attr('comment_liked') == 'False') {
+                            $ ('#main-likes-' + $(this).attr('comment_id')).css({'visibility': 'hidden', 'opacity': '0'})
+                        }
+                            $ ('#delete-' + $(this).attr('comment_id')).css({'visibility': 'hidden', 'opacity': '0'})
                     }
-                );
+               );
                 scrollTo(0, curScroll + (newHeight - curHeight));
             }
+        }
+    });
+}
+
+
+function replaceQaaCommentText(qaa_answer_id) {
+    var flex = document.getElementById('qaa-answer-comments-hidden-input-' + qaa_answer_id);
+    var div = document.getElementById('qaa-answer-comment-input-' + qaa_answer_id);
+    flex.value = div.innerText.replace(/\r?\n|\r/g, "\\n");
+}
+
+
+function addAnswer(question_id) {
+    var curScroll = $(window).scrollTop(),
+    curHeight = $('body').height(), newHeight;
+    var form = $("#qaa-answer-form");
+    $.ajax({
+        url: '/add_answer/' + question_id,
+        type: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            if (response.result == 'success') {
+                $('.main-qaa-error').hide();
+                string = `
+                <div id="qaa-answer-${response.id}">
+                    <div class="main-qaa-user-data-comment">
+                        <a href="/profile/${response.author}">
+                            <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" style="margin: 0 auto" aria-hidden="true"></i>
+                            <span>${response.name}</span>
+                        </a>
+                    </div>
+                    <div class="grid-answer">
+                        <div class="main-comment-vote">
+                            <i id='up-arrow-c-${response.id}' class="fa fa-arrow-up main-arrow-c" aria-hidden="true" onclick="qaa_vote_a_c(${response.id}, true)"></i>
+                            <span id="rating-qaa-span-c-${response.id}">${response.rating}</span>
+                            <i id="down-arrow-c-${response.id}" class="fa fa-arrow-down main-arrow-c" aria-hidden="true" onclick="qaa_vote_a_c(${response.id}, false)"></i>
+                        </div>
+                        <div class="grid-answer-data">
+                            <span class="answers-pre"></span>
+                        </div>
+                    </div>
+                    <div class="qaa-answers-comments">
+                    </div>
+                    <form id='qaa-comment-${response.id}' class="qaa-comment-form" method="post" enctype=multipart/form-data action="/add_qaa_comment/${response.id}">
+                        <input id="csrf_token" name="csrf_token" type="hidden" value="IjFiMWE4ZDBhNDNlOTgwODdjMTU3ZWM0ZjM2OGQ4ODlhNDBiODRkYTAi.YZqT-w.rg4mJCYR1ypsfiGOqsqko_otl1Y">
+                        <input id="qaa-answer-comments-hidden-input-${response.id}" name="text" required="" style="display: none" type="text">
+                        <div id='qaa-answer-comment-input-${response.id}' contenteditable="true" class="main-qaa-comment-input" placeholder="write comment..."></div>
+                        <input class="qaa-comment-btn" id="submit" name="submit" onclick="replaceQaaCommentText(${response.id})" type="submit" value="Comment">
+                        <small id="main-qaa-c-error-${response.id}" class='main-qaa-c-error'></small>
+                    </form>
+                </div>
+                `
+                var new_answer = $(string);
+                $('.answers-pre', new_answer).text(response.text.replace(/\r?\n|\r/g, "<br>"));
+                if (response.author_of_qaa) {
+                    fa_check = $("<i id='fa-check-${response.id}' class='fa fa-check' aria-hidden='true' onclick='mark_as_right(${response.q_id},${response.id})'></i>")
+                    $('.main-comment-vote', new_answer).append(fa_check);
+                }
+                new_answer.appendTo('#main-answers');
+                $('#answer-form').val('');
+            }
+            else {
+                $('.main-qaa-error').show();
+                $('.main-qaa-error').text(response.result);
+            }
+            newHeight = $('body').height();
+            scrollTo(0, curScroll + (newHeight - curHeight));
+        }
+    });
+}
+
+function addQAAComment(answer_id) {
+    var curScroll = $(window).scrollTop(),
+    curHeight = $('body').height(), newHeight;
+    var form = $("#qaa-comment-" + answer_id);
+    $.ajax({
+        url: '/add_qaa_comment/' + answer_id,
+        type: 'POST',
+        data: form.serialize(),
+        success: function(response) {
+            if (response.result == 'success') {
+                $('#main-qaa-c-error-' + answer_id).hide()
+                $('#s-a-b-' + answer_id).click();
+                string = `
+                <div class="qaa-comment">
+                    <span class='qaa-c-t'></span>
+                    <a href="/profile/${response.author}" class="qaa-comment-data">
+                        <small>${response.datetime} commented by &mdash;&ensp;</small>
+                        <span>${response.user}</span>
+                    </a>
+                </div>
+                `
+                var new_comment = $(string);
+                $('.qaa-c-t', new_comment).text(response.text.replace(/\r?\n|\r/g, "<br>"));
+                new_comment.appendTo('#qaa-comments-' + answer_id);
+                $('#qaa-answer-comment-input-' + answer_id).text('');
+            }
+            else {
+                $('#main-qaa-c-error-' + answer_id).show()
+                $('#main-qaa-c-error-' + answer_id).text(response.result);
+            }
+            newHeight = $('body').height();
+            scrollTo(0, curScroll + (newHeight - curHeight));
+        }
+    });
+}
+
+function show_hidden_qaa_comments(id) {
+    $(".qaa-comment-hidden").each(function (i, elm){
+        if ($(elm).attr('answer') == id) {
+            $(elm).removeClass('qaa-comment-hidden');
+        }
+    });
+    $('#s-a-b-' + id).hide()
+}
+
+function qaa_vote_a_c(id, bool_) {
+    if (bool_) {
+        var rating = 1
+    }
+    else {
+        var rating = 0
+    }
+    $.ajax({
+        url: '/like/qaa_comment/' + id + '/' + rating,
+        type: 'GET',
+        success: function(response) {
+            if (response.result == 'success') {
+                span = document.getElementById('rating-qaa-span-c-' + id);
+                span.innerHTML = response.rating;
+                if (response.cancel == 'True') {
+                    if (response.double == 'True') {
+                        if (rating) {
+                            arrow_up = document.getElementById('up-arrow-c-' + id);
+                            arrow_dn = document.getElementById('down-arrow-c-' + id);
+                            arrow_up.classList.add('main-qaa-selected');
+                            arrow_dn.classList.remove('main-qaa-selected');
+                        }
+                        else {
+                            arrow_up = document.getElementById('up-arrow-c-' + id);
+                            arrow_dn = document.getElementById('down-arrow-c-' + id);
+                            arrow_dn.classList.add('main-qaa-selected');
+                            arrow_up.classList.remove('main-qaa-selected');
+                        }
+                    }
+                    else {
+                        if (rating) {
+                            arrow = document.getElementById('up-arrow-c-' + id);
+                            arrow.classList.remove('main-qaa-selected');
+                        }
+                        else {
+                            arrow = document.getElementById('down-arrow-c-' + id);
+                            arrow.classList.remove('main-qaa-selected');
+                        }
+                    }
+                }
+                else {
+                    if (rating) {
+                        arrow = document.getElementById('up-arrow-c-' + id);
+                        arrow.classList.add('main-qaa-selected');
+                    }
+                    else {
+                        arrow = document.getElementById('down-arrow-c-' + id);
+                        arrow.classList.add('main-qaa-selected');
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+function mark_as_right(question_id, answer_id) {
+    $.ajax({
+        url: '/mark_as_right/' + question_id + '/' + answer_id,
+        type: 'GET',
+        success: function(response) {
+            if (response.result == 'success') {
+                if (response.canceled == 'False') {
+                    $('.fa-check').each(function (i, elm) {
+                        if ($(elm).attr('id') != 'fa-check-' + answer_id) {
+                            $(elm).hide();
+                        }
+                        else {
+                            $(elm).addClass('fa-check-right')
+                        }
+                    });
+                    $('#qaa-answer-' + answer_id).addClass('right-answer');
+                    }
+                else {
+                    $('.fa-check').each(function (i, elm) {
+                        if ($(elm).attr('id') != 'fa-check-' + answer_id) {
+                            $(elm).show();
+                        }
+                        else {
+                            $(elm).removeClass('fa-check-right')
+                        }
+                    });
+                    $('#qaa-answer-' + answer_id).removeClass('right-answer');
+                }
+                }
         }
     });
 }
@@ -356,15 +569,12 @@ function likeComment(id) {
                 heart.classList.remove('main-already-liked');
                 $('[comment_id=' + id + ']').attr('comment_liked', 'False');
             }
-            else {
-                console.log(response.result);
-            }
         }
     });
 }
 
 function from_text_to_tags() {
-    var text = document.getElementById('main-qaa-content').innerText;
+    var text = document.getElementById('main-qaa-content').innerText.trim();
     const regex = /(?:^|[^\\])```(.*?)```/gs;
     const searchRegExp = /\\```/g;
     const replaceWith_ = '```';
@@ -376,7 +586,9 @@ function from_text_to_tags() {
         index = text.indexOf("```" + item + "```");
         span.innerText = text.substring(last_num, index).replace(searchRegExp, replaceWith_);
         last_num = index + item.length + 6;
-        new_arr.push(span);
+        if (span.innerText.trim()) {
+            new_arr.push(span);
+        }
         code = document.createElement('p');
         code.classList.add('code');
         code.classList.add('main-w-w');

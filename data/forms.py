@@ -42,5 +42,12 @@ class QAAForm(FlaskForm):
 
 
 class AnswerForm(FlaskForm):
-    __form__ = 'answ'
-    text = StringField("write an answer...", validators=[DataRequired()])
+    __form__ = 'qaa_answer'
+    text = TextAreaField(validators=[DataRequired(), SelfLength('text', min_length=25)])
+    submit = SubmitField("Answer")
+
+
+class QaaCommentForm(FlaskForm):
+    __form__  = 'qaa_comment'
+    text = StringField(validators=[DataRequired(), SelfLength('text', max_length=250)])
+    submit = SubmitField("Comment")

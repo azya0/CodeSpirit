@@ -53,8 +53,6 @@ class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
 	rating = Column(Integer, default=0)
 	rated = Column(Integer, default=0)
 	tags = Column(String, default="")
-	answers = Column(Integer, default=0)
-	answered = Column(Boolean, default=False)
 	views = Column(Integer, default=0)
 
 
@@ -65,7 +63,8 @@ class Answer(UserMixin, SqlAlchemyBase, SerializerMixin):
 	author = Column(Integer, ForeignKey('users.id'))
 	text = Column(Text, default='')
 	datetime = Column(DateTime)
-	likes = Column(Integer, default=0)
+	rating = Column(Integer, default=0)
+	right_answer = Column(Boolean, default=False)
 
 
 class File(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -94,4 +93,14 @@ class Like(UserMixin, SqlAlchemyBase, SerializerMixin):
 	dislike = Column(Boolean, default=False)
 	type = Column(String)
 	obj_id = Column(Integer)
+	datetime = Column(DateTime)
+
+
+class QaaComment(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "qaa-comments"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	text = Column(String)
+	author = Column(Integer, ForeignKey('users.id'))
+	likes = Column(Integer, default=0)
+	answer_id = Column(Integer, ForeignKey('answ.id'))
 	datetime = Column(DateTime)
