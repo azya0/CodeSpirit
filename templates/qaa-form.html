@@ -23,7 +23,7 @@
                 <span class="main-qaa-error">{{ error }}</span>
         {% endfor %}
         <span class="main-white-font-color" style="font-weight: 700">Tags</span>
-        <small class="main-white-font-color" style="margin-bottom: .5%">Add tags (separated by commas: ',') describing what your question is about.</small>
+        <small class="main-white-font-color" style="margin-bottom: .5%">Add tags (separated by whitespace: ' ') describing what your question is about.</small>
         {{ form.tags(class='main-qaa-form-item' + ' main-qaa-field-error' if form.tags.errors else '', style='margin-bottom: 1.5%;', placeholder='For example: html, css, chebya') }}
         {% for error in form.tags.errors %}
                 <span class="main-qaa-error" style="margin-bottom: 1.5%;">{{ error }}</span>
