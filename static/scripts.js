@@ -333,25 +333,30 @@ function addAnswer(question_id) {
                             <span class="answers-pre"></span>
                         </div>
                     </div>
-                    <div class="qaa-answers-comments">
+                    <div id='qaa-comments-${response.id}' class="qaa-answers-comments">
                     </div>
-                    <form id='qaa-comment-${response.id}' class="qaa-comment-form" method="post" enctype=multipart/form-data action="/add_qaa_comment/${response.id}">
-                        <input id="csrf_token" name="csrf_token" type="hidden" value="IjFiMWE4ZDBhNDNlOTgwODdjMTU3ZWM0ZjM2OGQ4ODlhNDBiODRkYTAi.YZqT-w.rg4mJCYR1ypsfiGOqsqko_otl1Y">
-                        <input id="qaa-answer-comments-hidden-input-${response.id}" name="text" required="" style="display: none" type="text">
+                    <form id='qaa-comment-${response.id}' __answer='${response.id}' class="qaa-comment-form" method="post" enctype=multipart/form-data action="/add_qaa_comment/${response.id}">
+                        ${response.form_hidden_tag}
+                        ${response.form_text}
                         <div id='qaa-answer-comment-input-${response.id}' contenteditable="true" class="main-qaa-comment-input" placeholder="write comment..."></div>
-                        <input class="qaa-comment-btn" id="submit" name="submit" onclick="replaceQaaCommentText(${response.id})" type="submit" value="Comment">
+                        ${response.form_submit}
                         <small id="main-qaa-c-error-${response.id}" class='main-qaa-c-error'></small>
                     </form>
                 </div>
                 `
                 var new_answer = $(string);
-                $('.answers-pre', new_answer).text(response.text.replace(/\r?\n|\r/g, "<br>"));
+                $('.answers-pre', new_answer).text(response.text);
                 if (response.author_of_qaa) {
                     fa_check = $("<i id='fa-check-${response.id}' class='fa fa-check' aria-hidden='true' onclick='mark_as_right(${response.q_id},${response.id})'></i>")
                     $('.main-comment-vote', new_answer).append(fa_check);
                 }
                 new_answer.appendTo('#main-answers');
                 $('#answer-form').val('');
+                $(".qaa-comment-form", new_answer).submit(function(event) {
+                    answer_id = $(event.currentTarget).attr('__answer');
+                    addQAAComment(answer_id);
+                    event.preventDefault();
+                });
             }
             else {
                 $('.main-qaa-error').show();
@@ -385,7 +390,7 @@ function addQAAComment(answer_id) {
                 </div>
                 `
                 var new_comment = $(string);
-                $('.qaa-c-t', new_comment).text(response.text.replace(/\r?\n|\r/g, "<br>"));
+                $('.qaa-c-t', new_comment).text(response.text);
                 new_comment.appendTo('#qaa-comments-' + answer_id);
                 $('#qaa-answer-comment-input-' + answer_id).text('');
             }
@@ -542,7 +547,7 @@ function deleteComment(id) {
 
 function likeComment(id) {
     $.ajax({
-        url: '/like/comment/' + id,
+        url: '/like/Comment/' + id,
         type: 'GET',
         success: function(response) {
             heart = document.getElementById('heart-' + id);
@@ -568,6 +573,9 @@ function likeComment(id) {
                 span.classList.remove('main-already-liked');
                 heart.classList.remove('main-already-liked');
                 $('[comment_id=' + id + ']').attr('comment_liked', 'False');
+            }
+            else {
+                console.log(response.result);
             }
         }
     });
@@ -656,6 +664,20 @@ function qaa_vote(id, bool_) {
                     }
                 }
             }
+            else {
+                console.log(response.result);
+            }
         }
     });
+}
+
+function DeleteWind() {
+    popup = $('#qaa-popup');
+    if (popup.is(':hidden')) {
+        popup.show();
+    }
+    else {
+        console.log(1);
+        popup.hide();
+    }
 }

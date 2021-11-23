@@ -20,7 +20,7 @@
         <div class="main-qaa-block main-white-font-color">
             <div class="main-qaa-left-block">
                 <div class="main-m-b">
-                    <span class="main-num">{{ question.rating }}</span>
+                    <span class="main-num">{{ question_rating(question.id) }}</span>
                     <small>rating</small>
                 </div>
                 <div class="{% if answered(question.id) %}right-answer-bg {% endif %}main-m-b">

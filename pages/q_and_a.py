@@ -1,4 +1,5 @@
 from flask_login import login_required, current_user
+from data.request_tools import *
 from data.__all_models import *
 from data.forms import *
 from flask import render_template, redirect
@@ -51,6 +52,7 @@ def main_page():
         'File': File,
         'Like': Like,
         'current_user': current_user,
+        'question_rating': get_QaaPost_rating,
         'gradient': lambda: f'linear-gradient({randint(40, 160)}deg, rgba({randint(80, 255)},50,{randint(56, 110)},1)'
                             f'0%, rgba({randint(15, 100)},{randint(0, 107)},{randint(170, 250)},1) 28%,'
                             f'rgba({randint(151, 200)},{randint(50, 140)},{randint(10, 56)},1) 72%);',
@@ -88,6 +90,10 @@ def qaa_form():
 @blueprint.route('/q&a/<int:id>', methods=['GET', 'POST'])
 @login_required
 def qaa_a_page(id):
+    def is_liked(_id, _type, disliked=False):
+        return session.query(Like).filter(Like.author == current_user.id).filter(
+            Like.obj_id == get_LikeObj_id(_id, _type)).filter(Like.dislike == disliked).first()
+
     session = db_session.create_session()
     comment_form = QaaCommentForm()
     answer_form = AnswerForm()
@@ -98,14 +104,11 @@ def qaa_a_page(id):
         'files': session.query(File),
         'answers': session.query(Answer).filter(Answer.qaa_id == id).all(),
         'comments': session.query(QaaComment),
-        'is_liked': session.query(Like).filter(Like.author == current_user.id).filter(
-            Like.type == 'QAA').filter(Like.obj_id == id).filter(Like.dislike == False).first(),
-        'is_disliked': session.query(Like).filter(Like.author == current_user.id).filter(
-            Like.type == 'QAA').filter(Like.obj_id == id).filter(Like.dislike == True).first(),
-        'is_qaa_comment_liked': lambda x: session.query(Like).filter(Like.author == current_user.id).filter(
-            Like.obj_id == x).filter(Like.type == 'Answer').filter(Like.dislike == False).first(),
-        'is_qaa_comment_disliked': lambda x: session.query(Like).filter(Like.author == current_user.id).filter(
-            Like.obj_id == x).filter(Like.type == 'Answer').filter(Like.dislike == True).first(),
+        'is_liked': is_liked(id, 'QAA'),
+        'is_disliked': is_liked(id, 'QAA', True),
+        'is_qaa_comment_liked': lambda x: is_liked(x, 'Answer'),
+        'is_qaa_comment_disliked': lambda x: is_liked(x, 'Answer', True),
+        'question_rating': get_QaaPost_rating,
         'question': question,
         'comment_form': comment_form,
         'answer_form': answer_form,
@@ -113,6 +116,7 @@ def qaa_a_page(id):
         'File': File,
         'Like': Like,
         'Answer': Answer,
+        'AnswerRating': get_Answer_rating,
         'QaaComment': QaaComment,
         'enumerate': enumerate,
         'len': len,
@@ -125,92 +129,76 @@ def qaa_a_page(id):
     return render_template("qaa-q-page.html", **data)
 
 
-@blueprint.route('/like/qaa_post/<int:id>/<int:like>', methods=['GET'])
+@blueprint.route('/like/qaa_post/<int:id>/<int:liked>', methods=['GET'])
 @login_required
-def like_qaa_post(id, like):
-    def refresh_rating(reverse=False, double=False):
-        rate_ = rate * 2 if double else rate
-        qaa.rating += (-rate_ if reverse else rate_)
-        data['rating'] = qaa.rating
-
-    session = db_session.create_session()
-    qaa = session.query(QAA).get(id)
-    rate = (1 if like else -1)
-
+def like_qaa_post(id, liked):
     data = {
         'result': 'success',
-        'rating': qaa.rating,
         'cancel': 'False',
         'double': 'False'
     }
-
-    like_obj = session.query(Like).filter(Like.author == current_user.id).filter(
-        Like.type == 'QAA').filter(Like.obj_id == id).first()
-
-    if not like_obj:
-        like_obj = Like()
-        like_obj.author = current_user.id
-        like_obj.type = 'QAA'
-        like_obj.obj_id = id
-        like_obj.dislike = not bool(like)
-        like_obj.datetime = datetime.datetime.now()
-        session.add(like_obj)
-        refresh_rating()
-    else:
-        if not (like_obj.dislike != bool(like)):
-            like_obj.dislike = not like_obj.dislike
-            refresh_rating(double=True)
-            data['double'] = 'True'
-        else:
-            session.delete(like_obj)
-            refresh_rating(reverse=True)
-        data['cancel'] = 'True'
-    session.commit()
-    return flask.jsonify(data)
-
-
-@blueprint.route('/like/qaa_comment/<int:id>/<int:like>', methods=['GET'])
-@login_required
-def like_qaa_comment(id, like):
-    def refresh_rating(reverse=False, double=False):
-        rate_ = rate * 2 if double else rate
-        qaa.rating += (-rate_ if reverse else rate_)
-        data['rating'] = qaa.rating
-
     session = db_session.create_session()
-    qaa = session.query(Answer).get(id)
-    rate = (1 if like else -1)
+    like_obj = get_LikeObj(id, 'QAA')
+    if not like_obj:
+        like_obj = LikeObj()
+        like_obj.obj_id = id
+        like_obj.type_id = get_TypeObj_id('QAA')
+        session.add(like_obj)
+    like = session.query(Like).filter(Like.author == current_user.id).filter(
+        Like.obj_id == like_obj.id).first()
+    if like:
+        data['cancel'] = 'True'
+        if like.dislike != liked:
+            session.delete(like)
+        else:
+            like.dislike = not like.dislike
+            data['double'] = 'True'
+    else:
+        like = Like()
+        like.author = current_user.id
+        like.obj_id = like_obj.id
+        like.dislike = not liked
+        like.datetime = datetime.datetime.now()
+        session.add(like)
+    session.commit()
+    data['rating'] = get_QaaPost_rating(id)
+    return flask.jsonify(**data)
 
+
+@blueprint.route('/like/qaa_comment/<int:id>/<int:liked>', methods=['GET'])
+@login_required
+def like_answer(id, liked):
     data = {
         'result': 'success',
-        'rating': qaa.rating,
         'cancel': 'False',
         'double': 'False'
     }
-
-    like_obj = session.query(Like).filter(Like.author == current_user.id).filter(
-        Like.type == 'Answer').filter(Like.obj_id == id).first()
-
+    session = db_session.create_session()
+    like_obj = get_LikeObj(id, 'Answer')
     if not like_obj:
-        like_obj = Like()
-        like_obj.author = current_user.id
-        like_obj.type = 'Answer'
+        like_obj = LikeObj()
         like_obj.obj_id = id
-        like_obj.dislike = not bool(like)
-        like_obj.datetime = datetime.datetime.now()
+        like_obj.type_id = get_TypeObj_id('Answer')
         session.add(like_obj)
-        refresh_rating()
-    else:
-        if not (like_obj.dislike != bool(like)):
-            like_obj.dislike = not like_obj.dislike
-            refresh_rating(double=True)
-            data['double'] = 'True'
-        else:
-            session.delete(like_obj)
-            refresh_rating(reverse=True)
+    like = session.query(Like).filter(Like.author == current_user.id).filter(
+        Like.obj_id == like_obj.id).first()
+    if like:
         data['cancel'] = 'True'
+        if like.dislike != liked:
+            session.delete(like)
+        else:
+            like.dislike = not like.dislike
+            data['double'] = 'True'
+    else:
+        like = Like()
+        like.author = current_user.id
+        like.obj_id = like_obj.id
+        like.dislike = not liked
+        like.datetime = datetime.datetime.now()
+        session.add(like)
     session.commit()
-    return flask.jsonify(data)
+    data['rating'] = get_Answer_rating(id)
+    return flask.jsonify(**data)
 
 
 @blueprint.route('/add_answer/<int:id>', methods=['GET', 'POST'])
@@ -229,6 +217,11 @@ def add_answer(id):
             session.add(answer)
             session.commit()
             qaa = session.query(QAA).get(answer.qaa_id)
+            form = QaaCommentForm()
+            submit_data = {
+                'class': 'qaa-comment-btn',
+                'onclick': f'replaceQaaCommentText({str(answer.id)})'
+            }
             return flask.jsonify({
                 'result': 'success',
                 'id': answer.id,
@@ -236,10 +229,13 @@ def add_answer(id):
                 'author': answer.author,
                 'q_id': answer.qaa_id,
                 'name': session.query(User).get(answer.author).name,
-                'rating': answer.rating,
+                'rating': get_Answer_rating(answer.id),
                 'text': answer.text,
                 'author_of_qaa': qaa.author == current_user.id and not session.query(Answer).filter(
                     Answer.qaa_id == qaa.id).filter(Answer.right_answer == True).first(),
+                'form_hidden_tag': form.hidden_tag(),
+                'form_text': form.text(id='qaa-answer-comments-hidden-input-' + str(answer.id), style='display: none'),
+                'form_submit': form.submit(**submit_data)
             })
     except BaseException as exception:
         return flask.jsonify({'result': f'error {exception}'})
@@ -262,12 +258,12 @@ def add_qaa_comment(id):
             session.add(comment)
             session.commit()
             return flask.jsonify({
-                    'result': 'success',
-                    'text': comment.text.strip().replace('\n\n', '\n'),
-                    'author': comment.author,
-                    'datetime': comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT"),
-                    'user': session.query(User).get(comment.author).name
-                })
+                'result': 'success',
+                'text': comment.text.strip().replace('\n\n', '\n'),
+                'author': comment.author,
+                'datetime': comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+                'user': session.query(User).get(comment.author).name
+            })
     except BaseException as exception:
         return flask.jsonify({'result': f'error: {exception}'})
     return flask.jsonify({'result': '250 characters maximum'})
@@ -290,3 +286,26 @@ def mark_as_right(question_id, answer_id):
     answer.right_answer = not already
     session.commit()
     return flask.jsonify({'result': 'success', 'canceled': f'{already}'})
+
+
+@blueprint.route('/delete/qaa/<int:id>', methods=['GET', 'DELETE'])
+@login_required
+def delete_qaa(id):
+    session = db_session.create_session()
+    qaa = session.query(QAA).get(id)
+    if current_user.id == qaa.author:
+        likes = session.query(Like).filter(Like.obj_id == get_LikeObj_id(qaa.id, 'QAA')).all()
+        for like in likes:
+            session.delete(like)
+        answers = session.query(Answer).filter(Answer.qaa_id == qaa.id).all()
+        for answer in answers:
+            likes = session.query(Like).filter(Like.obj_id == get_LikeObj_id(answer.id, 'Answer')).all()
+            for like in likes:
+                session.delete(like)
+            comments = session.query(QaaComment).filter(QaaComment.answer_id == answer.id).all()
+            for comment in comments:
+                session.delete(comment)
+            session.delete(answer)
+        session.delete(qaa)
+        session.commit()
+    return redirect('/q&a')

@@ -976,6 +976,8 @@ input:-webkit-autofill:active {
 #main-qaa-content {
     display: grid;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .main-vote {
@@ -1302,6 +1304,7 @@ input:-webkit-autofill:active {
     margin-bottom: 0;
     word-wrap: break-word;
     word-break: break-word;
+    white-space: break-spaces;
 }
 
 .qaa-comment-form {
@@ -1413,6 +1416,7 @@ input:-webkit-autofill:active {
 
 .fa-check-right {
     color: #2b873fa6;
+    cursor: pointer;
 }
 
 .right-answered {
@@ -1432,6 +1436,76 @@ input:-webkit-autofill:active {
 .main-qaa-c-error {
     font-weight: bold;
     color: #d24545;
+}
+
+.main-popup {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #000000ad;
+}
+
+.main-popup-body {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-popup-content {
+    padding: .5rem 2rem;
+    background-color: #292d3ead;
+    color: #d7dce3;
+    width: 30rem;
+    border-radius: 12px;
+}
+
+.main-popup-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem 0 0 0;
+}
+
+.error-bg {
+    background-color: #a73b3b!important;
+    padding: .2rem .3rem;
+}
+
+.error-bg:hover {
+    color: #d7dce3;
+    background-color: #6e2727!important;
+    transition: .3s;
+}
+
+.main-popup-popup {
+    outline: none;
+    border: 0;
+    background-color: #4c465a;
+    border-radius: 5px;
+    color: #d7dce3;
+}
+
+.main-popup-popup:hover {
+    background-color: #373341;
+    transition: .3s;
+}
+
+#qaa-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fa-trash-alt {
+    color: #d24545;
+}
+
+#qaa-delete-btn {
+    outline: none;
+    background: none;
+    border: none;
 }
 
 @media screen and (max-width: 925px)

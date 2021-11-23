@@ -50,8 +50,6 @@ class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
 	text = Column(Text, default='')
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
-	rating = Column(Integer, default=0)
-	rated = Column(Integer, default=0)
 	tags = Column(String, default="")
 	views = Column(Integer, default=0)
 
@@ -63,7 +61,6 @@ class Answer(UserMixin, SqlAlchemyBase, SerializerMixin):
 	author = Column(Integer, ForeignKey('users.id'))
 	text = Column(Text, default='')
 	datetime = Column(DateTime)
-	rating = Column(Integer, default=0)
 	right_answer = Column(Boolean, default=False)
 
 
@@ -81,7 +78,6 @@ class Comment(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	text = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
-	likes = Column(Integer, default=0)
 	post_id = Column(Integer, ForeignKey('posts.id'))
 	datetime = Column(DateTime)
 
@@ -90,10 +86,22 @@ class Like(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "likes"
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	author = Column(Integer, ForeignKey('users.id'))
+	obj_id = Column(Integer, ForeignKey('like_obj.id'))
 	dislike = Column(Boolean, default=False)
-	type = Column(String)
-	obj_id = Column(Integer)
 	datetime = Column(DateTime)
+
+
+class LikeObj(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "like_obj"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	type_id = Column(Integer, ForeignKey('type_obj.id'))
+	obj_id = Column(Integer)
+
+
+class TypeObj(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "type_obj"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	type = Column(String, unique=True)
 
 
 class QaaComment(UserMixin, SqlAlchemyBase, SerializerMixin):

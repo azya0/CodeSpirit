@@ -2,6 +2,7 @@ from werkzeug.utils import secure_filename
 from data.__all_models import *
 from data.forms import *
 from flask_login import login_required, current_user
+from data.request_tools import *
 from flask import render_template
 import flask
 import datetime
@@ -85,7 +86,7 @@ def account(user_id):
 def is_liked(id):
     session = db_session.create_session()
     data = session.query(Like).filter(Like.author == current_user.id).filter(
-        Like.type == 'comment').filter(Like.obj_id == id).first()
+        Like.obj_id == get_LikeObj_id(id, 'Comment')).first()
     return data
 
 
@@ -108,13 +109,14 @@ def main_page():
         'Comment': Comment,
         'current_user': current_user,
         'sorted': sorted,
-        'cl_filter': lambda x: x.likes,
+        'cl_filter': lambda x: get_CommentLike_count(x.id),
         'len': len,
         'str': str,
         'enu': enumerate,
         'string_long': lambda x: 1 if len(x) >= 400 else 2 if x.count('\n') > 14 else 0,
         'string_long_p': lambda x: 1 if len(x) >= 1700 else 2 if x.count('\n') > 14 else 0,
         'is_liked': is_liked,
+        'get_CommentLike_count': get_CommentLike_count,
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
@@ -221,41 +223,29 @@ def add_comment(post_id: int):
 @blueprint.route('/like/<string:type_>/<int:id>', methods=['GET', 'PUT'])
 @login_required
 def is_comment_liked(type_: str, id: int):
-    WT_ERROR = flask.jsonify({'result': 'error: wrong type'})
-
-    def correct_like(add):
-        if type_ == 'post':
-            obj = session.query(Post).filter(Post.id == id).first()
-        else:
-            obj = session.query(Comment).filter(Comment.id == id).first()
-        obj.likes += 1 if add else -1
-
-    def valid_type(type_of):
-        return type_of in ('post', 'comment')
-
-    if not valid_type(type_):
-        return WT_ERROR
-
     session = db_session.create_session()
-    like = session.query(Like).filter(Like.author == current_user.id).filter(
-        Like.type == 'comment').filter(Like.obj_id == id).first()
+    _type = get_TypeObj_id(type_)
+    if _type == -1:
+        return flask.jsonify({'result': 'Wrong object type'})
+    like_obj = session.query(LikeObj).filter(LikeObj.type_id == _type).filter(LikeObj.obj_id == id).first()
+    if not like_obj:
+        like_obj = LikeObj()
+        like_obj.obj_id = id
+        like_obj.type_id = _type
+        session.add(like_obj)
+    like = session.query(Like).filter(Like.obj_id == like_obj.id).filter(Like.author == current_user.id).first()
     if like:
-        if valid_type(like.type):
-            correct_like(False)
-        else:
-            return WT_ERROR
         session.delete(like)
-        result = 'cancel'
+        session.commit()
+        return flask.jsonify({'result': 'cancel'})
     else:
-        new_like = Like()
-        new_like.author = current_user.id
-        new_like.obj_id = id
-        new_like.type = type_
-        session.add(new_like)
-        correct_like(True)
-        result = 'add'
+        like = Like()
+        like.author = current_user.id
+        like.obj_id = like_obj.id
+        like.datetime = datetime.datetime.now()
+        session.add(like)
     session.commit()
-    return flask.jsonify({'result': result})
+    return flask.jsonify({'result': 'add'})
 
 
 @blueprint.route('/delete_comment/<int:id>', methods=['DELETE'])
@@ -265,7 +255,7 @@ def delete_comment(id):
     comment = session.query(Comment).get(id)
     if comment and current_user.id == comment.author:
         session.delete(comment)
-    for like in session.query(Like).filter(Like.type == 'comment').filter(Like.obj_id == id).all():
+    for like in session.query(Like).filter(Like.obj_id == get_LikeObj_id(id, 'Comment')).all():
         session.delete(like)
     session.commit()
     return flask.jsonify({'success': True})

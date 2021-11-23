@@ -7,13 +7,20 @@
 
 
 <div class="df-c main-white-font-color">
-    <h2 class="main-w-w f-s-20">{{ question.title }}</h2>
+    <div id="qaa-title">
+        <h2 class="main-w-w f-s-20">{{ question.title }}</h2>
+        <div>
+            {% if current_user.id == question.author %}
+                <button id="qaa-delete-btn" onclick="DeleteWind()"><i class="far fa-trash-alt"></i></button>
+            {% endif %}
+        </div>
+    </div>
     <small>Asked {{ question.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</small>
     <small>Viewed {{ question.views }}</small>
     <div class="main-qaa-page-content">
         <div class="main-vote">
             <i id='up-arrow-{{ question.id }}' class="fa fa-arrow-up main-arrow {% if is_liked %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote({{ question.id }}, true)"></i>
-            <span id='rating-qaa-span-{{ question.id }}' style="font-size: 40px;">{{ question.rating }}</span>
+            <span id='rating-qaa-span-{{ question.id }}' style="font-size: 40px;">{{ question_rating(question.id) }}</span>
             <i id='down-arrow-{{ question.id }}' class="fa fa-arrow-down main-arrow {% if is_disliked %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote({{ question.id }}, false)"></i>
         </div>
         <div id="main-qaa-question">
@@ -49,7 +56,7 @@
                 <div class="grid-answer">
                     <div class="main-comment-vote">
                         <i id='up-arrow-c-{{ answer.id }}' class="fa fa-arrow-up main-arrow-c {% if is_qaa_comment_liked(answer.id) %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote_a_c({{ answer.id }}, true)"></i>
-                        <span id="rating-qaa-span-c-{{ answer.id }}">{{ answer.rating }}</span>
+                        <span id="rating-qaa-span-c-{{ answer.id }}">{{ AnswerRating(answer.id) }}</span>
                         <i id="down-arrow-c-{{ answer.id }}" class="fa fa-arrow-down main-arrow-c {% if is_qaa_comment_disliked(answer.id) %} main-qaa-selected {% endif %}" aria-hidden="true" onclick="qaa_vote_a_c({{ answer.id }}, false)"></i>
                         {% if question.author == current_user.id %}<i id='fa-check-{{ answer.id }}' class="fa fa-check {% if answer.right_answer %}fa-check-right{% endif %}" aria-hidden="true" onclick="mark_as_right({{ question.id }},{{ answer.id }})" {% if answered(question.id) and not answer.right_answer %}style="display: none;"{% endif %}></i>{% endif %}
                     </div>
@@ -89,5 +96,15 @@
         </form>
     </div>
 </div>
-
+<div id='qaa-popup' class="main-popup">
+    <div class="main-popup-body">
+        <div class="main-popup-content">
+            <span>Are you sure you want to delete your question?<br>Other users won't be able to see it or respond to it anymore.<br><span style="color: #fc1212">It will be impossible to restore it</span> :(</span>
+            <div class="main-popup-btn">
+                <a href='/delete/qaa/{{ question.id }}' class="main-popup-popup error-bg">Delete</a>
+                <button onclick="DeleteWind()" class="main-popup-popup">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
