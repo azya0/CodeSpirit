@@ -14,11 +14,17 @@ class Event(UserMixin, SqlAlchemyBase, SerializerMixin):
 class Message(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "messages"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	sender = Column(Integer)
-	receiver = Column(Integer)
+	sender_index = Column(Integer, ForeignKey('message_sender_index.id'))
 	text = Column(String)
 	datetime = Column(DateTime)
 	is_read = Column(Boolean, default=False)
+
+
+class MessageSenderIndex(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "message_sender_index"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	sender = Column(Integer)
+	receiver = Column(Integer)
 
 
 class User(UserMixin, SqlAlchemyBase, SerializerMixin):

@@ -1,6 +1,7 @@
 from flask_login import login_required, current_user
 from data.__all_models import User, Message
 from flask import render_template, redirect
+from data.request_tools import *
 from data.forms import NewPostForm
 import datetime
 import flask
@@ -40,16 +41,14 @@ def messages(user_id: int):
 @blueprint.route("/inbox/")
 def inbox():
     session = db_session.create_session()
-    all_messages = session.query(Message).filter(Message.receiver ==
-                                                 current_user.id or Message.sender == current_user.id).all()
-    sorted_messages = dict()
-    for message in all_messages:
-        if message.receiver == current_user.id:
-            sorted_messages[message.sender] = message
-        else:
-            sorted_messages[message.receiver] = message
-    sorted_messages = [
-        (session.query(User).get(id).name, sorted_messages[id].datetime, sorted_messages[id].text[:10], id) for id in
-        sorted_messages.keys()]
-    sorted_messages.sort(key=lambda x: x[1], reverse=True)
-    return render_template("messages.html", messages=sorted_messages)
+
+    indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.receiver == current_user.id).all()
+    users = tuple(set(session.query(User).get(index.sender) for index in indexes))
+    viewer_data = {
+        user: session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()[-1] for user in users
+    }
+    data = {
+        'viewer_data': viewer_data,
+    }
+
+    return render_template("messages.html", **data)

@@ -39,3 +39,14 @@ def get_Answer_rating(id):
             Like.obj_id == get_LikeObj_id(id, 'Answer')).filter(Like.dislike == False).all()) - \
         len(session.query(Like).filter(
             Like.obj_id == get_LikeObj_id(id, 'Answer')).filter(Like.dislike == True).all())
+
+
+def get_message_user_data(id):
+    session = db_session.create_session()
+    return session.query(MessageSenderIndex).get(id)
+
+
+def get_sender_index(sender, receiver):
+    session = db_session.create_session()
+    return session.query(MessageSenderIndex).filter(MessageSenderIndex.sender == sender)\
+        .filter(MessageSenderIndex.receiver == receiver).first()

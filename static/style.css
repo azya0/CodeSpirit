@@ -1508,6 +1508,20 @@ input:-webkit-autofill:active {
     border: none;
 }
 
+.user-avatar {
+    color: #d7dce3;
+}
+
+.message-user-block {
+    color: #d7dce3;
+}
+
+.top-user-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 @media screen and (max-width: 925px)
 {
     nav {
