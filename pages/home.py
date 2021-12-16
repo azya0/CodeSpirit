@@ -66,6 +66,7 @@ def self_account():
     return account(current_user.id)
 
 
+@login_required
 @blueprint.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def account(user_id):
     session = db_session.create_session()
@@ -80,6 +81,9 @@ def account(user_id):
         'len': len,
         'current_user': current_user
     }
+    notifications, unwatched_notifications = get_notification()
+    data['notifications'] = list(notifications)[::-1]
+    data['unwatched'] = unwatched_notifications
     return render_template("profile.html", **data)
 
 
@@ -120,6 +124,10 @@ def main_page():
         'is_file': lambda x: os.path.exists(x),
         'get_user': lambda x: session.query(User).get(x)
     }
+    if current_user.is_authenticated:
+        notifications, unwatched_notifications = get_notification()
+        data['notifications'] = list(notifications)[::-1]
+        data['unwatched'] = unwatched_notifications
     return render_template("home.html", **data)
 
 
@@ -188,7 +196,7 @@ def delete_post(id):
             os.remove(file.way)
         session.delete(file)
     for comment in session.query(Comment).filter(Comment.post_id == id).all():
-        session.delete(comment)
+        delete_comment(comment.id)
     session.commit()
     return flask.jsonify({'success': True})
 
@@ -208,6 +216,11 @@ def add_comment(post_id: int):
             comment.datetime = datetime.datetime.now()
             session.add(comment)
             session.commit()
+            post = session.query(Post).get(post_id)
+            create_notification(current_user.id,
+                                post.author,
+                                f'{get_user_name(current_user.id)} comment your post: "{post.text[:10]}..."',
+                                f'/', 'comment')
             return flask.jsonify({'result': 'success',
                                   'id': comment.id,
                                   'author': session.query(User).get(comment.author).name,
@@ -237,6 +250,15 @@ def is_comment_liked(type_: str, id: int):
     if like:
         session.delete(like)
         session.commit()
+        obj = session.query(get_class(get_TypeObj(like_obj.type_id).type)).get(like_obj.obj_id)
+        notification = session.query(Notification).filter(
+            Notification.author == current_user.id).filter(
+            Notification.to_user == obj.author).filter(
+            Notification.link_to_watch == f'/').filter(
+            Notification.type == get_Notification_type_id('like')).first()
+        if notification:
+            session.delete(notification)
+            session.commit()
         return flask.jsonify({'result': 'cancel'})
     else:
         like = Like()
@@ -244,7 +266,12 @@ def is_comment_liked(type_: str, id: int):
         like.obj_id = like_obj.id
         like.datetime = datetime.datetime.now()
         session.add(like)
-    session.commit()
+        obj = session.query(get_class(get_TypeObj(like_obj.type_id).type)).get(like_obj.obj_id)
+        session.commit()
+        create_notification(current_user.id,
+                            obj.author,
+                            f'{get_user_name(current_user.id)} like your {get_TypeObj(like_obj.type_id).type.lower()}',
+                            f'/', 'like')
     return flask.jsonify({'result': 'add'})
 
 
@@ -258,4 +285,25 @@ def delete_comment(id):
     for like in session.query(Like).filter(Like.obj_id == get_LikeObj_id(id, 'Comment')).all():
         session.delete(like)
     session.commit()
+    post = session.query(Post).get(comment.post_id)
+    notification = session.query(Notification).filter(
+        Notification.author == current_user.id).filter(
+        Notification.to_user == post.author).filter(
+        Notification.link_to_watch == f'/').filter(
+        Notification.type == get_Notification_type_id('comment')).first()
+    if notification:
+        session.delete(notification)
+        session.commit()
     return flask.jsonify({'success': True})
+
+
+@login_required
+@blueprint.route('/announce/<int:id>', methods=['GET'])
+def announce(id):
+    session = db_session.create_session()
+    notification = session.query(Notification).get(id)
+
+    if not notification.watched:
+        notification.watched = True
+        session.commit()
+    return flask.redirect(notification.link_to_watch)

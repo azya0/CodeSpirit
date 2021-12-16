@@ -275,6 +275,10 @@ input:-webkit-autofill:active {
     -webkit-transition-delay: 9999s;
 }
 
+.active {
+    position: relative;
+}
+
 .main-registration-error {
     margin-top: 1rem;
     font-weight: bold;
@@ -793,6 +797,7 @@ input:-webkit-autofill:active {
     margin-right: 6.285%;
     word-wrap: break-word;
     color: #d7dce3;
+    white-space: pre;
 }
 
 .main-comment-content {
@@ -1508,6 +1513,82 @@ input:-webkit-autofill:active {
     border: none;
 }
 
+#notifications {
+    flex-direction: column;
+    color: #d7dce3;
+    background-color: #1a1f26;
+    height: 25rem;
+    position: absolute;
+    right: 12rem;
+    z-index: 100;
+    box-shadow: -10px 10px 20px 2px #080a0fd9;
+    display: none;
+}
+
+.notification a {
+    color: #d7dce3;
+}
+
+.notification a:hover {
+    color: #d7dce399;
+    transition: .3s;
+}
+
+#notifications h5 {
+    display: flex;
+    justify-content: center;
+}
+
+.notification {
+    padding: .2rem 1rem;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+#notification-container {
+    height: 100%;
+    overflow-y: scroll;
+    padding-top: .4rem;
+    width: 30rem;
+}
+
+#notification-container::-webkit-scrollbar {
+    width: 7px;
+    background-color: #ffffff00;
+}
+
+#notification-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #d7dce3;
+}
+
+#notification-container::-webkit-resizer {
+    background-color: #292d3e;
+}
+
+.new-event-marker {
+    color: #d7dce3;
+    font-size: 10px;
+    position: absolute;
+    top: 15%;
+    left: 6px;
+    background: #d24545;
+    border-radius: 11px;
+    max-width: 1.5rem;
+    overflow: hidden;
+    padding: 0px 20%;
+}
+
+.nb-button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.notification-unread {
+    background-color: #1f2329;
+}
+
 @media screen and (max-width: 925px)
 {
     nav {
@@ -1723,6 +1804,15 @@ input:-webkit-autofill:active {
         min-height: 37px;
         padding-top: 7px!important;
     }
+
+    #notifications {
+        right: 0rem;
+        width: 100%;
+    }
+
+    #notification-container {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 426px)
@@ -1750,5 +1840,10 @@ input:-webkit-autofill:active {
 
     .main-registration-description {
         padding-top: 0.2rem!important;
+    }
+
+    #notifications {
+        right: 0rem;
+        width: 100%;
     }
 }

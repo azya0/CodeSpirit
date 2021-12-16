@@ -216,6 +216,13 @@ $(document).ready(function () {
         addQAAComment(answer_id);
         event.preventDefault();
     });
+    if (document.querySelector('div[contenteditable]')) {
+        document.querySelector('div[contenteditable]').addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = (e.originalEvent || e).clipboardData.getData('text/plain').replace("<br>", '\n');
+            window.document.execCommand('insertText', false, text);
+        });
+    }
 
     $(".main-comment-union").hover(
         function() {
@@ -267,7 +274,7 @@ function addComment(post_id) {
                  </div>
                 `
                 var new_comment = $(string);
-                $('.main-comment-text', new_comment).text(response.text.replace(/\r?\n|\r/g, "<br>"));
+                $('.main-comment-text', new_comment).text(response.text);
                 var hr = $('<hr class="main-hr-for-comments">');
                 if (!response.is_first) {
                     hr.appendTo('#main-post-comments-' + post_id);
@@ -347,7 +354,7 @@ function addAnswer(question_id) {
                 var new_answer = $(string);
                 $('.answers-pre', new_answer).text(response.text);
                 if (response.author_of_qaa) {
-                    fa_check = $("<i id='fa-check-${response.id}' class='fa fa-check' aria-hidden='true' onclick='mark_as_right(${response.q_id},${response.id})'></i>")
+                    fa_check = $("<i id='fa-check-${response.id}' class='fa fa-check' aria-hidden='true' onclick='mark_as_right(" + response.q_id + "," + response.id + ")'></i>")
                     $('.main-comment-vote', new_answer).append(fa_check);
                 }
                 new_answer.appendTo('#main-answers');
@@ -677,7 +684,16 @@ function DeleteWind() {
         popup.show();
     }
     else {
-        console.log(1);
         popup.hide();
+    }
+}
+
+function notification_button() {
+    wind = $('#notifications');
+    if (wind.is(':hidden')) {
+        wind.show().css('display', 'flex');
+    }
+    else {
+        wind.hide();
     }
 }

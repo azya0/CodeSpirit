@@ -4,11 +4,22 @@ from .db_session import SqlAlchemyBase
 from flask_login import UserMixin
 
 
-class Event(UserMixin, SqlAlchemyBase, SerializerMixin):
-	__tablename__ = "events"
+class Notification(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "notifications"
 	id = Column(Integer, primary_key=True, autoincrement=True)
+	author = Column(Integer, ForeignKey('users.id'))
+	to_user = Column(Integer, ForeignKey('users.id'))
 	datetime = Column(DateTime)
+	watched = Column(Boolean, default=False)
 	text = Column(String)
+	link_to_watch = Column(String, nullable=False)
+	type = Column(Integer, ForeignKey('notifications_type.id'))
+
+
+class Notification_type(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "notifications_type"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	type = Column(String, nullable=False)
 
 
 class Message(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -38,8 +49,6 @@ class Post(UserMixin, SqlAlchemyBase, SerializerMixin):
 	turn_off_comments = Column(Boolean, default=False)
 	anonymous = Column(Boolean)
 	datetime = Column(DateTime)
-	comments = Column(String, default="")
-	likes = Column(Integer, default=0)
 
 
 class QAA(UserMixin, SqlAlchemyBase, SerializerMixin):
@@ -109,6 +118,5 @@ class QaaComment(UserMixin, SqlAlchemyBase, SerializerMixin):
 	id = Column(Integer, primary_key=True, autoincrement=True)
 	text = Column(String)
 	author = Column(Integer, ForeignKey('users.id'))
-	likes = Column(Integer, default=0)
 	answer_id = Column(Integer, ForeignKey('answ.id'))
 	datetime = Column(DateTime)

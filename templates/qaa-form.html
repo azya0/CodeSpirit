@@ -18,7 +18,7 @@
         <span class="main-white-font-color" style="font-weight: 700">Main part</span>
         <small class="main-white-font-color">Add all the information you might need to answer your question.</small>
         {{ form.text(class='main-qaa-form-item' + ' main-qaa-field-error' if form.text.errors else '', style='min-height: 150px;') }}
-        <div style="margin-bottom: .5%" class="main-white-font-color">``` <code>code</code> ``` <p class="main-p">put '\' in front of the symbol(s) to make it non-special</p></blockquote></div>
+        <div style="margin-bottom: .5%" class="main-white-font-color">``` <code>code</code> ``` <p class="main-p">put '\' in front of the symbol(s) to make it non-special</p></div>
         {% for error in form.text.errors %}
                 <span class="main-qaa-error">{{ error }}</span>
         {% endfor %}

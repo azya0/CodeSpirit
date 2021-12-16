@@ -32,7 +32,7 @@ def internal_error(error):
 
 
 def create_TypeObj():
-    classes = [x for x in dir(data.__all_models) if isclass(getattr(data.__all_models, x))]
+    classes = (x for x in dir(data.__all_models) if isclass(getattr(data.__all_models, x)))
     session = db_session.create_session()
     for _class in classes:
         if not session.query(TypeObj).filter(TypeObj.type == _class).first():
@@ -42,13 +42,27 @@ def create_TypeObj():
     session.commit()
 
 
+def create_Notification_type():
+    types = ('like', 'comment', 'answered', 'mark_as_right', 'qaa_rated', 'qaa_answer_rated')
+    session = db_session.create_session()
+    for _type in types:
+        if not session.query(Notification_type).filter(Notification_type.type == _type).first():
+            obj = Notification_type()
+            obj.type = _type
+            session.add(obj)
+    session.commit()
+
+
 def main():
     db_session.global_init("db/database.db")
     create_TypeObj()
+    create_Notification_type()
+    print('/__server_working__/')
     app.run()
 
 
 if __name__ == '__main__':
+    print('/__loading__/')
     app.register_blueprint(home.blueprint)
     app.register_blueprint(authentication.blueprint)
     app.register_blueprint(chats.blueprint)

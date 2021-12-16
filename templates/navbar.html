@@ -57,7 +57,10 @@
                     </li>
                     {% if current_user.is_authenticated %}
                         <li class="active mx-3"><a class="nav-link main-font pt-60 main-fs" href="/inbox/"><i class="fa fa-comments main-icon-fix" aria-hidden="true"></i></a></li>
-                        <li class="active mx-3"><a class="nav-link main-font pt-60 main-fs" href="#"><i class="fa fa-bell main-icon-fix" aria-hidden="true"></i></a></li>
+                        <button class="active mx-3 nb-button" onclick="notification_button()">
+                            {% if unwatched %} <small class="new-event-marker">{{ unwatched }}</small> {% endif %}
+                            <a class="nav-link main-font pt-60 main-fs" href="#"><i class="fa fa-bell main-icon-fix" aria-hidden="true"></i></a>
+                        </button>
                     {% endif %}
                     <li class="active mx-3 d-line" style="font-size: 20px; padding-top: 0.4%;">
                         {% if current_user.is_authenticated %}
@@ -73,8 +76,24 @@
                 <span class="fa fa-times" id="times"></span>
             </label>
         </nav>
-
-
+        {% if current_user.is_authenticated %}
+            <div id="notifications">
+                <h5>Notifications</h5>
+                <div id="notification-container">
+                    {% for notification in notifications %}
+                        <div class="notification {% if not notification.watched %} notification-unread {% endif%}">
+                            <a href="/profile/{{ notification.author }}">
+                                {% if not notification.watched %} <span>🔥</span> {% endif%}
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                                <small>{{ get_user(notification.author).name }}</small>
+                            </a>
+                            <small> - </small>
+                            <a href="/announce/{{ notification.id }}"><small>{{ notification.text }}</small></a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
 
         <div class="main-container" style="margin-top: 25px">
             <main role="main" class="container" style="display:block">

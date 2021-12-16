@@ -63,6 +63,10 @@ def main_page():
         'answ_count': lambda x: len(session.query(Answer).filter(Answer.qaa_id == x).all()),
         'answered': answered
     }
+    notifications, unwatched_notifications = get_notification()
+    data['notifications'] = list(notifications)
+    data['unwatched'] = unwatched_notifications
+    data['get_user'] = lambda x: session.query(User).get(x)
     return render_template("qaa.html", **data)
 
 
@@ -84,6 +88,11 @@ def qaa_form():
     data = {
         'form': form
     }
+    notifications, unwatched_notifications = get_notification()
+    data['notifications'] = list(notifications)
+    data['unwatched'] = unwatched_notifications
+    session = db_session.create_session()
+    data['get_user'] = lambda x: session.query(User).get(x)
     return render_template("qaa-form.html", **data)
 
 
@@ -126,6 +135,9 @@ def qaa_a_page(id):
     }
     question.views += 1
     session.commit()
+    notifications, unwatched_notifications = get_notification()
+    data['notifications'] = list(notifications)
+    data['unwatched'] = unwatched_notifications
     return render_template("qaa-q-page.html", **data)
 
 
@@ -162,6 +174,29 @@ def like_qaa_post(id, liked):
         session.add(like)
     session.commit()
     data['rating'] = get_QaaPost_rating(id)
+    if data['cancel'] != 'False':
+        if data['double'] != 'False':
+            notification = session.query(Notification).filter(
+                Notification.author == current_user.id).filter(
+                Notification.to_user == session.query(QAA).get(like_obj.obj_id).author).filter(
+                Notification.link_to_watch == f'/q&a/{like_obj.obj_id}').filter(
+                Notification.type == get_Notification_type_id('qaa_rated')).first()
+            notification.text =  f'{"decreased" if like.dislike else "raised"} the rating of your post'
+            session.commit()
+        else:
+            notification = session.query(Notification).filter(
+                Notification.author == current_user.id).filter(
+                Notification.to_user == session.query(QAA).get(like_obj.obj_id).author).filter(
+                Notification.link_to_watch == f'/q&a/{like_obj.obj_id}').filter(
+                Notification.type == get_Notification_type_id('qaa_rated')).first()
+            session.delete(notification)
+            session.commit()
+    else:
+        if data['double'] == 'False':
+            create_notification(current_user.id,
+                                session.query(QAA).get(like_obj.obj_id).author,
+                                f'{"decreased" if like.dislike else "raised"} the rating of your post',
+                                f'/q&a/{like_obj.obj_id}', 'qaa_rated')
     return flask.jsonify(**data)
 
 
@@ -198,6 +233,29 @@ def like_answer(id, liked):
         session.add(like)
     session.commit()
     data['rating'] = get_Answer_rating(id)
+    if data['cancel'] != 'False':
+        if data['double'] != 'False':
+            notification = session.query(Notification).filter(
+                Notification.author == current_user.id).filter(
+                Notification.to_user == session.query(QAA).get(like_obj.obj_id).author).filter(
+                Notification.link_to_watch == f'/q&a/{like_obj.obj_id}').filter(
+                Notification.type == get_Notification_type_id('qaa_answer_rated')).first()
+            notification.text =  f'{"decreased" if like.dislike else "raised"} the rating of your answer'
+            session.commit()
+        else:
+            notification = session.query(Notification).filter(
+                Notification.author == current_user.id).filter(
+                Notification.to_user == session.query(QAA).get(like_obj.obj_id).author).filter(
+                Notification.link_to_watch == f'/q&a/{like_obj.obj_id}').filter(
+                Notification.type == get_Notification_type_id('qaa_answer_rated')).first()
+            session.delete(notification)
+            session.commit()
+    else:
+        if data['double'] == 'False':
+            create_notification(current_user.id,
+                                session.query(QAA).get(like_obj.obj_id).author,
+                                f'{"decreased" if like.dislike else "raised"} the rating of your answer',
+                                f'/q&a/{like_obj.obj_id}', 'qaa_answer_rated')
     return flask.jsonify(**data)
 
 
@@ -222,6 +280,12 @@ def add_answer(id):
                 'class': 'qaa-comment-btn',
                 'onclick': f'replaceQaaCommentText({str(answer.id)})'
             }
+            session = db_session.create_session()
+            question = session.query(QAA).get(id)
+            create_notification(current_user.id,
+                                question.author,
+                                f'{get_user_name(current_user.id)} answered on your question: {question.title}',
+                                f'/q&a/{id}', 'answered')
             return flask.jsonify({
                 'result': 'success',
                 'id': answer.id,
@@ -257,6 +321,12 @@ def add_qaa_comment(id):
             comment.datetime = datetime.datetime.now()
             session.add(comment)
             session.commit()
+            answer = session.query(Answer).get(id)
+            question = session.query(QAA).get(answer.qaa_id)
+            create_notification(current_user.id,
+                                answer.author,
+                                f'{get_user_name(current_user.id)} comment your answer on: "{question.title}"',
+                                f'/q&a/{id}', 'answered')
             return flask.jsonify({
                 'result': 'success',
                 'text': comment.text.strip().replace('\n\n', '\n'),
@@ -285,6 +355,20 @@ def mark_as_right(question_id, answer_id):
     already = answer.right_answer
     answer.right_answer = not already
     session.commit()
+    if answer.right_answer:
+        create_notification(current_user.id,
+                            answer.author,
+                            f'{get_user_name(current_user.id)} mark your answer as right',
+                            f'/q&a/{question_id}', 'mark_as_right')
+    else:
+        notification = session.query(Notification).filter(
+            Notification.author == current_user.id).filter(
+            Notification.to_user == answer.author).filter(
+            Notification.link_to_watch == f'/q&a/{question_id}').filter(
+            Notification.type == get_Notification_type_id('mark_as_right')).first()
+        if notification:
+            session.delete(notification)
+            session.commit()
     return flask.jsonify({'result': 'success', 'canceled': f'{already}'})
 
 
@@ -308,4 +392,8 @@ def delete_qaa(id):
             session.delete(answer)
         session.delete(qaa)
         session.commit()
+    notifications = session.query(Notification).filter(Notification.link_to_watch == f'/q&a/{id}').all()
+    for notification in notifications:
+        session.delete(notification)
+    session.commit()
     return redirect('/q&a')
