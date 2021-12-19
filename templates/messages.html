@@ -3,7 +3,7 @@
 {% block content %}
 <div id="main-inbox-div">
     {% for user in viewer_data %}
-        <div class="message-user-block">
+        <div class="message-user-block" onclick="location.href='im/{{ user.id }}'">
             <div class="top-user-data">
                 <div class="user-data">
                     <a class="user-avatar" href="/profile/{{ user.id }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
@@ -12,7 +12,7 @@
                 <small>{{ viewer_data[user].datetime }}</small>
             </div>
             <div class="bottom-user-data">
-                <span>{{ viewer_data[user].text }}</span>
+                <p>{{ viewer_data[user].text }}</p>
             </div>
         </div>
     {% endfor %}

@@ -46,7 +46,13 @@ def get_message_user_data(id):
     return session.query(MessageSenderIndex).get(id)
 
 
+def get_message_author(index_id):
+    session = db_session.create_session()
+    return session.query(User).get(session.query(MessageSenderIndex).get(index_id).sender)
+
+
 def get_sender_index(sender, receiver):
     session = db_session.create_session()
-    return session.query(MessageSenderIndex).filter(MessageSenderIndex.sender == sender)\
+    result = session.query(MessageSenderIndex).filter(MessageSenderIndex.sender == sender)\
         .filter(MessageSenderIndex.receiver == receiver).first()
+    return result if result else -1

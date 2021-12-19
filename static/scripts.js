@@ -304,6 +304,13 @@ function replaceQaaCommentText(qaa_answer_id) {
 }
 
 
+function replaceMessageText() {
+    var flex = document.getElementById('message-hidden-text');
+    var div = document.getElementById('main-message-input');
+    flex.value = div.innerText.replace(/\r?\n|\r/g, "\\n");
+}
+
+
 function addAnswer(question_id) {
     var curScroll = $(window).scrollTop(),
     curHeight = $('body').height(), newHeight;

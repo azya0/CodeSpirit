@@ -16,28 +16,6 @@ blueprint = flask.Blueprint(
 
 
 @login_required
-@blueprint.route("/messages/<int:user_id>", methods=['GET', 'POST'])
-def messages(user_id: int):
-    session = db_session.create_session()
-    __messages = session.query(Message).filter(
-        Message.receiver == current_user.id and Message.sender == user_id or Message.receiver == user_id and Message.sender == current_user.id).all()
-    __messages = __messages[-5:]
-    pair = {current_user.id: session.query(User).get(current_user.id).name,
-            user_id: session.query(User).get(user_id).name}
-    form = NewPostForm()
-    if form.validate_on_submit():
-        new_message = Message()
-        new_message.sender = current_user.id
-        new_message.receiver = user_id
-        new_message.text = form.text.data
-        new_message.datetime = datetime.datetime.now()
-        session.add(new_message)
-        session.commit()
-        return redirect(f"/messages/{user_id}")
-    return render_template("chat.html", messages=__messages, pair=pair, form=form)
-
-
-@login_required
 @blueprint.route("/inbox/")
 def inbox():
     session = db_session.create_session()
@@ -47,8 +25,49 @@ def inbox():
     viewer_data = {
         user: session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()[-1] for user in users
     }
-    data = {
-        'viewer_data': viewer_data,
-    }
 
-    return render_template("messages.html", **data)
+    return render_template("messages.html", viewer_data=viewer_data)
+
+
+@login_required
+@blueprint.route("/inbox/im/<int:id>", methods=['GET', 'POST'])
+def im(id):
+    from data.forms import MessageForm
+    form = MessageForm()
+    if form.validate_on_submit():
+        from pages.home import format_string
+        session = db_session.create_session()
+        msg = Message()
+        sender_index = get_sender_index(current_user.id, id)
+        if sender_index == -1:
+            sender_index = MessageSenderIndex()
+            sender_index.sender = current_user.id
+            sender_index.receiver = id
+            session.add(sender_index)
+            session.commit()
+        msg.sender_index = sender_index.id
+        msg.text = format_string(form.text.data)
+        msg.datetime = datetime.datetime.now()
+        session.add(msg)
+        session.commit()
+        return redirect(f"/inbox/im/{id}")
+    session = db_session.create_session()
+    try:
+        sender_messages = session.query(Message).filter(
+            Message.sender_index == get_sender_index(id, current_user.id).id).all()
+    except AttributeError:
+        sender_messages = []
+    try:
+        receiver_messages = session.query(Message).filter(
+            Message.sender_index == get_sender_index(current_user.id, id).id).all()
+    except AttributeError:
+        receiver_messages = []
+    _messages = sorted(list(set(sender_messages + receiver_messages)), key=lambda x: x.datetime)
+    data = {
+        'messages': _messages,
+        'current_user': current_user,
+        'get_message_author': get_message_author,
+        'enumerate': enumerate,
+        'form': form,
+    }
+    return render_template("im.html", **data)
