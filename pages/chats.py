@@ -25,8 +25,13 @@ def inbox():
     viewer_data = {
         user: session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()[-1] for user in users
     }
-
-    return render_template("messages.html", viewer_data=viewer_data)
+    data = {}
+    if current_user.is_authenticated:
+        notifications, unwatched_notifications = get_notification()
+        data['notifications'] = list(notifications)[::-1]
+        data['unwatched'] = unwatched_notifications
+        data['get_user'] = get_user
+    return render_template("messages.html", viewer_data=viewer_data, **data)
 
 
 @login_required
@@ -70,4 +75,9 @@ def im(id):
         'enumerate': enumerate,
         'form': form,
     }
+    if current_user.is_authenticated:
+        notifications, unwatched_notifications = get_notification()
+        data['notifications'] = list(notifications)[::-1]
+        data['unwatched'] = unwatched_notifications
+        data['get_user'] = get_user
     return render_template("im.html", **data)
