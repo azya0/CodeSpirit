@@ -1,0 +1,36 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<script>
+    $(document).ready(function () {
+        $("#main-im-div").scrollTop($("#main-im-div")[0].scrollHeight);
+    })
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+<div id="main-im-div">
+    <div id="main-data-message-div">
+        {% for message in enumerate(messages) %}
+        {% set author = get_message_author(message[1].sender_index) %}
+            {% if message[0] == 0 or get_message_author(message[1].sender_index).id != get_message_author(messages[message[0] - 1].sender_index).id %}
+                <div class="main-user-div {% if author.id != current_user.id %}user-message-left{% else %}user-message-right{% endif %}">
+                    <a href="/profile/{{ author.id }}">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        {{ get_message_author(message[1].sender_index).name }}
+                    </a>
+                </div>
+            {% endif %}
+        <div class="{% if author.id != current_user.id %}message-left{% else %}message-right{% endif %}">{{ message[1].text }}</div>
+        {% endfor %}
+    </div>
+    <form id="message-form" method="post" enctype=multipart/form-data novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.text(id='message-hidden-text', type='hidden') }}
+        <div id="bottom-message-data">
+            <div contenteditable="true" id="main-message-input" placeholder="the best place for your thoughts"></div>
+            {{ form.submit(id='main-send-message-btn', type="submit", value="send", onclick='replaceMessageText()') }}
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -32,6 +32,12 @@ class CommentForm(FlaskForm):
     text = StringField("write a comment...", validators=[DataRequired()])
 
 
+class MessageForm(FlaskForm):
+    __form__  = 'message'
+    text = StringField("write a comment...", validators=[DataRequired()])
+    submit = SubmitField("Comment")
+
+
 class QAAForm(FlaskForm):
     __form__ = 'qaa'
     title = StringField('What is the problem? Be short', validators=[DataRequired(), SelfLength('title', min_length=5,

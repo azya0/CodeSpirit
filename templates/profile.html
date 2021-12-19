@@ -5,7 +5,7 @@
 <p>User description:</p>
 <p>{{ user.description }}</p>
 {% if current_user.is_authenticated %}
-<h3><a href="/messages/{{ user.id }}">Write him</a></h3>
+<h3><a href="/inbox/im/{{ user.id }}">Write him</a></h3>
 {% endif %}
 {% if current_user.id == user.id %}
 <form method="post">

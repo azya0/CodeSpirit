@@ -54,7 +54,7 @@ def create_Notification_type():
 
 
 def main():
-    db_session.global_init("db/database.db")
+    db_session.global_init("database.db")
     create_TypeObj()
     create_Notification_type()
     print('/__server_working__/')

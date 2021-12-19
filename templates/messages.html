@@ -1,13 +1,20 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-{% for message in messages %}
-<div>
-    <b><a href="/account/{{ message[3] }}">{{ message[0] }}</a></b>
-    <p>{{ message[2] }}</p>
-    <s>{{ message[1] }}</s>
-    <a href="/messages/{{ message[3] }}">Open</a>
+<div id="main-inbox-div">
+    {% for user in viewer_data %}
+        <div class="message-user-block" onclick="location.href='im/{{ user.id }}'">
+            <div class="top-user-data">
+                <div class="user-data">
+                    <a class="user-avatar" href="/profile/{{ user.id }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                    <span>{{ user.name }}</span>
+                </div>
+                <small>{{ viewer_data[user].datetime }}</small>
+            </div>
+            <div class="bottom-user-data">
+                <p>{{ viewer_data[user].text }}</p>
+            </div>
+        </div>
+    {% endfor %}
 </div>
-<hr>
-{% endfor %}
 {% endblock %}
