@@ -56,7 +56,24 @@
                         </a>
                     </li>
                     {% if current_user.is_authenticated %}
-                        <li class="active mx-3"><a class="nav-link main-font pt-60 main-fs" href="/inbox/"><i class="fa fa-comments main-icon-fix" aria-hidden="true"></i></a></li>
+                        <li class="active mx-3">
+                            <a class="nav-link main-font pt-60 main-fs" href="/inbox/">
+                                {% if unwatched_msgs %}<small class="new-event-marker">{{ unwatched_msgs }}</small>{% endif %}
+                                <i class="fa fa-comments main-icon-fix" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <script>
+                            function notification_button() {
+                                console.log(11);
+                                wind = $('#notifications');
+                                if (wind.is(':hidden')) {
+                                    wind.show().css('display', 'flex');
+                                }
+                                else {
+                                    wind.hide();
+                                }
+                            }
+                        </script>
                         <button class="active mx-3 nb-button" onclick="notification_button()">
                             {% if unwatched %} <small class="new-event-marker">{{ unwatched }}</small> {% endif %}
                             <a class="nav-link main-font pt-60 main-fs" href="#"><i class="fa fa-bell main-icon-fix" aria-hidden="true"></i></a>

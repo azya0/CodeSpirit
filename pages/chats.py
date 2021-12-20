@@ -1,8 +1,6 @@
 from flask_login import login_required, current_user
-from data.__all_models import User, Message
 from flask import render_template, redirect
 from data.request_tools import *
-from data.forms import NewPostForm
 import datetime
 import flask
 
@@ -22,16 +20,21 @@ def inbox():
 
     indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.receiver == current_user.id).all()
     users = tuple(set(session.query(User).get(index.sender) for index in indexes))
-    viewer_data = {
-        user: session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()[-1] for user in users
-    }
+    viewer_data, unread_messages_data = {}, {}
+    for user in users:
+        _data = session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()
+        viewer_data[user] = _data[-1]
+        unread_messages_data[user] = sum([0 if message.is_read else 1 for message in _data])
     data = {}
+    sorted_viewer_data = sorted(viewer_data, key=lambda x: viewer_data[x].datetime, reverse=True)
     if current_user.is_authenticated:
         notifications, unwatched_notifications = get_notification()
         data['notifications'] = list(notifications)[::-1]
         data['unwatched'] = unwatched_notifications
         data['get_user'] = get_user
-    return render_template("messages.html", viewer_data=viewer_data, **data)
+        data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+        data['unread_dict'] = unread_messages_data
+    return render_template("messages.html", viewer_data=viewer_data, sorted_viewer_data=sorted_viewer_data, **data)
 
 
 @login_required
@@ -68,6 +71,9 @@ def im(id):
     except AttributeError:
         receiver_messages = []
     _messages = sorted(list(set(sender_messages + receiver_messages)), key=lambda x: x.datetime)
+    for message in sender_messages:
+        message.is_read = True
+    session.commit()
     data = {
         'messages': _messages,
         'current_user': current_user,
@@ -80,4 +86,5 @@ def im(id):
         data['notifications'] = list(notifications)[::-1]
         data['unwatched'] = unwatched_notifications
         data['get_user'] = get_user
+        data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("im.html", **data)

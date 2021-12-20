@@ -114,3 +114,9 @@ def get_sender_index(sender, receiver):
     result = session.query(MessageSenderIndex).filter(MessageSenderIndex.sender == sender)\
         .filter(MessageSenderIndex.receiver == receiver).first()
     return result if result else -1
+
+
+def get_unwroten_messages_count(user_id):
+    session = db_session.create_session()
+    indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.receiver == user_id).all()
+    return sum([0 if session.query(Message).filter(Message.sender_index == index.id)[-1].is_read else 1 for index in indexes])

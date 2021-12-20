@@ -2,7 +2,7 @@
 
 {% block content %}
 <div id="main-inbox-div">
-    {% for user in viewer_data %}
+    {% for user in sorted_viewer_data %}
         <div class="message-user-block" onclick="location.href='im/{{ user.id }}'">
             <div class="top-user-data">
                 <div class="user-data">
@@ -13,6 +13,10 @@
             </div>
             <div class="bottom-user-data">
                 <p>{{ viewer_data[user].text }}</p>
+                {% set user_read_data = unread_dict[user] %}
+                {% if user_read_data %}
+                    <p class="msg-unread-data">{{ user_read_data }}</p>
+                {% endif %}
             </div>
         </div>
     {% endfor %}

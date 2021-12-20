@@ -67,6 +67,7 @@ def main_page():
     data['notifications'] = list(notifications)
     data['unwatched'] = unwatched_notifications
     data['get_user'] = lambda x: session.query(User).get(x)
+    data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("qaa.html", **data)
 
 
@@ -90,6 +91,7 @@ def qaa_form():
     }
     notifications, unwatched_notifications = get_notification()
     data['notifications'] = list(notifications)
+    data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     data['unwatched'] = unwatched_notifications
     session = db_session.create_session()
     data['get_user'] = lambda x: session.query(User).get(x)
@@ -138,6 +140,7 @@ def qaa_a_page(id):
     notifications, unwatched_notifications = get_notification()
     data['notifications'] = list(notifications)
     data['unwatched'] = unwatched_notifications
+    data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("qaa-q-page.html", **data)
 
 

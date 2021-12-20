@@ -1527,6 +1527,11 @@ input:-webkit-autofill:active {
     align-items: center;
 }
 
+.bottom-user-data {
+    display: flex;
+    justify-content: space-between;
+}
+
 .bottom-user-data p {
     word-wrap: break-word;
     word-break: break-word;
@@ -1738,7 +1743,7 @@ input:-webkit-autofill:active {
     border-radius: 11px;
     max-width: 1.5rem;
     overflow: hidden;
-    padding: 0px 20%;
+    padding: 0px 30%;
 }
 
 .nb-button {
@@ -1749,6 +1754,14 @@ input:-webkit-autofill:active {
 
 .notification-unread {
     background-color: #1f2329;
+}
+
+.msg-unread-data {
+    background-color: #d24545;
+    padding: 0 .5rem;
+    border-radius: 12px;
+    width: fit-content;
+    overflow: inherit;
 }
 
 @media screen and (max-width: 925px)

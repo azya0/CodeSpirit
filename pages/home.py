@@ -84,6 +84,8 @@ def account(user_id):
     notifications, unwatched_notifications = get_notification()
     data['notifications'] = list(notifications)[::-1]
     data['unwatched'] = unwatched_notifications
+    data['get_user'] = get_user
+    data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("profile.html", **data)
 
 
@@ -128,6 +130,7 @@ def main_page():
         notifications, unwatched_notifications = get_notification()
         data['notifications'] = list(notifications)[::-1]
         data['unwatched'] = unwatched_notifications
+        data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("home.html", **data)
 
 
