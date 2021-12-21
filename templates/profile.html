@@ -16,12 +16,12 @@
     <div id="main-user-profile-data">
         <h2>{{ user.name }}</h2>
         <p>{{ user.description }}</p>
-        {% if user.id == current_user.id %}
+        {% if user.id != current_user.id %}
             <a id="write-message-div" href="/inbox/im/{{ user.id }}">
                 <i class="fa fa-comment" aria-hidden="true"></i>
                 <span>write him</span>
             </a>
-        {% endif%}
+        {% endif %}
     </div>
 </div>
 <script>
@@ -84,7 +84,12 @@
                 <div id="main-post-header">
                     <div id="post-user">
                         <a href="/profile/{{ post.author }}" id="main-post-user-link">
-                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-post-avatar" aria-hidden="true"></i>
+                            {% set user = get_user(post.author) %}
+                            {% if not user.avatar %}
+                                <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-post-avatar" aria-hidden="true"></i>
+                            {% else %}
+                                <img class='main-user-avatar-img' src="{{ url_for('static', filename=get_user_avatar(user.id)) }}">
+                            {% endif %}
                             <b class="main-font main-white-font-color main-home-user" style="margin-left: 5%">{{ get_user(post.author).name }}</b><br>
                         </a>
                         <div>
@@ -138,10 +143,15 @@
                         {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
                             <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ get_CommentLike_count(comment.id) != 0 }}' class="main-comment-union">
                                 <div class="main-post-comment">
-                                    <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                                    {% set user = get_user(comment.author) %}
+                                    {% if not user.avatar %}
+                                        <a href="profile/{{ comment.author }}"><i class="fa fa-user-circle main-comment-a-ava main-white-font-color i-c" aria-hidden="true"></i></a>
+                                    {% else %}
+                                        <a href="profile/{{ comment.author }}"><img class='main-user-avatar-img-c' src="{{ url_for('static', filename=get_user_avatar(user.id)) }}"></a>
+                                    {% endif %}
                                     <div class="main-comment-data">
                                         <div class='df-jc-sb'>
-                                            <b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b>
+                                                <a href="profile/{{ comment.author }}"><b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b></a>
                                             {% if comment.author == current_user.id %}
                                                 <i id="delete-{{ comment.id }}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment({{ comment.id }})"></i>
                                             {% endif %}

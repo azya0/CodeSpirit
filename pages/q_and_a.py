@@ -68,6 +68,7 @@ def main_page():
     data['unwatched'] = unwatched_notifications
     data['get_user'] = lambda x: session.query(User).get(x)
     data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+    data['get_user_avatar'] = get_user_avatar
     return render_template("qaa.html", **data)
 
 
@@ -95,6 +96,7 @@ def qaa_form():
     data['unwatched'] = unwatched_notifications
     session = db_session.create_session()
     data['get_user'] = lambda x: session.query(User).get(x)
+    data['get_user_avatar'] = get_user_avatar
     return render_template("qaa-form.html", **data)
 
 
@@ -141,6 +143,7 @@ def qaa_a_page(id):
     data['notifications'] = list(notifications)
     data['unwatched'] = unwatched_notifications
     data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+    data['get_user_avatar'] = get_user_avatar
     return render_template("qaa-q-page.html", **data)
 
 

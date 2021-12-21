@@ -6,7 +6,13 @@
         <div class="message-user-block" onclick="location.href='im/{{ user.id }}'">
             <div class="top-user-data">
                 <div class="user-data">
-                    <a class="user-avatar" href="/profile/{{ user.id }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                    <a class="user-avatar" href="/profile/{{ user.id }}">
+                        {% if not user.avatar %}
+                            <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        {% else %}
+                            <img class='main-user-avatar-img user-c-a' style="margin: 0 auto" src="{{ url_for('static', filename=get_user_avatar(user.id)) }}">
+                        {% endif %}
+                    </a>
                     <span>{{ user.name }}</span>
                 </div>
                 <small>{{ viewer_data[user].datetime }}</small>

@@ -1560,7 +1560,7 @@ input:-webkit-autofill:active {
 
 #main-im-div {
     color: #d7dce3;
-    height: 53.5rem;
+    height: 50rem;
     overflow-y: scroll;
 }
 
@@ -1667,7 +1667,7 @@ input:-webkit-autofill:active {
 
 #main-send-message-btn {
     font-size: 15px;
-    width: 10%;
+    width: 7rem;
     font-weight: bold;
     background: #293342;
     box-shadow: 7px 8px 8px #0d1015;
@@ -1787,7 +1787,7 @@ input:-webkit-autofill:active {
 }
 
 #main-user-profile-data h2 {
-    font-size: 110px;
+    font-size: 50px;
     color: #d7dce3cf;
 }
 
@@ -1829,11 +1829,54 @@ input:-webkit-autofill:active {
     margin-top: 3rem;
 }
 
+.user-c-a {
+    height: 1.05rem!important;
+}
+
+.main-user-avatar-img {
+    height: 1.5rem;
+    border-radius: 50%;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.main-user-avatar-img-c {
+    height: 1.5rem;
+    border-radius: 50%;
+    margin-right: .5rem;
+}
+
+.i-c {
+    margin-right: .5rem;
+}
+
+.main-user-avatar-img-default {
+    height: 1.5rem;
+    border-radius: 50%;
+    margin-bottom: .2rem;
+}
+
 @media screen and (max-width: 925px)
 {
     nav {
         padding-right: 0!important;
         padding-left: 0 !important;
+    }
+
+    #main-user-profile-data h2 {
+        font-size: 20px;
+    }
+
+    #main-user-profile-data p {
+        font-size: 15px;
+    }
+
+    #main-user-profile-data span {
+        font-size: 15px;
+    }
+
+    #avatar-label img {
+        height: 8rem;
     }
 
     .main-logo-link {
@@ -2071,5 +2114,17 @@ input:-webkit-autofill:active {
 
     .main-registration-description {
         padding-top: 0.2rem!important;
+    }
+
+    #profile-top-data {
+        display: flex;
+        gap: 0;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    #avatar {
+        display: flex;
+        justify-content: center;
     }
 }

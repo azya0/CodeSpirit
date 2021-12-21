@@ -14,7 +14,12 @@
 <div id="main-questions">
     {% for question in questions %}
         <a href='profile/{{ author(question.author).id }}' class="top-panel" style="background: {{ gradient() }}">
-             <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-qaa-ava" aria-hidden="true"></i>
+            {% set user = get_user(question.author) %}
+            {% if not user.avatar %}
+                <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-qaa-ava" aria-hidden="true"></i>
+            {% else %}
+                <img class='main-user-avatar-img-c i-post main-white-font-color main-qaa-ava' src="{{ url_for('static', filename=get_user_avatar(user.id)) }}">
+            {% endif %}
              <b>{{ author(question.author).name }}</b>
         </a>
         <div class="main-qaa-block main-white-font-color">

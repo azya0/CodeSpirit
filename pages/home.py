@@ -126,6 +126,7 @@ def account(user_id):
     data['unwatched'] = unwatched_notifications
     data['get_user'] = get_user
     data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+    data['get_user_avatar'] = get_user_avatar
     return render_template("profile.html", **data)
 
 
@@ -206,13 +207,15 @@ def main_page():
         'is_liked': is_liked,
         'get_CommentLike_count': get_CommentLike_count,
         'is_file': lambda x: os.path.exists(x),
-        'get_user': lambda x: session.query(User).get(x)
+        'get_user': lambda x: session.query(User).get(x),
+        'get_user_avatar': get_user_avatar
     }
     if current_user.is_authenticated:
         notifications, unwatched_notifications = get_notification()
         data['notifications'] = list(notifications)[::-1]
         data['unwatched'] = unwatched_notifications
         data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+        data['get_user_avatar'] = get_user_avatar
     return render_template("home.html", **data)
 
 

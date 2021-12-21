@@ -16,7 +16,12 @@
             {% if message[0] == 0 or get_message_author(message[1].sender_index).id != get_message_author(messages[message[0] - 1].sender_index).id %}
                 <div class="main-user-div {% if author.id != current_user.id %}user-message-left{% else %}user-message-right{% endif %}">
                     <a href="/profile/{{ author.id }}">
-                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                        {% set _user = get_user(author.id) %}
+                        {% if not _user.avatar %}
+                            <i class="fa fa-user-circle i-c" aria-hidden="true"></i>
+                        {% else %}
+                            <img class='main-user-avatar-img-default user-c-a' src="{{ url_for('static', filename=get_user_avatar(_user.id)) }}">
+                        {% endif %}
                         {{ get_message_author(message[1].sender_index).name }}
                     </a>
                 </div>

@@ -38,7 +38,12 @@
                     </div>
                 {% endif %}
                 <a href="/profile/{{ question.author }}" class="main-qaa-user-data">
-                    <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" aria-hidden="true"></i>
+                    {% set user = get_user(question.author) %}
+                    {% if not user.avatar %}
+                        <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" aria-hidden="true"></i>
+                    {% else %}
+                        <img class='main-user-avatar-img-c i-post man-qaa-ava-b' src="{{ url_for('static', filename=get_user_avatar(user.id)) }}">
+                    {% endif %}
                     <span>{{ get_user(question.author).name }}</span>
                 </a>
             </div>
@@ -49,7 +54,12 @@
             <div id="qaa-answer-{{ answer.id }}" class="{% if answer.right_answer %}right-answer{% endif %}">
                 <div class="main-qaa-user-data-comment">
                     <a href="/profile/{{ answer.author }}">
-                        <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" style="margin: 0 auto" aria-hidden="true"></i>
+                        {% set user = get_user(answer.author) %}
+                        {% if not user.avatar %}
+                            <i class="fa fa-user-circle main-post-item i-post man-qaa-ava-b" style="margin: 0 auto" aria-hidden="true"></i>
+                        {% else %}
+                            <img class='main-user-avatar-img-c i-post man-qaa-ava-b' style="margin: 0 auto" src="{{ url_for('static', filename=get_user_avatar(user.id)) }}">
+                        {% endif %}
                         <span>{{ get_user(answer.author).name }}</span>
                     </a>
                 </div>

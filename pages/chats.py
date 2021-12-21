@@ -19,11 +19,20 @@ def inbox():
     session = db_session.create_session()
 
     indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.receiver == current_user.id).all()
+    a_indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.sender == current_user.id).all()
     users = tuple(set(session.query(User).get(index.sender) for index in indexes))
+    a_users = tuple(set(session.query(User).get(index.receiver) for index in a_indexes))
     viewer_data, unread_messages_data = {}, {}
-    for user in users:
-        _data = session.query(Message).filter(Message.sender_index == get_sender_index(user.id, current_user.id).id).all()
+    for user in a_users:
+        _data = session.query(Message).filter(
+            Message.sender_index == get_receiver_index(current_user.id, user.id).id).all()
         viewer_data[user] = _data[-1]
+        unread_messages_data[user] = 0
+    for user in users:
+        _data = session.query(Message).filter(
+            Message.sender_index == get_sender_index(user.id, current_user.id).id).all()
+        if viewer_data[user] and viewer_data[user].datetime < _data[-1].datetime:
+            viewer_data[user] = _data[-1]
         unread_messages_data[user] = sum([0 if message.is_read else 1 for message in _data])
     data = {}
     sorted_viewer_data = sorted(viewer_data, key=lambda x: viewer_data[x].datetime, reverse=True)
@@ -34,6 +43,7 @@ def inbox():
         data['get_user'] = get_user
         data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
         data['unread_dict'] = unread_messages_data
+        data['get_user_avatar'] = get_user_avatar
     return render_template("messages.html", viewer_data=viewer_data, sorted_viewer_data=sorted_viewer_data, **data)
 
 
@@ -87,4 +97,5 @@ def im(id):
         data['unwatched'] = unwatched_notifications
         data['get_user'] = get_user
         data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
+        data['get_user_avatar'] = get_user_avatar
     return render_template("im.html", **data)
