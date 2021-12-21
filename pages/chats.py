@@ -31,7 +31,7 @@ def inbox():
     for user in users:
         _data = session.query(Message).filter(
             Message.sender_index == get_sender_index(user.id, current_user.id).id).all()
-        if viewer_data[user] and viewer_data[user].datetime < _data[-1].datetime:
+        if user not in viewer_data or viewer_data[user].datetime < _data[-1].datetime:
             viewer_data[user] = _data[-1]
         unread_messages_data[user] = sum([0 if message.is_read else 1 for message in _data])
     data = {}

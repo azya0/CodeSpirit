@@ -41,8 +41,8 @@ class MessageSenderIndex(UserMixin, SqlAlchemyBase, SerializerMixin):
 class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	__tablename__ = "users"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	name = Column(String, unique=True)
-	email = Column(String, unique=True)
+	name = Column(String)
+	email = Column(String)
 	password = Column(String)
 	description = Column(Text, default="")
 	avatar = Column(Integer, ForeignKey('avatars.id'), default=0)

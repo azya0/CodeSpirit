@@ -21,7 +21,7 @@ def global_init(db_file):
     print(f"Connecting with {conn_str} database.")
 
     engine = sa.create_engine(conn_str, echo=False)
-    __factory = orm.sessionmaker(bind=engine)
+    __factory = orm.sessionmaker(bind=engine, autoflush=False)
 
     from . import __all_models
 

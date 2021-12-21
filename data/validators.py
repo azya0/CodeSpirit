@@ -54,7 +54,6 @@ class Tag(object):
 
     def __call__(self, form, field):
         tags = field.data.split()
-        print(tags)
         if len(tags) > self.count:
             raise ValidationError(f'Too much tags ({self.count} maximum)')
         filtered = list(filter(lambda x: len(x) > self.length, tags))
