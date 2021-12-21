@@ -45,6 +45,13 @@ class User(UserMixin, SqlAlchemyBase, SerializerMixin):
 	email = Column(String, unique=True)
 	password = Column(String)
 	description = Column(Text, default="")
+	avatar = Column(Integer, ForeignKey('avatars.id'), default=0)
+
+
+class Avatar(UserMixin, SqlAlchemyBase, SerializerMixin):
+	__tablename__ = "avatars"
+	id = Column(Integer, primary_key=True, autoincrement=True)
+	way = Column(String, nullable=False)
 
 
 class Post(UserMixin, SqlAlchemyBase, SerializerMixin):

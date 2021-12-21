@@ -119,4 +119,12 @@ def get_sender_index(sender, receiver):
 def get_unwroten_messages_count(user_id):
     session = db_session.create_session()
     indexes = session.query(MessageSenderIndex).filter(MessageSenderIndex.receiver == user_id).all()
-    return sum([0 if session.query(Message).filter(Message.sender_index == index.id)[-1].is_read else 1 for index in indexes])
+    return sum([0 if session.query(Message).filter(Message.sender_index == index.id)[-1].is_read
+                else 1 for index in indexes])
+
+
+def get_user_avatar(user_id):
+    session = db_session.create_session()
+    user = session.query(User).get(user_id)
+    avatar = session.query(Avatar).get(user.avatar)
+    return avatar.way[7:] if avatar else 0

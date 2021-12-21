@@ -69,17 +69,57 @@ def self_account():
 @login_required
 @blueprint.route('/profile/<int:user_id>', methods=['GET', 'POST'])
 def account(user_id):
+    from pages.q_and_a import mini_qaa_text
+    from random import randint
+
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     form = NewPostForm()
+    all_user_activity = dict()
+    for elm in session.query(Post).filter(Post.author == user_id).all():
+        all_user_activity[elm] = 'post'
+    for elm in session.query(QAA).filter(QAA.author == user_id).all():
+        all_user_activity[elm] = 'qaa'
+    comment_form = CommentForm()
     data = {
         'user': user,
         'session': session,
         'posts': session.query(Post).filter(Post.author == user_id).all(),
+        'get_user_avatar': get_user_avatar,
+        'sorted_data': sorted(all_user_activity, key=lambda x: x.datetime, reverse=True),
+        'all_user_data_type': all_user_activity,
+        'files': session.query(File),
+        'answers': session.query(Answer),
+        'likes': session.query(Like),
+        'questions': sorted(session.query(QAA).all(), key=lambda x: x.datetime, reverse=True),
         'form': form,
         'User': User,
+        'File': File,
+        'Like': Like,
+        'current_user': current_user,
+        'question_rating': get_QaaPost_rating,
+        'gradient': lambda: f'linear-gradient({randint(40, 160)}deg, rgba({randint(80, 255)},50,{randint(56, 110)},1)'
+                            f'0%, rgba({randint(15, 100)},{randint(0, 107)},{randint(170, 250)},1) 28%,'
+                            f'rgba({randint(151, 200)},{randint(50, 140)},{randint(10, 56)},1) 72%);',
+        'enumerate': enumerate,
+        'qaa_text': mini_qaa_text,
+        'author': lambda x: session.query(User).get(x),
+        'answ_count': lambda x: len(session.query(Answer).filter(Answer.qaa_id == x).all()),
+        'answered': lambda x: session.query(Answer).filter(Answer.qaa_id == x).filter(Answer.right_answer == True).first(),
+        'comments': session.query(Comment),
+        'comment_form': comment_form,
+        'Comment': Comment,
+        'sorted': sorted,
+        'cl_filter': lambda x: get_CommentLike_count(x.id),
         'len': len,
-        'current_user': current_user
+        'str': str,
+        'enu': enumerate,
+        'string_long': lambda x: 1 if len(x) >= 400 else 2 if x.count('\n') > 14 else 0,
+        'string_long_p': lambda x: 1 if len(x) >= 1700 else 2 if x.count('\n') > 14 else 0,
+        'is_liked': is_liked,
+        'get_CommentLike_count': get_CommentLike_count,
+        'is_file': lambda x: os.path.exists(x),
+        'get_user': lambda x: session.query(User).get(x)
     }
     notifications, unwatched_notifications = get_notification()
     data['notifications'] = list(notifications)[::-1]
@@ -87,6 +127,48 @@ def account(user_id):
     data['get_user'] = get_user
     data['unwatched_msgs'] = get_unwroten_messages_count(current_user.id)
     return render_template("profile.html", **data)
+
+
+@login_required
+@blueprint.route('/upload_avatar', methods=['GET', 'POST'])
+def upload_avatar():
+    def get_filename(filename):
+        last_server_num = sorted(map(lambda x: int(x.split('.')[0]), os.listdir('static/avatars')))[-1] + 1
+        return f'{last_server_num}.' + filename.split('.')[-1]
+
+    def crop_center(pil_img, crop_width: int, crop_height: int):
+        img_width, img_height = pil_img.size
+        return pil_img.crop(((img_width - crop_width) // 2,
+                             (img_height - crop_height) // 2,
+                             (img_width + crop_width) // 2,
+                             (img_height + crop_height) // 2))
+
+    file = flask.request.files['avatar-input']
+    if file:
+        filename = get_filename(file.filename)
+        file.save(os.path.join(flask.current_app.config['AVATAR_FOLDER'], filename))
+        full_fileway = flask.current_app.config['AVATAR_FOLDER'] + '/' + filename
+        from PIL import Image
+
+        im = Image.open(full_fileway)
+        im_new = crop_center(im, 460, 460)
+        im_new.save(full_fileway, quality=95)
+
+        session = db_session.create_session()
+
+        user = session.query(User).get(current_user.id)
+        if user.avatar:
+            avatar = session.query(Avatar).get(user.avatar)
+            os.remove(avatar.way)
+            session.delete(avatar)
+
+        avatar = Avatar()
+        avatar.way = full_fileway
+        session.add(avatar)
+        session.commit()
+        user.avatar = avatar.id
+        session.commit()
+    return self_account()
 
 
 def is_liked(id):

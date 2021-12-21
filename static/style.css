@@ -1757,11 +1757,76 @@ input:-webkit-autofill:active {
 }
 
 .msg-unread-data {
+    min-width: 25px;
+    display: flex;
     background-color: #d24545;
     padding: 0 .5rem;
     border-radius: 12px;
     width: fit-content;
-    overflow: inherit;
+    justify-content: center;
+    align-content: center;
+}
+
+#avatar-label img {
+    cursor: pointer;
+}
+
+#avatar-input {
+    display: none;
+}
+
+.main-user-avatar {
+    height: 20rem;
+    box-shadow: 20px 20px 7px 6px #080a0fd9;
+}
+
+#profile-top-data {
+    display: flex;
+    gap: 5.5rem;
+    justify-content: center;
+}
+
+#main-user-profile-data h2 {
+    font-size: 110px;
+    color: #d7dce3cf;
+}
+
+#main-user-profile-data {
+    padding: 2rem;
+    background-color: #1a1f26;
+    border-radius: 9px;
+    box-shadow: -20px 14px 7px 6px #080a0fd9;
+}
+
+#main-user-profile-data p {
+    font-size: 30px;
+    color: #d7dce39c;
+}
+
+#write-message-div {
+    gap: .3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #d7dce3;
+}
+
+#write-message-div:hover {
+    color: #8a8a8a;
+    transition: .3s;
+}
+
+#write-message-div i {
+    font-size: 25px;
+}
+
+#write-message-div span {
+    font-size: 25px;
+    margin-bottom: .3rem;
+}
+
+#profile-user-data {
+    margin-top: 3rem;
 }
 
 @media screen and (max-width: 925px)

@@ -12,6 +12,7 @@ config = configparser.ConfigParser()
 config.read('static/config.ini')
 app.config['SECRET_KEY'] = config['App']['SECRET_KEY']
 app.config['UPLOAD_FOLDER'] = config['App']['UPLOAD_FOLDER']
+app.config['AVATAR_FOLDER'] = config['App']['AVATAR_FOLDER']
 app.config['MAX_CONTENT_LENGTH'] = int(config['App']['MAX_CONTENT_LENGTH'])
 app.config['last_uploaded_file'] = config['App']['last_file_way']
 app.add_url_rule("/uploads/<name>", endpoint="download_file", build_only=True)
@@ -54,7 +55,7 @@ def create_Notification_type():
 
 
 def main():
-    db_session.global_init("database.db")
+    db_session.global_init("db/database.db")
     create_TypeObj()
     create_Notification_type()
     print('/__server_working__/')

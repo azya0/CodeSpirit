@@ -1,30 +1,198 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h2>{{ user.name }}</h2>
-<p>User description:</p>
-<p>{{ user.description }}</p>
-{% if current_user.is_authenticated %}
-<h3><a href="/inbox/im/{{ user.id }}">Write him</a></h3>
-{% endif %}
-{% if current_user.id == user.id %}
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        <label for="text">{{ form.text.label }}</label>
-        {{ form.text(type="textarea", id="text") }}
+<div id="profile-top-data">
+    <div id="avatar">
+        <label for="avatar-input" id="avatar-label">
+            {% set avatar_way = get_user_avatar(user.id) %}
+            {% if avatar_way %}
+                <img class='main-user-avatar' src="{{ url_for('static', filename=avatar_way) }}">
+            {% else %}
+                <img class='main-user-avatar' src="{{ url_for('static', filename='avatars/0.jpg') }}">
+            {% endif %}
+        </label>
+        <input name="avatar-input" id="avatar-input" class="avatar_input" type="file" accept=".jpg">
     </div>
-    {{ form.submit() }}
-</form>
-{% endif %}
-{% for post in posts %}
-<hr>
-<b>{{ session.query(User).get(post.author).name }}</b>
-<br>
-{% for string in post.text.split('\n') %}
-{{ string }}<br>
-{% endfor %}
-<br>
-<small>{{ post.datetime }} & {{ post.likes }} likes</small>
-{% endfor %}
+    <div id="main-user-profile-data">
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.description }}</p>
+        {% if user.id == current_user.id %}
+            <a id="write-message-div" href="/inbox/im/{{ user.id }}">
+                <i class="fa fa-comment" aria-hidden="true"></i>
+                <span>write him</span>
+            </a>
+        {% endif%}
+    </div>
+</div>
+<script>
+    document.getElementById("avatar-input").onchange = function(e) {
+        var fileData = $('#avatar-input').prop('files')[0];
+        var formData = new FormData();
+        formData.append('avatar-input', fileData);
+
+        $.ajax({
+            url: '/upload_avatar',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: formData,
+            type: 'post',
+            success: function(data){
+                alert('flex');
+            }
+        });
+    }
+</script>
+<div id="profile-user-data">
+    {% for elm in sorted_data %}
+        {% if all_user_data_type[elm] == 'qaa' %}
+            {% set question = elm %}
+            <a href='profile/{{ author(question.author).id }}' class="top-panel" style="background: {{ gradient() }}">
+                 <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-qaa-ava" aria-hidden="true"></i>
+                 <b>{{ author(question.author).name }}</b>
+            </a>
+            <div class="main-qaa-block main-white-font-color">
+                <div class="main-qaa-left-block">
+                    <div class="main-m-b">
+                        <span class="main-num">{{ question_rating(question.id) }}</span>
+                        <small>rating</small>
+                    </div>
+                    <div class="{% if answered(question.id) %}right-answer-bg {% endif %}main-m-b">
+                        <span class="main-num">{{ answ_count(question.id) }}</span>
+                        <small>answers</small>
+                    </div>
+                    <small>{{ question.views }} views</small>
+                </div>
+                <div class="main-qaa-right-block">
+                    <div class="main-qaa-right-block">
+                        <a href="/q&a/{{ question.id }}" class="main-fs-15px{% if answered(question.id) %} right-answered{% endif %}">{{ question.title }}</a>
+                        <p class="main-w-w main-hidden-text main-fs-15px">{{ qaa_text(question.text) }}</p>
+                        {% if question.tags %}
+                            <div class="main-qaa-tags">
+                                {% for tag in question.tags.split() %}
+                                    <p class="main-qaa-tag">{{ tag }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% set post = elm %}
+            <div id='post-{{ post.id }}' class="main-post">
+                <hr>
+                <div id="main-post-header">
+                    <div id="post-user">
+                        <a href="/profile/{{ post.author }}" id="main-post-user-link">
+                            <i class="fa fa-user-circle main-post-item i-post main-white-font-color main-post-avatar" aria-hidden="true"></i>
+                            <b class="main-font main-white-font-color main-home-user" style="margin-left: 5%">{{ get_user(post.author).name }}</b><br>
+                        </a>
+                        <div>
+                            <button id='main-post-more-btn' data-easy-toggle="#main-post-dropdown" data-easy-class="show" data-easy-rcoe data-easy-parallel>
+                                <svg style='color: #d7dce3;' width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="more_horizontal_24__Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="more_horizontal_24__more_horizontal_24"><path id="more_horizontal_24__Bounds" d="M24 0H0v24h24z"></path><path d="M18 10a2 2 0 012 2 2 2 0 01-2 2 2 2 0 01-2-2c0-1.1.9-2 2-2zm-6 4a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2zm-6 0a2 2 0 01-2-2c0-1.1.9-2 2-2a2 2 0 012 2 2 2 0 01-2 2z" id="more_horizontal_24__Mask" fill="currentColor"></path></g></g></svg>
+                            </button>
+                            <div id="main-post-dropdown" class="main-post-dropdown-menu">
+                                {% if post.author == current_user.id %}
+                                    <a onclick="deletePost({{ post.id }})" class="main-dropdown-link main-delete-link" role="link">Delete</a>
+                                {% endif %}
+                                <a href="#" class="main-dropdown-link">It is not interesting</a>
+                                <a href="#" class="main-dropdown-link">Complain</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if not string_long_p(post.text) %}
+                    {% for string in post.text.split('\n') %}
+                        <b class="main-font main-white-font-color main-post-text">{{ string }}</b>
+                    {% endfor %}
+                {% elif string_long_p(post.text) == 2 %}
+                    {% for string in enu(post.text.split('\n')[:8]) %}
+                        <b class="main-post-long-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-p-{{ post.id }}" class="p-span">...</span>{% endif %}</b>
+                    {% endfor %}
+                    <a id="text-p-{{ post.id }}" style="margin-left: 3.15%;display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonPP('{{ post.id }}')" class="main-show-all-link-p">Show all...</a>
+                    {% for string in post.text.split('\n')[8:] %}
+                        <b class="text-p-hidden-{{ post.id }} main-comment-text" style="display: none">{{ string }}</b>
+                    {% endfor %}
+                {% elif string_long_p(post.text) == 1 %}
+                    <div class='main-hidden-content-div main-post-long-text'><span class="p-span">{{ post.text[:1001] }}</span><span id="p-points-{{ post.id }}" class="p-span">...</span><br id="p-text-br-{{ post.id }}"><a id="p-text-a-{{ post.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonP('{{ post.id }}')" class="main-show-all-link">Show all...</a><span id="p-text-hidden-{{ post.id }}" class="p-span" style="display: none">{{ post.text[1001:] }}</span></div>
+                {% endif %}
+                {% if files.filter(File.post_id == post.id).first() %}
+                    <div id="main-post-files">
+                    {% for image in files.filter(File.post_id == post.id).all() %}
+                        {% if is_file(image.way) %}
+                            <img id='main-image-in-post' src="{{ url_for('static', filename=image.way[7:]) }}">
+                        {% else %}
+                            <img id='main-image-in-post-error' src="static/post-img/a/0.jpg">
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <br>
+                <div id="main-post-other">
+                    <i class="fa fa-terminal" aria-hidden="true" style="color: #d7dce3;font-size: 13px;margin-right: 1%;"></i>
+                    <small class="main-font main-white-font-color">{{ post.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }} & {{ post.likes }} likes</small>
+                </div>
+                <hr class="main-comment-hr" style="{% if post.turn_off_comments %}opacity: 0;{% endif %}">
+                {% if not post.turn_off_comments %}
+                    <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
+                        {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
+                            <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ get_CommentLike_count(comment.id) != 0 }}' class="main-comment-union">
+                                <div class="main-post-comment">
+                                    <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                                    <div class="main-comment-data">
+                                        <div class='df-jc-sb'>
+                                            <b class="main-comment-username main-strong">{{ get_user(comment.author).name }}</b>
+                                            {% if comment.author == current_user.id %}
+                                                <i id="delete-{{ comment.id }}" class="fas fa-times main-white-font-color" style="visibility: hidden; opacity: 0;" onclick="deleteComment({{ comment.id }})"></i>
+                                            {% endif %}
+                                        </div>
+                                        {% if not string_long(comment.text) %}
+                                            {% for string in comment.text.split('\n') %}
+                                                <b class="main-comment-text">{{ string }}</b>
+                                            {% endfor %}
+                                        {% elif string_long(comment.text) == 2 %}
+                                            {% for string in enu(comment.text.split('\n')[:8]) %}
+                                                <b class="main-comment-text">{{ string[1] }}{% if string[0] == 7 %}<span id="points-n-{{ comment.id }}">...</span>{% endif %}</b>
+                                            {% endfor %}
+                                            <a id="text-n-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButtonN('{{ comment.id }}')" class="main-show-all-link-n">Show all...</a>
+                                            {% for string in comment.text.split('\n')[8:] %}
+                                                <b class="text-n-hidden-{{ comment.id }} main-comment-text" style="display: none">{{ string }}</b>
+                                            {% endfor %}
+                                        {% elif string_long(comment.text) == 1 %}
+                                            <div class='main-hidden-content-div'>
+                                                <span>{{ comment.text[:201] }}</span><span id="points-{{ comment.id }}">...</span><br id="text-br-{{ comment.id }}"><a id="text-a-{{ comment.id }}" style="display: inherit;cursor: pointer;color: #6498d0;" onclick="moreButton('{{ comment.id }}')" class="main-show-all-link">Show all...</a><span id="text-hidden-{{ comment.id }}" style="display: none">{{ comment.text[201:] }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="main-comment-content">
+                                    <p style="color: #e6e9ed70;margin-bottom: 0em;font-size: 0.85em;">{{ comment.datetime.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</p>
+                                    <a id='main-likes-{{ comment.id }}' class="main-likes" onclick="likeComment({{ comment.id }})" style="{% if get_CommentLike_count(comment.id) != 0 %}visibility: visible;opacity: 1;{% else %}visibility: hidden;opacity: 0;{% endif %}">
+                                        <span id="likes-{{ comment.id }}" class="main-likes-num {% if is_liked(comment.id) %}main-already-liked{% endif %}">{{ get_CommentLike_count(comment.id) if get_CommentLike_count(comment.id) else '' }}</span>
+                                        <i id='heart-{{ comment.id }}' class="fa fa-heart main-like-icon {% if is_liked(comment.id) != None %}main-already-liked{% endif %}"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% if sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True)[-1] != comment %}
+                                <hr class="main-hr-for-comments">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div id="main-post-write-comments">
+                        <form id='comment-form-{{ post.id }}' class='comment-form' _post='{{ post.id }}' method="post" enctype=multipart/form-data action="/add_comment/{{ post.id }}" novalidate>
+                            {{ comment_form.hidden_tag() }}
+                            {{ comment_form.text(id='comments-hidden-input-' + str(post.id), type='hidden', post=post.id) }}
+                            <div class="main-flex">
+                                <i class="fa fa-user-circle main-comment-ava main-white-font-color" aria-hidden="true"></i>
+                                <div contenteditable="true" id='comment-post-{{ post.id }}' class="main-post-comment-input" placeholder="write comment..."></div>
+                                {{ form.submit(id='main-send-comment-btn', type="submit", onclick='replaceCommentText("' + str(post.id) + '")', value="send") }}
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
 {% endblock %}
