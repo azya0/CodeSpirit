@@ -266,6 +266,7 @@ def add_post():
         post.turn_off_comments = 'toc' in data
         post.anonymous = 'anon' in data
         session.add(post)
+        session.commit()
         files = get_files(flask.request.files.getlist("image_input[]"))
         add_img(files)
         session.commit()
@@ -334,6 +335,7 @@ def is_comment_liked(type_: str, id: int):
         like_obj.obj_id = id
         like_obj.type_id = _type
         session.add(like_obj)
+        session.commit()
     like = session.query(Like).filter(Like.obj_id == like_obj.id).filter(Like.author == current_user.id).first()
     if like:
         session.delete(like)
