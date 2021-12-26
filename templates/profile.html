@@ -40,7 +40,7 @@
             data: formData,
             type: 'post',
             success: function(data){
-                alert('flex');
+                window.location.replace("/profile/{{ user.id }}");
             }
         });
     }
