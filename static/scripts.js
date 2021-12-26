@@ -94,6 +94,13 @@ function moreButtonPP(comment_id) {
 }
 
 
+function showAllComments(postId) {
+    comments = $('#main-post-comments-' + postId);
+    comments.find('.hidden-comment').show();
+    comments.find('.show-all-btn').hide();
+}
+
+
 function addImages() {
     $(function() {
             function readURL(input) {
@@ -255,7 +262,7 @@ function addComment(post_id) {
                 string = `
                 <div id='comment-${response.id}' comment_id="${response.id}" comment_liked='False' class="main-comment-union">
                     <div class="main-post-comment">
-                        <i class="fa fa-user-circle main-comment-a-ava main-white-font-color" aria-hidden="true"></i>
+                        ${response.avatar}
                         <div class="main-comment-data">
                             <div class='df-jc-sb'>
                                 <b class="main-comment-username main-strong">${response.author}</b>

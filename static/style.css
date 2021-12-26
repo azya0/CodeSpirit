@@ -783,7 +783,7 @@ input:-webkit-autofill:active {
 }
 
 .main-comment-data {
-    width: 100%;
+    width: inherit;
     display: flex;
     flex-direction: column;
 }
@@ -1854,6 +1854,18 @@ input:-webkit-autofill:active {
     height: 1.5rem;
     border-radius: 50%;
     margin-bottom: .2rem;
+}
+
+.hidden-comment {
+    display: none;
+}
+
+.show-all-btn {
+    display: inherit;
+    cursor: pointer;
+    color: #6498d0!important;
+    font-size: 13px;
+    margin-left: 1rem;
 }
 
 @media screen and (max-width: 925px)

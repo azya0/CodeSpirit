@@ -105,7 +105,8 @@ def account(user_id):
         'qaa_text': mini_qaa_text,
         'author': lambda x: session.query(User).get(x),
         'answ_count': lambda x: len(session.query(Answer).filter(Answer.qaa_id == x).all()),
-        'answered': lambda x: session.query(Answer).filter(Answer.qaa_id == x).filter(Answer.right_answer == True).first(),
+        'answered': lambda x: session.query(Answer).filter(Answer.qaa_id == x).filter(
+            Answer.right_answer == True).first(),
         'comments': session.query(Comment),
         'comment_form': comment_form,
         'Comment': Comment,
@@ -133,9 +134,9 @@ def account(user_id):
 @login_required
 @blueprint.route('/upload_avatar', methods=['GET', 'POST'])
 def upload_avatar():
-    def get_filename(filename):
+    def get_filename(_filename):
         last_server_num = sorted(map(lambda x: int(x.split('.')[0]), os.listdir('static/avatars')))[-1] + 1
-        return f'{last_server_num}.' + filename.split('.')[-1]
+        return f'{last_server_num}.' + _filename.split('.')[-1]
 
     def crop_center(pil_img, crop_width: int, crop_height: int):
         img_width, img_height = pil_img.size
@@ -306,6 +307,10 @@ def add_comment(post_id: int):
             session.add(comment)
             session.commit()
             post = session.query(Post).get(post_id)
+            fileway = flask.url_for('static', filename=get_user_avatar(current_user.id))
+            avatar = f"<img class='main-user-avatar-img-c' src='{fileway}'>" \
+                if get_user(current_user.id).avatar \
+                else '<i class="fa fa-user-circle main-comment-a-ava main-white-font-color i-c" aria-hidden="true"></i>'
             create_notification(current_user.id,
                                 post.author,
                                 f'{get_user_name(current_user.id)} comment your post: "{post.text[:10]}..."',
@@ -315,6 +320,7 @@ def add_comment(post_id: int):
                                   'author': session.query(User).get(comment.author).name,
                                   'text': comment.text,
                                   'datetime': comment.datetime,
+                                  'avatar': avatar,
                                   'is_first': True if len(session.query(Comment).filter(
                                       Comment.post_id == post_id).all()) == 1 else False})
     except BaseException as exception:

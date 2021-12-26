@@ -98,8 +98,9 @@
                 <hr class="main-comment-hr" style="{% if post.turn_off_comments %}opacity: 0;{% endif %}">
                 {% if not post.turn_off_comments %}
                     <div id='main-post-comments-{{ post.id }}' class="main-post-comments">
-                        {% for comment in sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
-                            <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ get_CommentLike_count(comment.id) != 0 }}' class="main-comment-union">
+                        {% set comment_list = sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True) %}
+                        {% for comment in comment_list %}
+                            <div id='comment-{{ comment.id }}' comment_id="{{ comment.id }}" comment_liked='{{ get_CommentLike_count(comment.id) != 0 }}' class="main-comment-union {% if comment_list.index(comment) >= 3 %}hidden-comment{% endif %}">
                                 <div class="main-post-comment">
                                     {% set user = get_user(comment.author) %}
                                     {% if not user.avatar %}
@@ -142,9 +143,12 @@
                                 </div>
                             </div>
                             {% if sorted(comments.filter(Comment.post_id == post.id).all(), key=cl_filter, reverse=True)[-1] != comment %}
-                                <hr class="main-hr-for-comments">
+                                <hr class="main-hr-for-comments {% if comment_list.index(comment) >= 3 %}hidden-comment{% endif %}">
                             {% endif %}
                         {% endfor %}
+                    {% if len(comment_list) >= 3 %}
+                        <a class="show-all-btn" onclick='showAllComments({{ post.id }})'>Show all comment</a>
+                    {% endif %}
                     </div>
                     <div id="main-post-write-comments">
                         <form id='comment-form-{{ post.id }}' class='comment-form' _post='{{ post.id }}' method="post" enctype=multipart/form-data action="/add_comment/{{ post.id }}" novalidate>
